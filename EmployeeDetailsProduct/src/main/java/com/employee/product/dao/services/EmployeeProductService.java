@@ -13,8 +13,8 @@ public class EmployeeProductService {
 	private CompanySignupDetailsInterface companySignupDetailsInterface;
 	
 	/**
-	 * method to save the squadDetails in DB
-	 * @param squadDetails
+	 * method to save the CompanyDetails in DB
+	 * @param companyDetails
 	 */
 	public CompanyDetails signUpCompanyDetails(CompanyDetails companyDetails){		
 				

@@ -44,7 +44,7 @@ public class EmployeeDetails {
 	private String contactNumber;
 	@Column(name = "date_of_birth")
 	private Date dateOfBirth;
-	@Column(name= "created_At" ,nullable = false, insertable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+	@Column(name= "updated_at" ,nullable = false, insertable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
 	private Date updated_at;
 
 }
