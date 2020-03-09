@@ -4,8 +4,6 @@ import java.util.Iterator;
 import java.util.Optional;
 import java.util.Set;
 
-import org.springframework.util.StringUtils;
-
 import com.employee.product.companydetails.request.dto.LoginDetailsRequestDto;
 import com.employee.product.companydetails.response.dto.LoginDetailsResponseDto;
 import com.employee.product.employeedetails.dto.EmployeeDetailsDto;
@@ -21,8 +19,7 @@ public class LoginUserUtil {
 		}
 	}
 
-	public static void mapLoginDetailsResponseDto(Users users,
-			LoginDetailsResponseDto loginDetailsResponseDto) {
+	public static void mapLoginDetailsResponseDto(Users users, LoginDetailsResponseDto loginDetailsResponseDto) {
 
 		loginDetailsResponseDto.setRole(users.getRole());
 		loginDetailsResponseDto.setUserName(users.getUserName());
@@ -47,6 +44,5 @@ public class LoginUserUtil {
 		}
 		loginDetailsResponseDto.setEmployeeDetailsDto(employeeDetailsDto);
 
-		
 	}
 }

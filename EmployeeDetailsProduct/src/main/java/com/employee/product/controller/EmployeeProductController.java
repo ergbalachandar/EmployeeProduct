@@ -32,14 +32,12 @@ public class EmployeeProductController {
 
 	@Autowired
 	private EmployeeProductService employeeProductService;
-	
+
 	@Autowired
 	private LoginDetailsService loginDetailsService;
-	
-	  @Autowired
-	  private JavaMailSender javaMailSender;
 
-
+	@Autowired
+	private JavaMailSender javaMailSender;
 
 	/**
 	 * Method to SignUp Company
@@ -58,42 +56,39 @@ public class EmployeeProductController {
 		CompanyDetailsResponseDto companyDetailsResponseDto = new CompanyDetailsResponseDto();
 		CompanySignUpDetailsUtil.companySignUpDetailsMapping(companyDetailsDto, companyDetails);
 		companyDetails = employeeProductService.signUpCompanyDetails(companyDetails);
-		CompanySignUpDetailsUtil.sendEmail(javaMailSender,companyDetails);
+		CompanySignUpDetailsUtil.sendEmail(javaMailSender, companyDetails);
 		CompanySignUpDetailsUtil.companyDetailsSignUpResponseMapping(companyDetailsResponseDto);
 		return companyDetailsResponseDto;
 	}
-	
 
 	/**
 	 * Method to Login User
 	 * 
-	 * @param CompanyDetailsRequestDto
-	 * @throws Exception 
+	 * @param LoginDetailsrequestDto
+	 * @throws Exception
 	 */
 	@RequestMapping(method = RequestMethod.POST, value = "/loginUser")
-	@ApiOperation(value = "Sign Up Company")
+	@ApiOperation(value = "LoginUser")
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "Successfully Logged In"),
 			@ApiResponse(code = 401, message = "You are not authorized to Log In"),
 			@ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
 			@ApiResponse(code = 404, message = "The resource you were trying to reach is not found") })
 	@ResponseBody
-	public LoginDetailsResponseDto loginUser(@RequestBody LoginDetailsRequestDto loginDetailsRequestDto) throws Exception {
-	
+	public LoginDetailsResponseDto loginUser(@RequestBody LoginDetailsRequestDto loginDetailsRequestDto)
+			throws Exception {
+
 		LoginDetailsResponseDto loginDetailsResponseDto = new LoginDetailsResponseDto();
 		Users users = new Users();
 		users.setUserName(loginDetailsRequestDto.getUserName());
-		
+
 		Optional<Users> optionalUsers = loginDetailsService.loginUser(users);
-		
+
 		LoginUserUtil.validateLoginDetails(optionalUsers, loginDetailsRequestDto);
-		
+
 		users = optionalUsers.get();
-		LoginUserUtil.mapLoginDetailsResponseDto(users,loginDetailsResponseDto);
-		
+		LoginUserUtil.mapLoginDetailsResponseDto(users, loginDetailsResponseDto);
+
 		return loginDetailsResponseDto;
-		
-		
-		
-		
+
 	}
 }
