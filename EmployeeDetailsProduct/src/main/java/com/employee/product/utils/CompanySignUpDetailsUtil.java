@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
+import org.springframework.mail.MailSender;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 
@@ -74,7 +75,7 @@ public class CompanySignUpDetailsUtil {
 
 	}
 
-	public static void sendEmail(JavaMailSender javaMailSender, CompanyDetails companyDetails) {
+	/*public static void sendEmail(JavaMailSender javaMailSender, CompanyDetails companyDetails) {
 
 		SimpleMailMessage msg = new SimpleMailMessage();
 		msg.setTo(companyDetails.getEmailId());
@@ -101,7 +102,39 @@ public class CompanySignUpDetailsUtil {
 		msg.setText(result.toString());
 		javaMailSender.send(msg);
 
-	}
+	} */
+	
+	
+	
+	 public static void sendMessage(MailSender mailSender, CompanyDetails companyDetails) {
+        SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
+        
+        
+        Set<Users> usersSet = companyDetails.getUsers();
+    	StringBuilder result = new StringBuilder();
+
+		for (Iterator<Users> it = usersSet.iterator(); it.hasNext();) {
+			Users users = it.next();
+			result.append("Dear " + users.getFirstName() + " " + users.getLastName());
+			result.append(System.lineSeparator());
+			result.append("UserName : " + users.getUserName());
+			result.append(System.lineSeparator());
+			result.append("Password : " + users.getPassword());
+			result.append(System.lineSeparator());
+		}
+
+		result.append("Company Name : " + companyDetails.getCompanyName());
+		result.append(System.lineSeparator());
+		result.append("Company Mail Id : " + companyDetails.getEmailId());
+		simpleMailMessage.setText(result.toString());
+        simpleMailMessage.setFrom("mproduct113@gmail.com");
+        simpleMailMessage.setTo(companyDetails.getEmailId());
+        simpleMailMessage.setSubject("SignUp Is Successfull");
+       
+
+        mailSender.send(simpleMailMessage);
+
+    }
 	
 	public static CompanyDetailsResponseDto companyDetailsSignUpResponseMapping(CompanyDetailsResponseDto companyDetailsResponseDto) {
 		

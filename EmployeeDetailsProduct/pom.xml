@@ -66,6 +66,20 @@
 			<artifactId>spring-boot-starter-mail</artifactId>
 		</dependency>
 
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-aws</artifactId>
+			<version>2.2.1.RELEASE</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.amazonaws</groupId>
+			<artifactId>aws-java-sdk-ses</artifactId>
+			<version>1.11.741</version>
+		</dependency>
+
+		<!-- Email Dependency Ends -->
+
 
 	</dependencies>
 

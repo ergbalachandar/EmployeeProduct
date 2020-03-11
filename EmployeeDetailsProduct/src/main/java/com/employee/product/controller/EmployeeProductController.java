@@ -3,6 +3,7 @@ package com.employee.product.controller;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.MailSender;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -36,8 +37,11 @@ public class EmployeeProductController {
 	@Autowired
 	private LoginDetailsService loginDetailsService;
 
+//	@Autowired
+//	private JavaMailSender javaMailSender;
+//	
 	@Autowired
-	private JavaMailSender javaMailSender;
+	private MailSender mailSender;
 
 	/**
 	 * Method to SignUp Company
@@ -56,7 +60,7 @@ public class EmployeeProductController {
 		CompanyDetailsResponseDto companyDetailsResponseDto = new CompanyDetailsResponseDto();
 		CompanySignUpDetailsUtil.companySignUpDetailsMapping(companyDetailsDto, companyDetails);
 		companyDetails = employeeProductService.signUpCompanyDetails(companyDetails);
-		CompanySignUpDetailsUtil.sendEmail(javaMailSender, companyDetails);
+		CompanySignUpDetailsUtil.sendMessage(mailSender, companyDetails);
 		CompanySignUpDetailsUtil.companyDetailsSignUpResponseMapping(companyDetailsResponseDto);
 		return companyDetailsResponseDto;
 	}
