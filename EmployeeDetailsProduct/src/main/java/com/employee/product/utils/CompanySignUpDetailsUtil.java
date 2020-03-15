@@ -6,7 +6,10 @@ import java.util.Set;
 
 import org.springframework.mail.MailSender;
 import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
+
+//import org.springframework.mail.MailSender;
+//import org.springframework.mail.SimpleMailMessage;
+//import org.springframework.mail.javamail.JavaMailSender;
 
 import com.employee.product.companydetails.request.dto.CompanyDetailsRequestDto;
 import com.employee.product.companydetails.response.dto.CompanyDetailsResponseDto;
@@ -17,7 +20,30 @@ import com.employee.product.entity.employeedetails.EmployeeDetails;
 
 public class CompanySignUpDetailsUtil {
 
-	public static void companySignUpDetailsMapping(CompanyDetailsRequestDto companyDetailsDto,
+	public static void companySignUpDetailsMapping(CompanyDetailsRequestDto companyDetailsDto, Users users) {
+
+		CompanyDetails companyDetails = new CompanyDetails();
+
+		users.setActive(companyDetailsDto.getActive());
+		users.setUserName(companyDetailsDto.getEmailId());
+		if (null != companyDetailsDto.getEmployeeDetails()) {
+			users.setFirstName(companyDetailsDto.getEmployeeDetails().getFirstName());
+			users.setLastName(companyDetailsDto.getEmployeeDetails().getLastName());
+			users.setCountry(companyDetailsDto.getEmployeeDetails().getCountry());
+		}
+		users.setPassword(companyDetailsDto.getPassword());
+		users.setRole("Admin");
+		users.setActive(1);
+
+		companyDetailsMapping(companyDetailsDto, companyDetails);
+
+		users.setCompanyDetails(companyDetails);
+
+		employeeDetailsMapping(users, companyDetailsDto, companyDetails);
+
+	}
+
+	private static void companyDetailsMapping(CompanyDetailsRequestDto companyDetailsDto,
 			CompanyDetails companyDetails) {
 
 		companyDetails.setCompanyName(companyDetailsDto.getCompanyName());
@@ -31,31 +57,10 @@ public class CompanySignUpDetailsUtil {
 		companyDetails.setSizeOfTheCompany(companyDetailsDto.getSizeOfTheCompany());
 		companyDetails.setActive(companyDetailsDto.getActive());
 
-		userDetailsMapping(companyDetailsDto, companyDetails);
-
 	}
 
-	private static void userDetailsMapping(CompanyDetailsRequestDto companyDetailsDto, CompanyDetails companyDetails) {
-
-		Set<Users> usersSet = new HashSet<Users>();
-		Users users = new Users();
-		users.setActive(companyDetailsDto.getActive());
-		users.setUserName(companyDetailsDto.getEmailId());
-		if (null != companyDetailsDto.getEmployeeDetails()) {
-			users.setFirstName(companyDetailsDto.getEmployeeDetails().getFirstName());
-			users.setLastName(companyDetailsDto.getEmployeeDetails().getLastName());
-			users.setCountry(companyDetailsDto.getEmployeeDetails().getCountry());
-		}
-		users.setPassword(companyDetailsDto.getPassword());
-		users.setRole("Admin");
-		users.setActive(1);
-		employeeDetailsMapping(users, companyDetailsDto);
-		usersSet.add(users);
-		companyDetails.setUsers(usersSet);
-
-	}
-
-	private static void employeeDetailsMapping(Users users, CompanyDetailsRequestDto companyDetailsDto) {
+	private static void employeeDetailsMapping(Users users, CompanyDetailsRequestDto companyDetailsDto,
+			CompanyDetails companyDetails) {
 
 		Set<EmployeeDetails> employeeDetailsSet = new HashSet<EmployeeDetails>();
 		EmployeeDetails employeeDetails = new EmployeeDetails();
@@ -69,75 +74,68 @@ public class CompanySignUpDetailsUtil {
 		employeeDetails.setCountry(companyDetailsDto.getCountry());
 		employeeDetails.setContactNumber(companyDetailsDto.getContactNumber());
 
+		employeeDetails.setCompanyDetails(companyDetails);
 		employeeDetailsSet.add(employeeDetails);
 
 		users.setEmployeeDetails(employeeDetailsSet);
 
 	}
 
-	/*public static void sendEmail(JavaMailSender javaMailSender, CompanyDetails companyDetails) {
+	/*
+	 * public static void sendEmail(JavaMailSender javaMailSender, CompanyDetails
+	 * companyDetails) {
+	 * 
+	 * SimpleMailMessage msg = new SimpleMailMessage();
+	 * msg.setTo(companyDetails.getEmailId());
+	 * 
+	 * msg.setSubject("SignUp Is Successfull");
+	 * 
+	 * Set<Users> usersSet = companyDetails.getUsers();
+	 * 
+	 * StringBuilder result = new StringBuilder();
+	 * 
+	 * for (Iterator<Users> it = usersSet.iterator(); it.hasNext();) { Users users =
+	 * it.next(); result.append("Dear " + users.getFirstName() + " " +
+	 * users.getLastName()); result.append(System.lineSeparator());
+	 * result.append("UserName : " + users.getUserName());
+	 * result.append(System.lineSeparator()); result.append("Password : " +
+	 * users.getPassword()); result.append(System.lineSeparator()); }
+	 * 
+	 * result.append("Company Name : " + companyDetails.getCompanyName());
+	 * result.append(System.lineSeparator()); result.append("Company Mail Id : " +
+	 * companyDetails.getEmailId()); msg.setText(result.toString());
+	 * javaMailSender.send(msg);
+	 * 
+	 * }
+	 */
 
-		SimpleMailMessage msg = new SimpleMailMessage();
-		msg.setTo(companyDetails.getEmailId());
-
-		msg.setSubject("SignUp Is Successfull");
-
-		Set<Users> usersSet = companyDetails.getUsers();
+	public static void sendMessage(MailSender mailSender, Users users) {
+		SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
 
 		StringBuilder result = new StringBuilder();
 
-		for (Iterator<Users> it = usersSet.iterator(); it.hasNext();) {
-			Users users = it.next();
-			result.append("Dear " + users.getFirstName() + " " + users.getLastName());
-			result.append(System.lineSeparator());
-			result.append("UserName : " + users.getUserName());
-			result.append(System.lineSeparator());
-			result.append("Password : " + users.getPassword());
-			result.append(System.lineSeparator());
-		}
-
-		result.append("Company Name : " + companyDetails.getCompanyName());
+		result.append("Dear " + users.getFirstName() + " " + users.getLastName());
 		result.append(System.lineSeparator());
-		result.append("Company Mail Id : " + companyDetails.getEmailId());
-		msg.setText(result.toString());
-		javaMailSender.send(msg);
-
-	} */
-	
-	
-	
-	 public static void sendMessage(MailSender mailSender, CompanyDetails companyDetails) {
-        SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
-        
-        
-        Set<Users> usersSet = companyDetails.getUsers();
-    	StringBuilder result = new StringBuilder();
-
-		for (Iterator<Users> it = usersSet.iterator(); it.hasNext();) {
-			Users users = it.next();
-			result.append("Dear " + users.getFirstName() + " " + users.getLastName());
-			result.append(System.lineSeparator());
-			result.append("UserName : " + users.getUserName());
-			result.append(System.lineSeparator());
-			result.append("Password : " + users.getPassword());
-			result.append(System.lineSeparator());
-		}
-
-		result.append("Company Name : " + companyDetails.getCompanyName());
+		result.append("UserName : " + users.getUserName());
 		result.append(System.lineSeparator());
-		result.append("Company Mail Id : " + companyDetails.getEmailId());
+		result.append("Password : " + users.getPassword());
+		result.append(System.lineSeparator());
+
+		result.append("Company Name : " + users.getCompanyDetails().getCompanyName());
+		result.append(System.lineSeparator());
+		result.append("Company Mail Id : " + users.getCompanyDetails().getEmailId());
 		simpleMailMessage.setText(result.toString());
-        simpleMailMessage.setFrom("mproduct113@gmail.com");
-        simpleMailMessage.setTo(companyDetails.getEmailId());
-        simpleMailMessage.setSubject("SignUp Is Successfull");
-       
+		simpleMailMessage.setFrom("mproduct113@gmail.com");
+		simpleMailMessage.setTo(users.getCompanyDetails().getEmailId());
+		simpleMailMessage.setSubject("SignUp Is Successfull");
 
-        mailSender.send(simpleMailMessage);
+		mailSender.send(simpleMailMessage);
 
-    }
-	
-	public static CompanyDetailsResponseDto companyDetailsSignUpResponseMapping(CompanyDetailsResponseDto companyDetailsResponseDto) {
-		
+	}
+
+	public static CompanyDetailsResponseDto companyDetailsSignUpResponseMapping(
+			CompanyDetailsResponseDto companyDetailsResponseDto) {
+
 		companyDetailsResponseDto.setMessage("SignUp Successfull");
 		return companyDetailsResponseDto;
 	}

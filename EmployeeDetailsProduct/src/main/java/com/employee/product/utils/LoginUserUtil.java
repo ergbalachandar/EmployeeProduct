@@ -13,8 +13,8 @@ import com.employee.product.entity.employeedetails.EmployeeDetails;
 public class LoginUserUtil {
 
 	public static void validateLoginDetails(Optional<Users> optionalUsers,
-			LoginDetailsRequestDto loginDetailsRequestDto) throws Exception {
-		if (!loginDetailsRequestDto.getPassword().equals(optionalUsers.get().getPassword())) {
+			String password) throws Exception {
+		if (!password.equals(optionalUsers.get().getPassword())) {
 			throw new Exception("You are not authorised to Login");
 		}
 	}
@@ -23,8 +23,10 @@ public class LoginUserUtil {
 
 		loginDetailsResponseDto.setRole(users.getRole());
 		loginDetailsResponseDto.setUserName(users.getUserName());
+		loginDetailsResponseDto.setCompanyId(String.valueOf(users.getCompanyDetails().getId()));
+		loginDetailsResponseDto.setCompanyName(users.getCompanyDetails().getCompanyName());
 
-		Set<EmployeeDetails> employeeDetailsSet = users.getEmployeeDetails();
+		/*Set<EmployeeDetails> employeeDetailsSet = users.getEmployeeDetails();
 		EmployeeDetailsDto employeeDetailsDto = new EmployeeDetailsDto();
 		for (Iterator<EmployeeDetails> it = employeeDetailsSet.iterator(); it.hasNext();) {
 			EmployeeDetails employeeDetails = it.next();
@@ -42,7 +44,7 @@ public class LoginUserUtil {
 			employeeDetailsDto.setState(employeeDetails.getState());
 
 		}
-		loginDetailsResponseDto.setEmployeeDetailsDto(employeeDetailsDto);
+		loginDetailsResponseDto.setEmployeeDetailsDto(employeeDetailsDto); */
 
 	}
 }

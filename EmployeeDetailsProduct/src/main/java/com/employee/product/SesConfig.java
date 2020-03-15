@@ -24,5 +24,5 @@ public class SesConfig {
     @Bean
     public MailSender mailSender(AmazonSimpleEmailService ses) {
         return new SimpleEmailServiceMailSender(ses);
-    }
+    } 
 }

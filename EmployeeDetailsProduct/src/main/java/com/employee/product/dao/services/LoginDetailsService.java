@@ -1,5 +1,6 @@
 package com.employee.product.dao.services;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,10 +21,12 @@ public class LoginDetailsService {
 	 * method to retrieve UserDetails
 	 * @param companyDetails
 	 */
-	public Optional<Users> loginUser(Users users){		
+	public Optional<Users> loginUser(String userName){		
 				
-		 Optional<Users> optionalUsers =  loginDetailsInterface.findById(users.getUserName());
+		Optional<Users> optionalUsers =  loginDetailsInterface.findById(userName);
 		return optionalUsers;
 	}
+	
+
 	
 }

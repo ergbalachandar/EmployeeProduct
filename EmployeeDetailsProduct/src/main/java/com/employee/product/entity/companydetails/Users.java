@@ -6,12 +6,16 @@ import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import com.employee.product.entity.employeedetails.EmployeeDetails;
+
 
 import lombok.Data;
 
@@ -19,28 +23,31 @@ import lombok.Data;
 @Data
 @Table(name = "users")
 public class Users {
-	
+
 	@Id
-	@Column(name= "user_name")
+	@Column(name = "user_name")
 	private String userName;
-	@Column(name= "first_name")
+	@Column(name = "first_name")
 	private String firstName;
-	@Column(name= "last_name")
+	@Column(name = "last_name")
 	private String lastName;
-	@Column(name= "password")
+	@Column(name = "password")
 	private String password;
-	@Column(name= "role")
+	@Column(name = "role")
 	private String role;
-	@Column(name= "created_At" ,nullable = false, insertable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+	@Column(name = "created_At", nullable = false, insertable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
 	private Date createdAt;
-	@Column(name= "country")
+	@Column(name = "country")
 	private String country;
-	@Column(name= "active")
+	@Column(name = "active")
 	private int active;
-	@OneToMany(cascade=CascadeType.ALL)
-	@JoinColumn(name="updated_by")
+
+	@OneToMany(cascade = CascadeType.ALL)
+	@JoinColumn(name = "updated_by")
 	private Set<EmployeeDetails> employeeDetails;
 
-	
+	@ManyToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "company_id")
+	private CompanyDetails companyDetails;
 
 }
