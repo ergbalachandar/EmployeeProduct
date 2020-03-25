@@ -13,6 +13,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 
 import com.employee.product.entity.employeedetails.EmployeeDetails;
 
@@ -35,7 +36,7 @@ public class Users {
 	private String password;
 	@Column(name = "role")
 	private String role;
-	@Column(name = "created_At", nullable = false, insertable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+	@Column(name = "created_At", nullable = false, insertable = false, columnDefinition = "DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")
 	private Date createdAt;
 	@Column(name = "country")
 	private String country;

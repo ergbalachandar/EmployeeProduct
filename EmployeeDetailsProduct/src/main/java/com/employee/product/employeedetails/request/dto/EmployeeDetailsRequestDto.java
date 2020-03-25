@@ -11,6 +11,7 @@ import lombok.Data;
 public class EmployeeDetailsRequestDto {
 	
 	
+	private Integer id;
 	
 	private String firstName;
 
@@ -34,10 +35,20 @@ public class EmployeeDetailsRequestDto {
 	
 	private Date dateOfBirth;
 	
+	private String department;
+	
+	private String jobRole;
+	
+	private String reportingPerson;
+	
+	private String workLocation;
+	
     private List<EmployeeWorkPermitDetailsRequestDto> employeeWorkPermitDetailsRequestDto;
     
     private List<EmployeePassportDetailsRequestDto> employeePassportDetailRequestDto;
     
-    private EmployeeOfficeDetailsRequestDto employeeOfficeDetailsRequestDto;
+    private List<EmployeeFamilyDetailsRequestDto> employeeFamilyDetailsRequestDto;
+    
+    private List<EmployeePaySlipDetailsRequestDto> employeePaySlipDetailsRequestDto;
 
 }
