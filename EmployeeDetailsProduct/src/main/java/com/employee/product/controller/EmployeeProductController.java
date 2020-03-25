@@ -74,8 +74,7 @@ public class EmployeeProductController {
 		CompanyDetailsResponseDto companyDetailsResponseDto = new CompanyDetailsResponseDto();
 		CompanySignUpDetailsUtil.companySignUpDetailsMapping(companyDetailsDto, users);
 		users = employeeProductService.signUpCompanyDetails(users);
-		System.out.println(users.getEmployeeDetails());
-		CompanySignUpDetailsUtil.sendMessage(mailSender, users);
+		CompanySignUpDetailsUtil.sendMessage(mailSender,companyDetailsDto.getEmailId(), companyDetailsDto.getCompanyName(), users);
 		CompanySignUpDetailsUtil.companyDetailsSignUpResponseMapping(companyDetailsResponseDto);
 		return companyDetailsResponseDto;
 	}

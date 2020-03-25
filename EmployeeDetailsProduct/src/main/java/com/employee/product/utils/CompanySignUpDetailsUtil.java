@@ -105,7 +105,7 @@ public class CompanySignUpDetailsUtil {
 	 * }
 	 */
 
-	public static void sendMessage(MailSender mailSender, Users users) {
+	public static void sendMessage(MailSender mailSender,String emailId, String companyName, Users users) {
 		SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
 
 		StringBuilder result = new StringBuilder();
@@ -117,18 +117,20 @@ public class CompanySignUpDetailsUtil {
 		result.append("Password : " + users.getPassword());
 		result.append(System.lineSeparator());
 
-		result.append("Company Name : " + users.getCompanyDetails().getCompanyName());
+		result.append("Company Name : " + companyName);
 		result.append(System.lineSeparator());
-		result.append("Company Mail Id : " + users.getCompanyDetails().getEmailId());
+		result.append("Company Mail Id : " + emailId);
 		simpleMailMessage.setText(result.toString());
 		simpleMailMessage.setFrom("mproduct113@gmail.com");
-		simpleMailMessage.setTo(users.getCompanyDetails().getEmailId());
+		simpleMailMessage.setTo(emailId);
 		simpleMailMessage.setSubject("SignUp Is Successfull");
 
 		mailSender.send(simpleMailMessage);
 
 	}
-
+	
+	
+	
 	public static CompanyDetailsResponseDto companyDetailsSignUpResponseMapping(
 			CompanyDetailsResponseDto companyDetailsResponseDto) {
 
