@@ -1,6 +1,6 @@
 package com.employee.product.employeedetails.request.dto;
 
-import java.util.Date;
+import java.sql.Date;
 
 import lombok.Data;
 

@@ -7,7 +7,7 @@ public class AddEmployeeRequestDto {
 	
 	private String adminuserName;
 	
-	private String companyId;
+	private int companyId;
 	
 	private EmployeeDetailsRequestDto employeeDetailsRequestDto;
 	

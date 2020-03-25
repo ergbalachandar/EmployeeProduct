@@ -1,6 +1,6 @@
 package com.employee.product.employeedetails.request.dto;
 
-import java.util.Date;
+import java.sql.Date;
 
 import lombok.Data;
 
@@ -18,6 +18,6 @@ public class EmployeeWorkPermitDetailsRequestDto {
 	
 	private String documentName;
 	
-	private String documentDate;
+	private String documentData;
 
 }

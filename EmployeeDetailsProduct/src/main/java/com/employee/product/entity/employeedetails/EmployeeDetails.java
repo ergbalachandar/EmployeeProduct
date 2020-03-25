@@ -1,6 +1,6 @@
 package com.employee.product.entity.employeedetails;
 
-import java.sql.Date;
+import java.util.Date;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -61,7 +61,7 @@ public class EmployeeDetails {
 	@Column(name = "department")
 	private String department;
 	
-	@Column(name = "repotingPerson")
+	@Column(name = "reportingPerson")
 	private String reportingPerson;
 	
 	@ManyToOne(cascade = CascadeType.ALL)
