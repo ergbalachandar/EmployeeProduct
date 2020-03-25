@@ -61,7 +61,7 @@ public class EmployeeDetails {
 	@Column(name = "department")
 	private String department;
 	
-	@Column(name = "reportingPerson")
+	@Column(name = "reporting_person")
 	private String reportingPerson;
 	
 	@ManyToOne(cascade = CascadeType.ALL)
