@@ -117,3 +117,5 @@ ALTER TABLE `passport_details` ADD FOREIGN KEY (`employee_id`) REFERENCES `emplo
 
 ALTER TABLE `family_details` ADD FOREIGN KEY (`employee_id`) REFERENCES `employee` (`id`);
 
+ALTER TABLE employee add column reporting_person varchar(255);
+
