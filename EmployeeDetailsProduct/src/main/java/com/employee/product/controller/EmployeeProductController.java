@@ -125,8 +125,6 @@ public class EmployeeProductController {
 			HttpSession httpSession) throws Exception {
 		EmployeeDataResponseDto employeeDataResponseDto = new EmployeeDataResponseDto();
 
-		if (httpSession.getAttribute("userName") != null
-				&& httpSession.getAttribute("userName").equals(employeeDataRequestDto.getUserName())) {
 
 			loginValidation(employeeDataRequestDto.getUserName(), employeeDataRequestDto.getPassword());
 
@@ -134,10 +132,7 @@ public class EmployeeProductController {
 					.findbyCompanyDetails(employeeDataRequestDto.getCompanyId());
 
 			EmployeeDetailsUtil.mappingEmployeeDataResponse(employeeDetailsList, employeeDataResponseDto);
-		} else {
-			throw new ResponseStatusException(HttpStatus.FORBIDDEN);
-		}
-
+		
 		return employeeDataResponseDto;
 
 	}
