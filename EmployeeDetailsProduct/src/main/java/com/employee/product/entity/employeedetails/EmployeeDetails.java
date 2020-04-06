@@ -49,7 +49,7 @@ public class EmployeeDetails {
 	@Column(name = "contact_number")
 	private String contactNumber;
 	@Column(name = "date_of_birth")
-	private Date dateOfBirth;
+	private java.sql.Date dateOfBirth;
 	@Column(name = "updated_at", nullable = false, insertable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
 	private Date updated_at;
 	@Column(name = "job_role")

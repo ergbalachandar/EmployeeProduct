@@ -89,6 +89,7 @@ public class EmployeeDetailsUtil {
 				employeeFamilyDetailsResponseDto.setFirstName(employeeFamilyDetails.getFirstName());
 				employeeFamilyDetailsResponseDto.setLastName(employeeFamilyDetails.getLastName());
 				employeeFamilyDetailsResponseDto.setRelation(employeeFamilyDetails.getRelation());
+				employeeFamilyDetailsResponseDto.setId(employeeFamilyDetails.getId());
 
 				employeeFamilyDetailsResponseDtoList.add(employeeFamilyDetailsResponseDto);
 

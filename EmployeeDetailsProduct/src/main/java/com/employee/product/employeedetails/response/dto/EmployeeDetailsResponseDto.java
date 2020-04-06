@@ -1,6 +1,6 @@
 package com.employee.product.employeedetails.response.dto;
 
-import java.util.Date;
+import java.sql.Date;
 import java.util.List;
 
 

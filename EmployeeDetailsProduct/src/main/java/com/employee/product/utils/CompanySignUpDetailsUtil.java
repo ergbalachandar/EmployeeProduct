@@ -33,7 +33,7 @@ public class CompanySignUpDetailsUtil {
 		users.setCreatedAt(new Date());
 		companyDetailsMapping(companyDetailsDto, companyDetails);
 
-		// users.setCompanyDetails(companyDetails);
+		 users.setCompanyDetails(companyDetails);
 
 		employeeDetailsMapping(users, companyDetailsDto, companyDetails);
 
@@ -105,7 +105,7 @@ public class CompanySignUpDetailsUtil {
 	 * }
 	 */
 
-	public static void sendMessage(MailSender mailSender,String emailId, String companyName, Users users) {
+     public static void sendMessage(MailSender mailSender,String emailId, String companyName, Users users) {
 		SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
 
 		StringBuilder result = new StringBuilder();
@@ -127,7 +127,7 @@ public class CompanySignUpDetailsUtil {
 
 		mailSender.send(simpleMailMessage);
 
-	}
+	} 
 	
 	
 	
