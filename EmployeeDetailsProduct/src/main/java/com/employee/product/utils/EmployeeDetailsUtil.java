@@ -102,6 +102,7 @@ public class EmployeeDetailsUtil {
 			Set<EmployeePaySlipDetails> employeePaySlipDetailsList = employeeDetails.getEmployeePaySlipDetails();
 
 			List<EmployeePaySlipDocumentDetailsResponseDto> employeePaySlipDocumentDetailsResponseDtoList = new ArrayList<EmployeePaySlipDocumentDetailsResponseDto>();
+			if(null != employeePaySlipDetailsList) {
 
 			for (EmployeePaySlipDetails employeePaySlipDetails : employeePaySlipDetailsList) {
 
@@ -111,6 +112,7 @@ public class EmployeeDetailsUtil {
 				employeePaySlipDocumentDetailsResponseDto.setDocumentNumber(employeePaySlipDetails.getPaySlipNumber());
 				employeePaySlipDocumentDetailsResponseDtoList.add(employeePaySlipDocumentDetailsResponseDto);
 
+			}
 			}
 			employeeDetailsResponseDto
 					.setEmployeePaySlipDocumentDetailsResponseDto(employeePaySlipDocumentDetailsResponseDtoList);
