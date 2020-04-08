@@ -3,16 +3,13 @@ package com.employee.product.employeedetails.response.dto;
 import java.sql.Date;
 import java.util.List;
 
-
-import com.employee.product.employeedetails.request.dto.EmployeePassportDetailsRequestDto;
-import com.employee.product.employeedetails.request.dto.EmployeeWorkPermitDetailsRequestDto;
-import com.employee.product.entity.employeedetails.EmployeePaySlipDetails;
-
 import lombok.Data;
 
 @Data
 public class EmployeeDetailsResponseDto {
 
+	private int id;
+	
 	private String firstName;
 
 	private String lastName;
