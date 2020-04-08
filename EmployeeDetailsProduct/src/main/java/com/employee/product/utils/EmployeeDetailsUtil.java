@@ -38,6 +38,7 @@ public class EmployeeDetailsUtil {
 			employeeDetailsResponseDto.setLastName(employeeDetails.getLastName());
 			employeeDetailsResponseDto.setSex(employeeDetails.getSex());
 			employeeDetailsResponseDto.setState(employeeDetails.getState());
+			employeeDetailsResponseDto.setId(employeeDetails.getId());
 
 			// Mapping PassportDetails
 			Set<EmployeePassportDetails> employeePassportDetailsList = employeeDetails.getEmployeePassportDetails();
