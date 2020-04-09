@@ -30,8 +30,7 @@ CREATE TABLE `employee` (
   `company_id` int,
   `job_role` varchar(255),
   `work_location` varchar(255),
-  `department` varchar(255),
-  ` reportingPerson`  varchar(255)
+  `department` varchar(255)
 );
 
 CREATE TABLE `workpermit_details` (
@@ -118,4 +117,6 @@ ALTER TABLE `passport_details` ADD FOREIGN KEY (`employee_id`) REFERENCES `emplo
 ALTER TABLE `family_details` ADD FOREIGN KEY (`employee_id`) REFERENCES `employee` (`id`);
 
 ALTER TABLE employee add column reporting_person varchar(255);
+
+ALTER TABLE employee add column active integer;
 
