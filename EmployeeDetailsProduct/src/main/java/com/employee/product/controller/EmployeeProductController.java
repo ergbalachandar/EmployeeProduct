@@ -52,8 +52,8 @@ public class EmployeeProductController {
 	@Autowired
 	private EmployeeDetailsInterface employeeDetailsInterface;
 
-//     @Autowired
-//	private MailSender mailSender;
+        @Autowired
+	private MailSender mailSender;
 
 	/**
 	 * Method to SignUp Company
