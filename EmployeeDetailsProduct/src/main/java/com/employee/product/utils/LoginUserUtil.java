@@ -1,21 +1,16 @@
 package com.employee.product.utils;
 
-import java.util.Iterator;
 import java.util.Optional;
-import java.util.Set;
 
-import com.employee.product.companydetails.request.dto.LoginDetailsRequestDto;
 import com.employee.product.companydetails.response.dto.LoginDetailsResponseDto;
-import com.employee.product.employeedetails.dto.EmployeeDetailsDto;
 import com.employee.product.entity.companydetails.Users;
-import com.employee.product.entity.employeedetails.EmployeeDetails;
 
 public class LoginUserUtil {
 
 	public static void validateLoginDetails(Optional<Users> optionalUsers,
 			String password) throws Exception {
-		if (!password.equals(optionalUsers.get().getPassword())) {
-			throw new Exception("You are not authorised to Login");
+		if (!password.equals(optionalUsers.get().getPassword()) & optionalUsers.get().getActive()==0) {
+			throw new Exception("You are not authorised to Login or Your profile has been deleted");
 		}
 	}
 

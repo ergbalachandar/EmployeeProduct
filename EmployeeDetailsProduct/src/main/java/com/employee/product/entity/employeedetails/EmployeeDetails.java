@@ -64,6 +64,9 @@ public class EmployeeDetails {
 	@Column(name = "reporting_person")
 	private String reportingPerson;
 	
+	@Column(name="active")
+	private int active;
+	
 	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "company_id")
 	private CompanyDetails companyDetails;

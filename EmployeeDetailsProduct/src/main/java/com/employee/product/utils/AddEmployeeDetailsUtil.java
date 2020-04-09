@@ -39,6 +39,7 @@ public class AddEmployeeDetailsUtil {
 		employeeDetails.setSex(emloyeeDetailsRequestDto.getSex());
 		employeeDetails.setState(emloyeeDetailsRequestDto.getState());
 		employeeDetails.setWorkLocation(emloyeeDetailsRequestDto.getWorkLocation());
+		employeeDetails.setActive(1);
 		if (null != emloyeeDetailsRequestDto.getId()) {
 			employeeDetails.setId(emloyeeDetailsRequestDto.getId());
 		}
