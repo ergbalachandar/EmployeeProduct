@@ -8,5 +8,9 @@ public class LoginDetailsRequestDto {
 	private String userName;
 	
 	private String password;
+	
+	private int reset;
+	
+	private String newPassword;
 
 }

@@ -52,8 +52,8 @@ public class EmployeeProductController {
 	@Autowired
 	private EmployeeDetailsInterface employeeDetailsInterface;
 
-     @Autowired
-	private MailSender mailSender;
+//     @Autowired
+//	private MailSender mailSender;
 
 	/**
 	 * Method to SignUp Company
@@ -74,7 +74,8 @@ public class EmployeeProductController {
 		CompanyDetailsResponseDto companyDetailsResponseDto = new CompanyDetailsResponseDto();
 		CompanySignUpDetailsUtil.companySignUpDetailsMapping(companyDetailsDto, users);
 		users = employeeProductService.signUpCompanyDetails(users);
-		CompanySignUpDetailsUtil.sendMessage(mailSender,companyDetailsDto.getEmailId(), companyDetailsDto.getCompanyName(), users);
+	    CompanySignUpDetailsUtil.sendMessage(mailSender,companyDetailsDto.getEmailId(),
+		companyDetailsDto.getCompanyName(), users);
 		CompanySignUpDetailsUtil.companyDetailsSignUpResponseMapping(companyDetailsResponseDto);
 		return companyDetailsResponseDto;
 	}
@@ -99,8 +100,14 @@ public class EmployeeProductController {
 		Users users = new Users();
 		Optional<Users> optionalUsers = loginValidation(loginDetailsRequestDto.getUserName(),
 				loginDetailsRequestDto.getPassword());
-		users = optionalUsers.get();
-		LoginUserUtil.mapLoginDetailsResponseDto(users, loginDetailsResponseDto);
+		if (loginDetailsRequestDto.getReset() == 0) {
+			users = optionalUsers.get();
+			LoginUserUtil.mapLoginDetailsResponseDto(users, loginDetailsResponseDto);
+		} else {
+			Users usersWithNewPassword = loginDetailsService.updatePassword(loginDetailsRequestDto.getNewPassword(),
+					loginDetailsRequestDto.getUserName());
+			LoginUserUtil.mapLoginDetailsResponseDto(usersWithNewPassword, loginDetailsResponseDto);
+		}
 		httpSession.setAttribute("userName", users.getUserName());
 
 		return loginDetailsResponseDto;
@@ -125,20 +132,23 @@ public class EmployeeProductController {
 			HttpSession httpSession) throws Exception {
 		EmployeeDataResponseDto employeeDataResponseDto = new EmployeeDataResponseDto();
 
+		Optional<Users> users = loginValidation(employeeDataRequestDto.getUserName(),
+				employeeDataRequestDto.getPassword());
 
-			loginValidation(employeeDataRequestDto.getUserName(), employeeDataRequestDto.getPassword());
+		if (!users.get().getRole().equalsIgnoreCase("Admin")) {
+			throw new Exception("You are not authorised to retrieve the list of Employees");
+		}
+		List<EmployeeDetails> employeeDetailsList = employeeProductService
+				.findbyCompanyDetails(employeeDataRequestDto.getCompanyId());
 
-			List<EmployeeDetails> employeeDetailsList = employeeProductService
-					.findbyCompanyDetails(employeeDataRequestDto.getCompanyId());
+		EmployeeDetailsUtil.mappingEmployeeDataResponse(employeeDetailsList, employeeDataResponseDto);
 
-			EmployeeDetailsUtil.mappingEmployeeDataResponse(employeeDetailsList, employeeDataResponseDto);
-		
 		return employeeDataResponseDto;
 
 	}
 
 	/**
-	 * Method to Add or Modify Employee
+	 * a Method to Add or Modify Employee
 	 * 
 	 * @param EmployeeDetailsRequestDto
 	 * @throws Exception
@@ -160,7 +170,6 @@ public class EmployeeProductController {
 		AddEmployeeDetailsUtil.mapAddEmployeeRequest(addEmployeeRequestDto, users, employeeDetails, companyDetails);
 
 		employeeDetails = employeeProductService.addOrUpdateEmployeeDetails(employeeDetails, users, companyDetails);
-		// users = employeeProductService.signUpCompanyDetails(users);
 		List<EmployeeDetails> employeeDetailsList = new ArrayList<EmployeeDetails>();
 
 		employeeDetailsList.add(employeeDetails);
