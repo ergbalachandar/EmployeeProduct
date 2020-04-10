@@ -58,6 +58,12 @@
 			<version>2.6.1</version>
 			<scope>compile</scope>
 		</dependency>
+		<!-- Dependency for PDF Generation -->
+		<dependency>
+			<groupId>com.lowagie</groupId>
+			<artifactId>itext</artifactId>
+			<version>4.2.2</version>
+		</dependency>
 
 		<!-- Email Dependency -->
 

@@ -1,5 +1,7 @@
 package com.employee.product.controller;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -7,7 +9,12 @@ import java.util.Optional;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.mail.MailSender;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,6 +39,7 @@ import com.employee.product.entity.employeedetails.EmployeeDetails;
 import com.employee.product.utils.AddEmployeeDetailsUtil;
 import com.employee.product.utils.CompanySignUpDetailsUtil;
 import com.employee.product.utils.EmployeeDetailsUtil;
+import com.employee.product.utils.GeneratePdfReportUtil;
 import com.employee.product.utils.LoginUserUtil;
 
 import io.swagger.annotations.ApiOperation;
@@ -52,8 +60,9 @@ public class EmployeeProductController {
 	@Autowired
 	private EmployeeDetailsInterface employeeDetailsInterface;
 
-        @Autowired
-	private MailSender mailSender;
+	/*
+	 * @Autowired private MailSender mailSender;
+	 */
 
 	/**
 	 * Method to SignUp Company
@@ -74,8 +83,10 @@ public class EmployeeProductController {
 		CompanyDetailsResponseDto companyDetailsResponseDto = new CompanyDetailsResponseDto();
 		CompanySignUpDetailsUtil.companySignUpDetailsMapping(companyDetailsDto, users);
 		users = employeeProductService.signUpCompanyDetails(users);
-	    CompanySignUpDetailsUtil.sendMessage(mailSender,companyDetailsDto.getEmailId(),
-	    		companyDetailsDto.getCompanyName(), users);
+
+		CompanySignUpDetailsUtil.sendMessage(mailSender, companyDetailsDto.getEmailId(),
+				companyDetailsDto.getCompanyName(), users);
+
 		CompanySignUpDetailsUtil.companyDetailsSignUpResponseMapping(companyDetailsResponseDto);
 		return companyDetailsResponseDto;
 	}
@@ -178,6 +189,33 @@ public class EmployeeProductController {
 		EmployeeDetailsUtil.mappingEmployeeDataResponse(employeeDetailsList, employeeDataResponseDto);
 
 		return employeeDataResponseDto;
+
+	}
+
+	@RequestMapping(value = "/pdfreport/{companyId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_PDF_VALUE)
+	@ApiOperation(value = "Generate EmployeeReport PDF")
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "Successfully GeneratedPDF"),
+			@ApiResponse(code = 401, message = "You are not authorized to Log In"),
+			@ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
+			@ApiResponse(code = 404, message = "The resource you were trying to reach is not found") })
+	public ResponseEntity<InputStreamResource> employeePdfReport(@PathVariable String companyId) throws Exception {
+
+		/*
+		 * Optional<Users> users = loginValidation(employeeDataRequestDto.getUserName(),
+		 * employeeDataRequestDto.getPassword());
+		 * 
+		 * if (!users.get().getRole().equalsIgnoreCase("Admin")) { throw new
+		 * Exception("You are not authorised to retrieve the list of Employees"); }
+		 */
+		List<EmployeeDetails> employeeDetailsList = employeeProductService.findbyCompanyDetails(companyId);
+
+		ByteArrayInputStream bis = GeneratePdfReportUtil.employeeReport(employeeDetailsList);
+
+		HttpHeaders headers = new HttpHeaders();
+		headers.add("Content-Disposition", "inline; filename=EmployeeReport.pdf");
+
+		return ResponseEntity.ok().headers(headers).contentType(MediaType.APPLICATION_PDF)
+				.body(new InputStreamResource(bis));
 
 	}
 

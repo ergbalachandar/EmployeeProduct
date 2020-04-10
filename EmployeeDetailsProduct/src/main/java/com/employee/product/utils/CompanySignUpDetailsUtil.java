@@ -71,6 +71,7 @@ public class CompanySignUpDetailsUtil {
 		employeeDetails.setContactNumber(companyDetailsDto.getContactNumber());
 
 		employeeDetails.setCompanyDetails(companyDetails);
+		employeeDetails.setActive(1);
 		employeeDetailsSet.add(employeeDetails);
 
 		users.setEmployeeDetails(employeeDetailsSet);
@@ -105,7 +106,7 @@ public class CompanySignUpDetailsUtil {
 	 * }
 	 */
 
-     public static void sendMessage(MailSender mailSender,String emailId, String companyName, Users users) {
+	 public static void sendMessage(MailSender mailSender,String emailId, String companyName, Users users) {
 		SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
 
 		StringBuilder result = new StringBuilder();
