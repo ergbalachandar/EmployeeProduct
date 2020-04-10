@@ -9,7 +9,7 @@ public class LoginUserUtil {
 
 	public static void validateLoginDetails(Optional<Users> optionalUsers,
 			String password) throws Exception {
-		if (!password.equals(optionalUsers.get().getPassword()) & optionalUsers.get().getActive()==0) {
+		if (!password.equals(optionalUsers.get().getPassword()) || optionalUsers.get().getActive()==0) {
 			throw new Exception("You are not authorised to Login or Your profile has been deleted");
 		}
 	}
