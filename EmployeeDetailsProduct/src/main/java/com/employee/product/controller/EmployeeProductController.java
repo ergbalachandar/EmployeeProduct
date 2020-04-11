@@ -57,10 +57,8 @@ public class EmployeeProductController {
 	@Autowired
 	private EmployeeDetailsInterface employeeDetailsInterface;
 
-	
 	  @Autowired 
 	  private MailSender mailSender;
-	 
 
 	/**
 	 * Method to SignUp Company
@@ -76,14 +74,13 @@ public class EmployeeProductController {
 	@ResponseBody
 	public CompanyDetailsResponseDto signUpCompanyDetails(@RequestBody CompanyDetailsRequestDto companyDetailsDto,
 			HttpSession httpSession) {
-		System.out.println("Session Value------>" + httpSession.toString());
 		Users users = new Users();
 		CompanyDetailsResponseDto companyDetailsResponseDto = new CompanyDetailsResponseDto();
 		CompanySignUpDetailsUtil.companySignUpDetailsMapping(companyDetailsDto, users);
 		users = employeeProductService.signUpCompanyDetails(users);
 
 		CompanySignUpDetailsUtil.sendMessage(mailSender, companyDetailsDto.getEmailId(),
-				companyDetailsDto.getCompanyName(), users);
+			companyDetailsDto.getCompanyName(), users);
 
 		CompanySignUpDetailsUtil.companyDetailsSignUpResponseMapping(companyDetailsResponseDto);
 		return companyDetailsResponseDto;
@@ -189,23 +186,31 @@ public class EmployeeProductController {
 		return employeeDataResponseDto;
 
 	}
-
-	@RequestMapping(value = "/pdfreport/{companyId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_PDF_VALUE)
+	
+	/**
+	 * a Method to Generate PDF
+	 * 
+	 * @param EmployeeDetailsRequestDto
+	 * @throws Exception
+	 */
+    @RequestMapping(value = "/pdfReport", method = RequestMethod.POST, produces = MediaType.APPLICATION_PDF_VALUE)
 	@ApiOperation(value = "Generate EmployeeReport PDF")
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "Successfully GeneratedPDF"),
 			@ApiResponse(code = 401, message = "You are not authorized to Log In"),
 			@ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
 			@ApiResponse(code = 404, message = "The resource you were trying to reach is not found") })
-	public ResponseEntity<InputStreamResource> employeePdfReport(@PathVariable String companyId) throws Exception {
+	public ResponseEntity<InputStreamResource> employeePdfReport(
+			@RequestBody EmployeeDataRequestDto employeeDataRequestDto) throws Exception {
 
-		/*
-		 * Optional<Users> users = loginValidation(employeeDataRequestDto.getUserName(),
-		 * employeeDataRequestDto.getPassword());
-		 * 
-		 * if (!users.get().getRole().equalsIgnoreCase("Admin")) { throw new
-		 * Exception("You are not authorised to retrieve the list of Employees"); }
-		 */
-		List<EmployeeDetails> employeeDetailsList = employeeProductService.findbyCompanyDetails(companyId);
+		Optional<Users> users = loginValidation(employeeDataRequestDto.getUserName(),
+				employeeDataRequestDto.getPassword());
+
+		if (!users.get().getRole().equalsIgnoreCase("Admin")) {
+			throw new Exception("You are not authorised to retrieve the list of Employees");
+		}
+
+		List<EmployeeDetails> employeeDetailsList = employeeProductService
+				.findbyCompanyDetails(employeeDataRequestDto.getCompanyId());
 
 		ByteArrayInputStream bis = GeneratePdfReportUtil.employeeReport(employeeDetailsList);
 
