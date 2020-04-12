@@ -1,15 +1,11 @@
 package com.employee.product.utils;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
-import org.aspectj.apache.bcel.classfile.Module.Uses;
-
 import com.employee.product.companydetails.response.dto.LoginDetailsResponseDto;
-import com.employee.product.employeedetails.dto.EmployeeDetailsDto;
 import com.employee.product.employeedetails.response.dto.EmployeeDataResponseDto;
 import com.employee.product.entity.companydetails.Users;
 import com.employee.product.entity.employeedetails.EmployeeDetails;
