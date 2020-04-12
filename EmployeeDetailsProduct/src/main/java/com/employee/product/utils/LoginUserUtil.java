@@ -1,9 +1,18 @@
 package com.employee.product.utils;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+
+import org.aspectj.apache.bcel.classfile.Module.Uses;
 
 import com.employee.product.companydetails.response.dto.LoginDetailsResponseDto;
+import com.employee.product.employeedetails.dto.EmployeeDetailsDto;
+import com.employee.product.employeedetails.response.dto.EmployeeDataResponseDto;
 import com.employee.product.entity.companydetails.Users;
+import com.employee.product.entity.employeedetails.EmployeeDetails;
 
 public class LoginUserUtil {
 
@@ -24,6 +33,15 @@ public class LoginUserUtil {
 		loginDetailsResponseDto.setUserName(users.getUserName());
 		loginDetailsResponseDto.setCompanyId(String.valueOf(users.getCompanyDetails().getId()));
 		loginDetailsResponseDto.setCompanyName(users.getCompanyDetails().getCompanyName());
+		
+		EmployeeDataResponseDto employeeDataResponseDto = new EmployeeDataResponseDto();
+		List<EmployeeDetails> employeeDetailsList = new ArrayList<EmployeeDetails>();
+		Set<EmployeeDetails> employeeDetailsSet = users.getEmployeeDetails();
+		for(EmployeeDetails employeeDetails : employeeDetailsSet) {
+			employeeDetailsList.add(employeeDetails);
+		}
+		EmployeeDetailsUtil.mappingEmployeeDataResponse(employeeDetailsList, employeeDataResponseDto);
+		loginDetailsResponseDto.setEmployeeDataResponseDto(employeeDataResponseDto);
 
 		/*Set<EmployeeDetails> employeeDetailsSet = users.getEmployeeDetails();
 		EmployeeDetailsDto employeeDetailsDto = new EmployeeDetailsDto();
@@ -42,7 +60,7 @@ public class LoginUserUtil {
 			employeeDetailsDto.setSex(employeeDetails.getSex());
 			employeeDetailsDto.setState(employeeDetails.getState());
 
-		}
+		} 
 		loginDetailsResponseDto.setEmployeeDetailsDto(employeeDetailsDto); */
 
 	}
