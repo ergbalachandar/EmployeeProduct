@@ -29,44 +29,46 @@ public class EmployeeDetailsUtil {
 
 		for (EmployeeDetails employeeDetails : employeeDetailsList) {
 			if (employeeDetails.getActive() != 0) {
-
 				EmployeeDetailsResponseDto employeeDetailsResponseDto = new EmployeeDetailsResponseDto();
-
-				employeeDetailsResponseDto.setAddressLine1(employeeDetails.getAddressLine1());
-				employeeDetailsResponseDto.setAddressLine2(employeeDetails.getAddressLine2());
-				employeeDetailsResponseDto.setCity(employeeDetails.getCity());
-				employeeDetailsResponseDto.setContactNumber(employeeDetails.getContactNumber());
-				employeeDetailsResponseDto.setCountry(employeeDetails.getCountry());
-				employeeDetailsResponseDto.setDateOfBirth(employeeDetails.getDateOfBirth());
-				employeeDetailsResponseDto.setEmailId(employeeDetails.getEmailId());
-				employeeDetailsResponseDto.setFirstName(employeeDetails.getFirstName());
-				employeeDetailsResponseDto.setLastName(employeeDetails.getLastName());
-				employeeDetailsResponseDto.setSex(employeeDetails.getSex());
-				employeeDetailsResponseDto.setState(employeeDetails.getState());
-				employeeDetailsResponseDto.setId(employeeDetails.getId());
-
-				// Mapping PassportDetails
-				employeeDetailsResponseDto.setEmployeePassportDetailResponseDto(
-						mapPassportDetails(employeeDetails.getEmployeePassportDetails()));
-
-				// Mapping workPermit Details
-				employeeDetailsResponseDto.setEmployeeWorkPermitDetailsResponseDto(
-						mapWorkPermitDetails(employeeDetails.getEmployeeWorkPermitDetails()));
-
-				// Mapping Family Details
-				employeeDetailsResponseDto.setEmployeeFamilyDetailsResponseDto(
-						mapFamilyDetails(employeeDetails.getEmployeeFamilyDetails()));
-
-				// Mapping Payslip Details
-				employeeDetailsResponseDto.setEmployeePaySlipDocumentDetailsResponseDto(
-						mapPaySlipDetails(employeeDetails.getEmployeePaySlipDetails()));
-
+				mapEmployeeDetails(employeeDetailsResponseDto, employeeDetails);
 				employeeDetailsResponseDtoList.add(employeeDetailsResponseDto);
 			}
 		}
 
 		employeeDataResponseDto.setEmployeeDetailsResponseDto(employeeDetailsResponseDtoList);
 
+	}
+	
+	public static void mapEmployeeDetails(EmployeeDetailsResponseDto employeeDetailsResponseDto, EmployeeDetails employeeDetails) {
+		
+		employeeDetailsResponseDto.setAddressLine1(employeeDetails.getAddressLine1());
+		employeeDetailsResponseDto.setAddressLine2(employeeDetails.getAddressLine2());
+		employeeDetailsResponseDto.setCity(employeeDetails.getCity());
+		employeeDetailsResponseDto.setContactNumber(employeeDetails.getContactNumber());
+		employeeDetailsResponseDto.setCountry(employeeDetails.getCountry());
+		employeeDetailsResponseDto.setDateOfBirth(employeeDetails.getDateOfBirth());
+		employeeDetailsResponseDto.setEmailId(employeeDetails.getEmailId());
+		employeeDetailsResponseDto.setFirstName(employeeDetails.getFirstName());
+		employeeDetailsResponseDto.setLastName(employeeDetails.getLastName());
+		employeeDetailsResponseDto.setSex(employeeDetails.getSex());
+		employeeDetailsResponseDto.setState(employeeDetails.getState());
+		employeeDetailsResponseDto.setId(employeeDetails.getId());
+
+		// Mapping PassportDetails
+		employeeDetailsResponseDto.setEmployeePassportDetailResponseDto(
+				mapPassportDetails(employeeDetails.getEmployeePassportDetails()));
+
+		// Mapping workPermit Details
+		employeeDetailsResponseDto.setEmployeeWorkPermitDetailsResponseDto(
+				mapWorkPermitDetails(employeeDetails.getEmployeeWorkPermitDetails()));
+
+		// Mapping Family Details
+		employeeDetailsResponseDto.setEmployeeFamilyDetailsResponseDto(
+				mapFamilyDetails(employeeDetails.getEmployeeFamilyDetails()));
+
+		// Mapping Payslip Details
+		employeeDetailsResponseDto.setEmployeePaySlipDocumentDetailsResponseDto(
+				mapPaySlipDetails(employeeDetails.getEmployeePaySlipDetails()));
 	}
 
 	/*

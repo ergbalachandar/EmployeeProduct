@@ -30,6 +30,7 @@ import com.employee.product.dao.services.LoginDetailsService;
 import com.employee.product.employeedetails.request.dto.AddEmployeeRequestDto;
 import com.employee.product.employeedetails.request.dto.EmployeeDataRequestDto;
 import com.employee.product.employeedetails.response.dto.EmployeeDataResponseDto;
+import com.employee.product.employeedetails.response.dto.EmployeeDetailsResponseDto;
 import com.employee.product.entity.companydetails.CompanyDetails;
 import com.employee.product.entity.companydetails.Users;
 import com.employee.product.entity.employeedetails.EmployeeDetails;
@@ -57,8 +58,8 @@ public class EmployeeProductController {
 	@Autowired
 	private EmployeeDetailsInterface employeeDetailsInterface;
 
-	  @Autowired 
-	  private MailSender mailSender;
+	@Autowired 
+	private MailSender mailSender;
 
 	/**
 	 * Method to SignUp Company
@@ -80,7 +81,7 @@ public class EmployeeProductController {
 		users = employeeProductService.signUpCompanyDetails(users);
 
 		CompanySignUpDetailsUtil.sendMessage(mailSender, companyDetailsDto.getEmailId(),
-			companyDetailsDto.getCompanyName(), users);
+		companyDetailsDto.getCompanyName(), users);
 
 		CompanySignUpDetailsUtil.companyDetailsSignUpResponseMapping(companyDetailsResponseDto);
 		return companyDetailsResponseDto;
@@ -167,7 +168,7 @@ public class EmployeeProductController {
 			@ApiResponse(code = 404, message = "The resource you were trying to reach is not found") })
 	@ResponseBody
 
-	public EmployeeDataResponseDto addOrUpdateEmployeeList(@RequestBody AddEmployeeRequestDto addEmployeeRequestDto) {
+	public EmployeeDetailsResponseDto addOrUpdateEmployeeList(@RequestBody AddEmployeeRequestDto addEmployeeRequestDto) {
 
 		Users users = new Users();
 		EmployeeDetails employeeDetails = new EmployeeDetails();
@@ -176,14 +177,10 @@ public class EmployeeProductController {
 		AddEmployeeDetailsUtil.mapAddEmployeeRequest(addEmployeeRequestDto, users, employeeDetails, companyDetails);
 
 		employeeDetails = employeeProductService.addOrUpdateEmployeeDetails(employeeDetails, users, companyDetails);
-		List<EmployeeDetails> employeeDetailsList = new ArrayList<EmployeeDetails>();
+		EmployeeDetailsResponseDto employeeDetailsResponseDto = new EmployeeDetailsResponseDto();
+		EmployeeDetailsUtil.mapEmployeeDetails(employeeDetailsResponseDto, employeeDetails);
 
-		employeeDetailsList.add(employeeDetails);
-
-		EmployeeDataResponseDto employeeDataResponseDto = new EmployeeDataResponseDto();
-		EmployeeDetailsUtil.mappingEmployeeDataResponse(employeeDetailsList, employeeDataResponseDto);
-
-		return employeeDataResponseDto;
+		return employeeDetailsResponseDto;
 
 	}
 	
