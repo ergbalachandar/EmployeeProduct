@@ -257,7 +257,7 @@ public class EmployeeProductController {
 			throw new Exception("You are not authorised to Delete the employee");
 		}
 
-		employeeProductService.findByUserName(deleteEmployeeRequestDto.getUserName());
+		employeeProductService.deleteEmployee(deleteEmployeeRequestDto.getUserName());
 		DeleteEmployeeResponseUtil.mapResponseDeleteEmployeeResponse(deleteEmployeeResponseDto);
 
 		return deleteEmployeeResponseDto;

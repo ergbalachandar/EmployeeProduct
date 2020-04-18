@@ -64,7 +64,7 @@ public class EmployeeProductService {
 	}
 
 	@Transactional
-	public void findByUserName(String userName) {
+	public void deleteEmployee(String userName) {
 
 		Users users = entity.find(Users.class, userName);
 		users.setActive(0);
