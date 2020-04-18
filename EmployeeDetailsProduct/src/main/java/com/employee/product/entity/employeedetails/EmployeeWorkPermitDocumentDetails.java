@@ -1,11 +1,13 @@
 package com.employee.product.entity.employeedetails;
 
-import java.sql.Date;
+
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
 import javax.persistence.MapsId;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
@@ -21,7 +23,7 @@ public class EmployeeWorkPermitDocumentDetails {
 	@Column(name = "workpermit_number")
 	private String workPermitNumber;
 	
-	@OneToOne
+	@OneToOne (fetch = FetchType.LAZY)
     @MapsId // This is used to map the column employee id as both PK and FK
     @JoinColumn(name = "workpermit_number")
 	private EmployeeWorkPermitDetails workpermit_number;
@@ -29,8 +31,11 @@ public class EmployeeWorkPermitDocumentDetails {
 	@Column(name = "document_name")
 	private String documentName;
 	
+	@Lob
 	@Column(name = "document_data")
-	private String documentData;
+    private byte[] documentData;
+	
+	
 	
 	
 

@@ -16,6 +16,12 @@ import com.employee.product.dao.interfaces.EmployeeDetailsInterface;
 import com.employee.product.entity.companydetails.CompanyDetails;
 import com.employee.product.entity.companydetails.Users;
 import com.employee.product.entity.employeedetails.EmployeeDetails;
+import com.employee.product.entity.employeedetails.EmployeePassportDetails;
+import com.employee.product.entity.employeedetails.EmployeePassportDocumentDetails;
+import com.employee.product.entity.employeedetails.EmployeePaySlipDetails;
+import com.employee.product.entity.employeedetails.EmployeePaySlipDocumentDetails;
+import com.employee.product.entity.employeedetails.EmployeeWorkPermitDetails;
+import com.employee.product.entity.employeedetails.EmployeeWorkPermitDocumentDetails;
 
 @Service
 public class EmployeeProductService {
@@ -57,9 +63,17 @@ public class EmployeeProductService {
 
 	}
 
-	public Optional<Users> findByUserName(String userName) {
+	@Transactional
+	public void findByUserName(String userName) {
 
-		return companySignupDetailsInterface.findById(userName);
+		Users users = entity.find(Users.class, userName);
+		users.setActive(0);
+		Set<EmployeeDetails> employeeDetailsSet = users.getEmployeeDetails();
+		for (EmployeeDetails employeeDetails : employeeDetailsSet) {
+			employeeDetails.setActive(0);
+		}
+		System.out.println(users.getEmployeeDetails());
+
 	}
 
 	@Transactional

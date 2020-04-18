@@ -44,7 +44,7 @@ CREATE TABLE `workpermit_details` (
 CREATE TABLE `workpermit_document_details` (
   `workpermit_number` varchar(255) PRIMARY KEY,
   `document_name` varchar(255),
-  `document_data` varchar(255)
+  `document_data` longblob
 );
 
 CREATE TABLE `payslip_details` (
@@ -55,7 +55,8 @@ CREATE TABLE `payslip_details` (
 
 CREATE TABLE `payslip_document_details` (
   `payslip_number` varchar(255) PRIMARY KEY,
-  `document_data` varchar(255)
+  `document_name` varchar(255),
+  `document_data` longblob
 );
 
 CREATE TABLE `passport_details` (
@@ -65,6 +66,12 @@ CREATE TABLE `passport_details` (
   `end_date` date,
   `issue_place` varchar(255),
   `validity` int
+);
+
+CREATE TABLE `passport_document_details` (
+  `passport_number` varchar(255) PRIMARY KEY,
+  `document_name` varchar(255),
+  `document_data` longblob
 );
 
 CREATE TABLE `family_details` (
@@ -114,9 +121,12 @@ ALTER TABLE `payslip_document_details` ADD FOREIGN KEY (`payslip_number`) REFERE
 
 ALTER TABLE `passport_details` ADD FOREIGN KEY (`employee_id`) REFERENCES `employee` (`id`);
 
+ALTER TABLE `passport_document_details` ADD FOREIGN KEY (`passport_number`) REFERENCES `passport_details` (`passport_number`);
+
 ALTER TABLE `family_details` ADD FOREIGN KEY (`employee_id`) REFERENCES `employee` (`id`);
 
 ALTER TABLE employee add column reporting_person varchar(255);
 
 ALTER TABLE employee add column active integer;
+
 
