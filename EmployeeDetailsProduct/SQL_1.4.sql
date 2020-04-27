@@ -129,4 +129,8 @@ ALTER TABLE employee add column reporting_person varchar(255);
 
 ALTER TABLE employee add column active integer;
 
+DROP INDEX email_id ON employee;
+
+ALTER TABLE employee ADD CONSTRAINT email_id UNIQUE(email_id, active);
+
 
