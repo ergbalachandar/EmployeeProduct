@@ -61,9 +61,10 @@ public class UploadDocumentUtil {
 		documentManagementService.addPassportDocument(employeePassportDocumentDetails);
 
 	}
-	
-	public static void mapResponseUploadDocumentResponseDto(UploadDocumentDetailsResponseDto uploadDocumentDetailsResponseDto) {
-		
+
+	public static void mapResponseUploadDocumentResponseDto(
+			UploadDocumentDetailsResponseDto uploadDocumentDetailsResponseDto) {
+
 		uploadDocumentDetailsResponseDto.setMessage("Upload is Successful");
 	}
 
