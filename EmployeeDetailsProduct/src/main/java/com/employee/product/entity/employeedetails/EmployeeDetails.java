@@ -12,11 +12,10 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import com.employee.product.employeedetails.common.Sex;
 import com.employee.product.entity.companydetails.CompanyDetails;
-import com.employee.product.entity.companydetails.Users;
 
 import lombok.Data;
 
@@ -35,7 +34,7 @@ public class EmployeeDetails {
 	@Column(name = "email_id")
 	private String emailId;
 	@Column(name = "sex")
-	private String sex;
+	private Sex sex;
 	@Column(name = "address1")
 	private String addressLine1;
 	@Column(name = "address2")

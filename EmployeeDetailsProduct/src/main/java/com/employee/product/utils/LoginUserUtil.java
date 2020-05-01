@@ -31,7 +31,7 @@ public class LoginUserUtil {
 
 			EmployeeDetailsUtil.mapEmployeeDetails(employeeDetailsResponseDto, employeeDetails);
 		}
-		loginDetailsResponseDto.setEmployeeDetailsResponseDto(employeeDetailsResponseDto);
+		loginDetailsResponseDto.setEmployeeDetails(employeeDetailsResponseDto);
 
 		/*
 		 * Set<EmployeeDetails> employeeDetailsSet = users.getEmployeeDetails();

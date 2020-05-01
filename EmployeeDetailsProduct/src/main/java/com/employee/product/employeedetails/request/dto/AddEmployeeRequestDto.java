@@ -9,7 +9,7 @@ public class AddEmployeeRequestDto {
 	
 	private int companyId;
 	
-	private EmployeeDetailsRequestDto employeeDetailsRequestDto;
+	private EmployeeDetailsRequestDto employeeDetails;
 	
 	
 	

@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.employee.product.employeedetails.common.Sex;
 import com.employee.product.employeedetails.request.dto.AddEmployeeRequestDto;
 import com.employee.product.employeedetails.request.dto.EmployeeDetailsRequestDto;
 import com.employee.product.employeedetails.request.dto.EmployeeFamilyDetailsRequestDto;
@@ -48,7 +49,7 @@ public class AddEmployeeDetailsUtil {
 		Set<EmployeeWorkPermitDetails> employeeWorkPermitDetailsSet = new HashSet<EmployeeWorkPermitDetails>();
 
 		List<EmployeeWorkPermitDetailsRequestDto> employeeWorkPermitDetailsRequestDtoList = emloyeeDetailsRequestDto
-				.getEmployeeWorkPermitDetailsRequestDto();
+				.getWorkPermitDetails();
 		if (null != employeeWorkPermitDetailsRequestDtoList) {
 			for (EmployeeWorkPermitDetailsRequestDto employeeWorPermitDetailsRequestDto : employeeWorkPermitDetailsRequestDtoList) {
 
@@ -69,7 +70,7 @@ public class AddEmployeeDetailsUtil {
 		Set<EmployeeFamilyDetails> employeeFamilyDetailsSet = new HashSet<EmployeeFamilyDetails>();
 
 		List<EmployeeFamilyDetailsRequestDto> employeeFamilyDetailsRequestDtoList = emloyeeDetailsRequestDto
-				.getEmployeeFamilyDetailsRequestDto();
+				.getFamilyDetails();
 		if (employeeFamilyDetailsRequestDtoList != null)
 			for (EmployeeFamilyDetailsRequestDto employeeFamilyDetailsRequestDto : employeeFamilyDetailsRequestDtoList) {
 				EmployeeFamilyDetails employeeFamilyDetails = new EmployeeFamilyDetails();
@@ -90,7 +91,7 @@ public class AddEmployeeDetailsUtil {
 		Set<EmployeePassportDetails> employeePassportDetailsSet = new HashSet<EmployeePassportDetails>();
 
 		List<EmployeePassportDetailsRequestDto> employeePassportDetailsRequestDtoList = emloyeeDetailsRequestDto
-				.getEmployeePassportDetailRequestDto();
+				.getPassportDetails();
 
 		if (null != employeePassportDetailsRequestDtoList) {
 			for (EmployeePassportDetailsRequestDto employeePassportDetailsRequestDto : employeePassportDetailsRequestDtoList) {
@@ -112,27 +113,25 @@ public class AddEmployeeDetailsUtil {
 
 		Set<EmployeePaySlipDetails> employeePaySlipDetailsSet = new HashSet<EmployeePaySlipDetails>();
 
-		List<EmployeePaySlipDetailsRequestDto> employeePaySlipDetailsRequestDtoList = emloyeeDetailsRequestDto
-				.getEmployeePaySlipDetailsRequestDto();
-
-		if (null != employeePaySlipDetailsRequestDtoList) {
-			for (EmployeePaySlipDetailsRequestDto employeePaySlipDetailsRequestDto : employeePaySlipDetailsRequestDtoList) {
-				EmployeePaySlipDetails employeePaySlipDetails = new EmployeePaySlipDetails();
-
-				employeePaySlipDetails.setPaySlipMonth(employeePaySlipDetailsRequestDto.getPaySlipMonth());
-				employeePaySlipDetails.setPaySlipNumber(employeePaySlipDetailsRequestDto.getPaySlipNumber());
-				employeePaySlipDetailsSet.add(employeePaySlipDetails);
-			}
-
-			employeeDetails.setEmployeePaySlipDetails(employeePaySlipDetailsSet);
-		}
-
+		/*
+		 * List<EmployeePaySlipDetailsRequestDto> employeePaySlipDetailsRequestDtoList =
+		 * emloyeeDetailsRequestDto .getEmployeePaySlipDetailsRequestDto(); if (null !=
+		 * employeePaySlipDetailsRequestDtoList) { for (EmployeePaySlipDetailsRequestDto
+		 * employeePaySlipDetailsRequestDto : employeePaySlipDetailsRequestDtoList) {
+		 * EmployeePaySlipDetails employeePaySlipDetails = new EmployeePaySlipDetails();
+		 * employeePaySlipDetails.setPaySlipMonth(employeePaySlipDetailsRequestDto.
+		 * getPaySlipMonth());
+		 * employeePaySlipDetails.setPaySlipNumber(employeePaySlipDetailsRequestDto.
+		 * getPaySlipNumber()); employeePaySlipDetailsSet.add(employeePaySlipDetails); }
+		 * 
+		 * employeeDetails.setEmployeePaySlipDetails(employeePaySlipDetailsSet); }
+		 */
 	}
 
 	public static void mapAddEmployeeRequest(AddEmployeeRequestDto addEmployeeRequestDto, Users users,
 			EmployeeDetails employeeDetails, CompanyDetails companyDetails) {
 
-		EmployeeDetailsRequestDto emloyeeDetailsRequestDto = addEmployeeRequestDto.getEmployeeDetailsRequestDto();
+		EmployeeDetailsRequestDto emloyeeDetailsRequestDto = addEmployeeRequestDto.getEmployeeDetails();
 
 		users.setActive(1);
 		users.setCountry(emloyeeDetailsRequestDto.getCountry());
@@ -150,12 +149,12 @@ public class AddEmployeeDetailsUtil {
 //		CompanyDetails companyDetails = new CompanyDetails();
 //		companyDetails.setId(Integer.valueOf(addEmployeeRequestDto.getCompanyId()));
 //		employeeDetails.setCompanyDetails(companyDetails);
-		
-        employeeDetails.setCompanyDetails(companyDetails);
+
+		employeeDetails.setCompanyDetails(companyDetails);
 		employeeDetailsSet.add(employeeDetails);
 
 		// users.setEmployeeDetails(employeeDetailsSet);
 
-		//users.setCompanyDetails(companyDetails);
+		// users.setCompanyDetails(companyDetails);
 	}
 }

@@ -16,8 +16,4 @@ public class EmployeeWorkPermitDetailsRequestDto {
 	
 	private int validity;
 	
-	private String documentName;
-	
-	private String documentData;
-
 }

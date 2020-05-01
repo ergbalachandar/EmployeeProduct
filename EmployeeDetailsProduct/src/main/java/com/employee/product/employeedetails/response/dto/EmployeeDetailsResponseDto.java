@@ -3,6 +3,8 @@ package com.employee.product.employeedetails.response.dto;
 import java.sql.Date;
 import java.util.List;
 
+import com.employee.product.employeedetails.common.Sex;
+
 import lombok.Data;
 
 @Data
@@ -16,7 +18,7 @@ public class EmployeeDetailsResponseDto {
 
 	private String emailId;
 
-	private String sex;
+	private Sex sex;
 
 	private String addressLine1;
 
@@ -32,12 +34,22 @@ public class EmployeeDetailsResponseDto {
 
 	private Date dateOfBirth;
 
-	private List<EmployeeWorkPermitDetailsResponseDto> employeeWorkPermitDetailsResponseDto;
+	private String department;
+	
+	private String jobRole;
+	
+	private String reportingPerson;
+	
+	private String workLocation;
+	
+	private List<EmployeeWorkPermitDetailsResponseDto> workPermitDetails;
 
-	private List<EmployeePassportDetailsResponseDto> employeePassportDetailResponseDto;
+	private List<EmployeePassportDetailsResponseDto> passportDetails;
 
-	private List<EmployeeFamilyDetailsResponseDto> employeeFamilyDetailsResponseDto;
+	private List<EmployeeFamilyDetailsResponseDto> familyDetails;
 
-	private List<EmployeePaySlipDocumentDetailsResponseDto> employeePaySlipDocumentDetailsResponseDto;
-
+	/*
+	 * private List<EmployeePaySlipDocumentDetailsResponseDto>
+	 * employeePaySlipDocumentDetailsResponseDto;
+	 */	 
 }
