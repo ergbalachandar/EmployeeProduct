@@ -30,7 +30,7 @@ public class EmployeeDetailsUtil {
 		for (EmployeeDetails employeeDetails : employeeDetailsList) {
 			if (employeeDetails.getActive() != 0) {
 				EmployeeDetailsResponseDto employeeDetailsResponseDto = new EmployeeDetailsResponseDto();
-				mapEmployeeDetails(employeeDetailsResponseDto, employeeDetails);
+				mapEmployeeDetails(employeeDetailsResponseDto, employeeDetails, true);
 				employeeDetailsResponseDtoList.add(employeeDetailsResponseDto);
 			}
 		}
@@ -38,9 +38,10 @@ public class EmployeeDetailsUtil {
 		employeeDataResponseDto.setEmployeeDetailsResponseDto(employeeDetailsResponseDtoList);
 
 	}
-	
-	public static void mapEmployeeDetails(EmployeeDetailsResponseDto employeeDetailsResponseDto, EmployeeDetails employeeDetails) {
-		
+
+	public static void mapEmployeeDetails(EmployeeDetailsResponseDto employeeDetailsResponseDto,
+			EmployeeDetails employeeDetails, boolean retrieveEmployeeService) {
+
 		employeeDetailsResponseDto.setAddressLine1(employeeDetails.getAddressLine1());
 		employeeDetailsResponseDto.setAddressLine2(employeeDetails.getAddressLine2());
 		employeeDetailsResponseDto.setCity(employeeDetails.getCity());
@@ -53,22 +54,24 @@ public class EmployeeDetailsUtil {
 		employeeDetailsResponseDto.setSex(employeeDetails.getSex());
 		employeeDetailsResponseDto.setState(employeeDetails.getState());
 		employeeDetailsResponseDto.setId(employeeDetails.getId());
+		if (!retrieveEmployeeService) {
 
-		// Mapping PassportDetails
-		employeeDetailsResponseDto.setEmployeePassportDetailResponseDto(
-				mapPassportDetails(employeeDetails.getEmployeePassportDetails()));
+			// Mapping PassportDetails
+			employeeDetailsResponseDto.setEmployeePassportDetailResponseDto(
+					mapPassportDetails(employeeDetails.getEmployeePassportDetails()));
 
-		// Mapping workPermit Details
-		employeeDetailsResponseDto.setEmployeeWorkPermitDetailsResponseDto(
-				mapWorkPermitDetails(employeeDetails.getEmployeeWorkPermitDetails()));
+			// Mapping workPermit Details
+			employeeDetailsResponseDto.setEmployeeWorkPermitDetailsResponseDto(
+					mapWorkPermitDetails(employeeDetails.getEmployeeWorkPermitDetails()));
 
-		// Mapping Family Details
-		employeeDetailsResponseDto.setEmployeeFamilyDetailsResponseDto(
-				mapFamilyDetails(employeeDetails.getEmployeeFamilyDetails()));
+			// Mapping Family Details
+			employeeDetailsResponseDto
+					.setEmployeeFamilyDetailsResponseDto(mapFamilyDetails(employeeDetails.getEmployeeFamilyDetails()));
 
-		// Mapping Payslip Details
-		employeeDetailsResponseDto.setEmployeePaySlipDocumentDetailsResponseDto(
-				mapPaySlipDetails(employeeDetails.getEmployeePaySlipDetails()));
+			// Mapping Payslip Details
+			employeeDetailsResponseDto.setEmployeePaySlipDocumentDetailsResponseDto(
+					mapPaySlipDetails(employeeDetails.getEmployeePaySlipDetails()));
+		}
 	}
 
 	/*

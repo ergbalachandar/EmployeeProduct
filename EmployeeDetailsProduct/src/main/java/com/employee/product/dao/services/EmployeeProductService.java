@@ -52,6 +52,12 @@ public class EmployeeProductService {
 
 		return entity.find(CompanyDetails.class, id);
 	}
+	
+	@Transactional
+	public EmployeeDetails findByEmployeeId(Integer id) {
+		return entity.find(EmployeeDetails.class, id);
+	}
+	
 
 	public List<EmployeeDetails> findbyCompanyDetails(String id) {
 

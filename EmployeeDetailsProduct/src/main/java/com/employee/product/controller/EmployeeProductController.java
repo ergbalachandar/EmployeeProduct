@@ -34,6 +34,7 @@ import com.employee.product.documentdetails.response.dto.UploadDocumentDetailsRe
 import com.employee.product.employeedetails.request.dto.AddEmployeeRequestDto;
 import com.employee.product.employeedetails.request.dto.DeleteEmployeeRequestDto;
 import com.employee.product.employeedetails.request.dto.EmployeeDataRequestDto;
+import com.employee.product.employeedetails.request.dto.RetrieveEmployeeDataRequestDto;
 import com.employee.product.employeedetails.response.dto.DeleteEmployeeResponseDto;
 import com.employee.product.employeedetails.response.dto.EmployeeDataResponseDto;
 import com.employee.product.employeedetails.response.dto.EmployeeDetailsResponseDto;
@@ -71,7 +72,7 @@ public class EmployeeProductController {
 	@Autowired
 	private DocumentManagementService documentManagementService;
 
-	@Autowired 
+	@Autowired
 	private MailSender mailSender;
 
 	/**
@@ -93,8 +94,8 @@ public class EmployeeProductController {
 		CompanySignUpDetailsUtil.companySignUpDetailsMapping(companyDetailsDto, users);
 		users = employeeProductService.signUpCompanyDetails(users);
 
-    	CompanySignUpDetailsUtil.sendMessage(mailSender, companyDetailsDto.getEmailId(),
-		companyDetailsDto.getCompanyName(), users);
+		CompanySignUpDetailsUtil.sendMessage(mailSender, companyDetailsDto.getEmailId(),
+				companyDetailsDto.getCompanyName(), users);
 
 		CompanySignUpDetailsUtil.companyDetailsSignUpResponseMapping(companyDetailsResponseDto);
 		return companyDetailsResponseDto;
@@ -137,11 +138,11 @@ public class EmployeeProductController {
 	/**
 	 * Method to retrieve Employee List
 	 * 
-	 * @param EmployeeDetailsRequestDto
+	 * @param EmployeeDataResponseDto
 	 * @throws Exception
 	 */
 	@RequestMapping(method = RequestMethod.POST, value = "/retrieveEmployeeList")
-	@ApiOperation(value = "RetrieveEmployee")
+	@ApiOperation(value = "RetrieveEmployeeList")
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "Successfully retrieved EmployeeList"),
 			@ApiResponse(code = 401, message = "You are not authorized to Log In"),
 			@ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
@@ -155,7 +156,8 @@ public class EmployeeProductController {
 		Optional<Users> users = loginValidation(employeeDataRequestDto.getUserName(),
 				employeeDataRequestDto.getPassword());
 
-		if (!users.get().getRole().equalsIgnoreCase("Admin")) {
+		if (!users.get().getRole().equalsIgnoreCase("Admin") || !String.valueOf(users.get().getCompanyDetails().getId())
+				.equalsIgnoreCase(employeeDataRequestDto.getCompanyId())) {
 			throw new Exception("You are not authorised to retrieve the list of Employees");
 		}
 		List<EmployeeDetails> employeeDetailsList = employeeProductService
@@ -164,6 +166,31 @@ public class EmployeeProductController {
 		EmployeeDetailsUtil.mappingEmployeeDataResponse(employeeDetailsList, employeeDataResponseDto);
 
 		return employeeDataResponseDto;
+
+	}
+
+	/**
+	 * Method to retrieve Employee Data
+	 * 
+	 * @param EmployeeDetailsRequestDto
+	 * @throws Exception
+	 */
+	@RequestMapping(method = RequestMethod.POST, value = "/retrieveEmployeeData")
+	@ApiOperation(value = "RetrieveEmployeeData")
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "Successfully retrieved Employee Data"),
+			@ApiResponse(code = 401, message = "You are not authorized to Log In"),
+			@ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
+			@ApiResponse(code = 404, message = "The resource you were trying to reach is not found") })
+	@ResponseBody
+
+	public EmployeeDetailsResponseDto retrieveEmployeeList(
+			@RequestBody RetrieveEmployeeDataRequestDto retrieveEmployeeDataRequestDto) throws Exception {
+		EmployeeDetailsResponseDto employeeDetailsResponseDto = new EmployeeDetailsResponseDto();
+		loginValidation(retrieveEmployeeDataRequestDto.getUserName(), retrieveEmployeeDataRequestDto.getPassword());
+		EmployeeDetails employeeDetails = employeeProductService
+				.findByEmployeeId(retrieveEmployeeDataRequestDto.getEmployeeId());
+		EmployeeDetailsUtil.mapEmployeeDetails(employeeDetailsResponseDto, employeeDetails, false);
+		return employeeDetailsResponseDto;
 
 	}
 
@@ -192,7 +219,7 @@ public class EmployeeProductController {
 
 		employeeDetails = employeeProductService.addOrUpdateEmployeeDetails(employeeDetails, users, companyDetails);
 		EmployeeDetailsResponseDto employeeDetailsResponseDto = new EmployeeDetailsResponseDto();
-		EmployeeDetailsUtil.mapEmployeeDetails(employeeDetailsResponseDto, employeeDetails);
+		EmployeeDetailsUtil.mapEmployeeDetails(employeeDetailsResponseDto, employeeDetails, false);
 
 		return employeeDetailsResponseDto;
 
@@ -279,9 +306,9 @@ public class EmployeeProductController {
 		UploadDocumentDetailsRequestDto uploadDocumentDetailsRequestDto = mapper.readValue(value,
 				UploadDocumentDetailsRequestDto.class);
 		try {
-		UploadDocumentUtil.uploadDocument(uploadDocumentDetailsRequestDto, bytes, documentManagementService, uploadFile.getOriginalFilename());
-		}
-		catch(Exception e) {
+			UploadDocumentUtil.uploadDocument(uploadDocumentDetailsRequestDto, bytes, documentManagementService,
+					uploadFile.getOriginalFilename());
+		} catch (Exception e) {
 			e.printStackTrace();
 			throw new Exception("Could not upload Document");
 		}
@@ -296,26 +323,27 @@ public class EmployeeProductController {
 			@ApiResponse(code = 401, message = "You are not authorized to Log In"),
 			@ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
 			@ApiResponse(code = 404, message = "The resource you were trying to reach is not found"),
-			@ApiResponse(code = 204, message = "No Content for the document")})
-	public ResponseEntity<?> downloadFromDB(@RequestBody UploadDocumentDetailsRequestDto uploadDocumentDetailsRequestDto) {
-		
+			@ApiResponse(code = 204, message = "No Content for the document") })
+	public ResponseEntity<?> downloadFromDB(
+			@RequestBody UploadDocumentDetailsRequestDto uploadDocumentDetailsRequestDto) {
+
 		Object obj = DownloadDocumentUtil.downloadDocument(uploadDocumentDetailsRequestDto, documentManagementService);
-		if(obj instanceof EmployeeWorkPermitDocumentDetails) {
+		if (obj instanceof EmployeeWorkPermitDocumentDetails) {
 			return ResponseEntity.ok().contentType(MediaType.parseMediaType("application/octet-stream"))
-					.header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + ((EmployeeWorkPermitDocumentDetails) obj).getDocumentName())
+					.header(HttpHeaders.CONTENT_DISPOSITION,
+							"attachment; filename=" + ((EmployeeWorkPermitDocumentDetails) obj).getDocumentName())
 					.body(((EmployeeWorkPermitDocumentDetails) obj).getDocumentData());
-		}
-		else if (obj instanceof EmployeePassportDocumentDetails) {
+		} else if (obj instanceof EmployeePassportDocumentDetails) {
 			return ResponseEntity.ok().contentType(MediaType.parseMediaType("application/octet-stream"))
-					.header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + ((EmployeePassportDocumentDetails) obj).getDocumentName())
+					.header(HttpHeaders.CONTENT_DISPOSITION,
+							"attachment; filename=" + ((EmployeePassportDocumentDetails) obj).getDocumentName())
 					.body(((EmployeePassportDocumentDetails) obj).getDocumentData());
-		}
-		else if (obj instanceof EmployeePaySlipDocumentDetails) {
+		} else if (obj instanceof EmployeePaySlipDocumentDetails) {
 			return ResponseEntity.ok().contentType(MediaType.parseMediaType("application/octet-stream"))
-					.header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + ((EmployeePaySlipDocumentDetails) obj).getDocumentName())
+					.header(HttpHeaders.CONTENT_DISPOSITION,
+							"attachment; filename=" + ((EmployeePaySlipDocumentDetails) obj).getDocumentName())
 					.body(((EmployeePaySlipDocumentDetails) obj).getDocumentData());
-		}
-		else {
+		} else {
 			return ResponseEntity.noContent().build();
 		}
 

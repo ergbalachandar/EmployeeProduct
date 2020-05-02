@@ -29,7 +29,7 @@ public class LoginUserUtil {
 		EmployeeDetailsResponseDto employeeDetailsResponseDto = new EmployeeDetailsResponseDto();
 		for (EmployeeDetails employeeDetails : employeeDetailsSet) {
 
-			EmployeeDetailsUtil.mapEmployeeDetails(employeeDetailsResponseDto, employeeDetails);
+			EmployeeDetailsUtil.mapEmployeeDetails(employeeDetailsResponseDto, employeeDetails,false);
 		}
 		loginDetailsResponseDto.setEmployeeDetailsResponseDto(employeeDetailsResponseDto);
 
