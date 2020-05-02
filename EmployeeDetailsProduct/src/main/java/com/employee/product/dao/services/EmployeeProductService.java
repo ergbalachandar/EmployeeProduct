@@ -2,7 +2,6 @@ package com.employee.product.dao.services;
 
 import java.util.HashSet;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 
 import javax.persistence.EntityManager;
@@ -11,23 +10,13 @@ import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.employee.product.dao.interfaces.CompanySignupDetailsInterface;
 import com.employee.product.dao.interfaces.EmployeeDetailsInterface;
 import com.employee.product.entity.companydetails.CompanyDetails;
 import com.employee.product.entity.companydetails.Users;
 import com.employee.product.entity.employeedetails.EmployeeDetails;
-import com.employee.product.entity.employeedetails.EmployeePassportDetails;
-import com.employee.product.entity.employeedetails.EmployeePassportDocumentDetails;
-import com.employee.product.entity.employeedetails.EmployeePaySlipDetails;
-import com.employee.product.entity.employeedetails.EmployeePaySlipDocumentDetails;
-import com.employee.product.entity.employeedetails.EmployeeWorkPermitDetails;
-import com.employee.product.entity.employeedetails.EmployeeWorkPermitDocumentDetails;
 
 @Service
 public class EmployeeProductService {
-
-	@Autowired
-	private CompanySignupDetailsInterface companySignupDetailsInterface;
 
 	@Autowired
 	private EmployeeDetailsInterface employeeDetailsInterface;
