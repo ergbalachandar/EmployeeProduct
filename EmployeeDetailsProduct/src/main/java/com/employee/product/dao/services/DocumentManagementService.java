@@ -6,6 +6,9 @@ import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.employee.product.dao.interfaces.EmployeePassportDocumentDetailsInterface;
+import com.employee.product.dao.interfaces.EmployeePaySlipDocumentDetailsInterface;
+import com.employee.product.dao.interfaces.EmployeeWorkPermitDocumentDetailsInterface;
 import com.employee.product.entity.employeedetails.EmployeePassportDetails;
 import com.employee.product.entity.employeedetails.EmployeePassportDocumentDetails;
 import com.employee.product.entity.employeedetails.EmployeePaySlipDetails;
@@ -18,6 +21,15 @@ public class DocumentManagementService {
 
 	@Autowired
 	private EntityManager entity;
+
+	@Autowired
+	private EmployeeWorkPermitDocumentDetailsInterface employeeWorkPermitDocumentDetailsInterface;
+
+	@Autowired
+	private EmployeePaySlipDocumentDetailsInterface employeePaySlipDocumentDetailsInterface;
+
+	@Autowired
+	private EmployeePassportDocumentDetailsInterface employeePassportDocumentDetailsInterface;
 
 	@Transactional
 	public void addWorkPermitDocument(EmployeeWorkPermitDocumentDetails employeeWorkPermitDocumentDetails) {
@@ -92,6 +104,18 @@ public class DocumentManagementService {
 		}
 
 		return null;
+	}
+
+	public void deleteDocument(String documentNumber, String documentType) {
+
+		if (documentType.equals("1")) {
+			employeeWorkPermitDocumentDetailsInterface.deleteById(documentNumber);
+		} else if (documentType.equals("2")) {
+			employeePaySlipDocumentDetailsInterface.deleteById(documentNumber);
+		} else if (documentType.equals("3")) {
+			employeePassportDocumentDetailsInterface.deleteById(documentNumber);
+		}
+
 	}
 
 }

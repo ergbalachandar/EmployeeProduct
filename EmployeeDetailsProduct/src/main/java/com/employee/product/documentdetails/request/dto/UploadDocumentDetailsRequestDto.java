@@ -5,7 +5,7 @@ import lombok.Data;
 @Data
 public class UploadDocumentDetailsRequestDto {
 
-	private String documentType; // 1 - WP, 2- Passport, 3 - Payslip
+	private String documentType; // 1 - WP, 2- PaySlip, 3 - Passport
 	
 	private String documentNumber;
 	

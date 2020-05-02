@@ -35,8 +35,4 @@ public class EmployeeWorkPermitDocumentDetails {
 	@Column(name = "document_data")
     private byte[] documentData;
 	
-	
-	
-	
-
 }

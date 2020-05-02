@@ -29,7 +29,9 @@ import com.employee.product.companydetails.response.dto.LoginDetailsResponseDto;
 import com.employee.product.dao.services.DocumentManagementService;
 import com.employee.product.dao.services.EmployeeProductService;
 import com.employee.product.dao.services.LoginDetailsService;
+import com.employee.product.documentdetails.request.dto.DeleteDocumentRequestDto;
 import com.employee.product.documentdetails.request.dto.UploadDocumentDetailsRequestDto;
+import com.employee.product.documentdetails.response.dto.DeleteDocumentResponseDto;
 import com.employee.product.documentdetails.response.dto.UploadDocumentDetailsResponseDto;
 import com.employee.product.employeedetails.request.dto.AddEmployeeRequestDto;
 import com.employee.product.employeedetails.request.dto.DeleteEmployeeRequestDto;
@@ -46,6 +48,7 @@ import com.employee.product.entity.employeedetails.EmployeePaySlipDocumentDetail
 import com.employee.product.entity.employeedetails.EmployeeWorkPermitDocumentDetails;
 import com.employee.product.utils.AddEmployeeDetailsUtil;
 import com.employee.product.utils.CompanySignUpDetailsUtil;
+import com.employee.product.utils.DeleteDocumentUtil;
 import com.employee.product.utils.DeleteEmployeeResponseUtil;
 import com.employee.product.utils.DownloadDocumentUtil;
 import com.employee.product.utils.EmployeeDetailsUtil;
@@ -320,7 +323,7 @@ public class EmployeeProductController {
 	@PostMapping("/downloadDocument")
 	@ApiOperation(value = "Download Document")
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "Successfully Downloaded"),
-			@ApiResponse(code = 401, message = "You are not authorized to Log In"),
+			@ApiResponse(code = 401, message = "You are not authorized to Download"),
 			@ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
 			@ApiResponse(code = 404, message = "The resource you were trying to reach is not found"),
 			@ApiResponse(code = 204, message = "No Content for the document") })
@@ -346,6 +349,35 @@ public class EmployeeProductController {
 		} else {
 			return ResponseEntity.noContent().build();
 		}
+
+	}
+
+	@PostMapping("/deleteDocument")
+	@ApiOperation(value = "Delete Document")
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "Successfully Deleted"),
+			@ApiResponse(code = 401, message = "You are not authorized to Delete Document"),
+			@ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
+			@ApiResponse(code = 404, message = "The resource you were trying to reach is not found"),
+			@ApiResponse(code = 204, message = "No Content for the document") })
+	public DeleteDocumentResponseDto deleteDocument(@RequestBody DeleteDocumentRequestDto deleteDocumentRequestDto)
+			throws Exception {
+		DeleteDocumentResponseDto deleteDocumentResponseDto = new DeleteDocumentResponseDto();
+		Optional<Users> users = loginValidation(deleteDocumentRequestDto.getUserName(),
+				deleteDocumentRequestDto.getPassword());
+		EmployeeDetails employeeDetails = employeeProductService
+				.findByEmployeeId(deleteDocumentRequestDto.getEmployeeId());
+		if (!users.get().getRole().equalsIgnoreCase("Admin")) {
+			DeleteDocumentUtil.validateRequestForOthers(users, employeeDetails,
+					deleteDocumentRequestDto.getDocumentNumber(), deleteDocumentRequestDto.getDocumentType());
+		} else if (users.get().getRole().equalsIgnoreCase("Admin")) {
+			if (users.get().getCompanyDetails().getId() != employeeDetails.getCompanyDetails().getId()) {
+				throw new Exception("You are not authorised to delete the document of the employee");
+			}
+		}
+		DeleteDocumentUtil.deleteDocument(deleteDocumentRequestDto, documentManagementService);
+		DeleteDocumentUtil.mapResponse(deleteDocumentResponseDto);
+
+		return deleteDocumentResponseDto;
 
 	}
 
