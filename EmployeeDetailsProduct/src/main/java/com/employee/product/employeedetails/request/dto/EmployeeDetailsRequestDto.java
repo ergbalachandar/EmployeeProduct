@@ -43,12 +43,12 @@ public class EmployeeDetailsRequestDto {
 	
 	private String workLocation;
 	
-    private List<EmployeeWorkPermitDetailsRequestDto> employeeWorkPermitDetailsRequestDto;
+    private List<EmployeeWorkPermitDetailsRequestDto> workPermitDetails;
     
-    private List<EmployeePassportDetailsRequestDto> employeePassportDetailRequestDto;
+    private List<EmployeePassportDetailsRequestDto> passportDetails;
     
-    private List<EmployeeFamilyDetailsRequestDto> employeeFamilyDetailsRequestDto;
+    private List<EmployeeFamilyDetailsRequestDto> familyDetails;
     
-    private List<EmployeePaySlipDetailsRequestDto> employeePaySlipDetailsRequestDto;
+    private List<EmployeePaySlipDetailsRequestDto> paySlipDetails;
 
 }

@@ -32,12 +32,12 @@ public class EmployeeDetailsResponseDto {
 
 	private Date dateOfBirth;
 
-	private List<EmployeeWorkPermitDetailsResponseDto> employeeWorkPermitDetailsResponseDto;
+	private List<EmployeeWorkPermitDetailsResponseDto> workPermitDetails;
 
-	private List<EmployeePassportDetailsResponseDto> employeePassportDetailResponseDto;
+	private List<EmployeePassportDetailsResponseDto> passportDetails;
 
-	private List<EmployeeFamilyDetailsResponseDto> employeeFamilyDetailsResponseDto;
+	private List<EmployeeFamilyDetailsResponseDto> familyDetails;
 
-	private List<EmployeePaySlipDocumentDetailsResponseDto> employeePaySlipDocumentDetailsResponseDto;
+	private List<EmployeePaySlipDocumentDetailsResponseDto> payslipDetails;
 
 }

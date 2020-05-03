@@ -48,7 +48,7 @@ public class AddEmployeeDetailsUtil {
 		Set<EmployeeWorkPermitDetails> employeeWorkPermitDetailsSet = new HashSet<EmployeeWorkPermitDetails>();
 
 		List<EmployeeWorkPermitDetailsRequestDto> employeeWorkPermitDetailsRequestDtoList = emloyeeDetailsRequestDto
-				.getEmployeeWorkPermitDetailsRequestDto();
+				.getWorkPermitDetails();
 		if (null != employeeWorkPermitDetailsRequestDtoList) {
 			for (EmployeeWorkPermitDetailsRequestDto employeeWorPermitDetailsRequestDto : employeeWorkPermitDetailsRequestDtoList) {
 
@@ -69,7 +69,7 @@ public class AddEmployeeDetailsUtil {
 		Set<EmployeeFamilyDetails> employeeFamilyDetailsSet = new HashSet<EmployeeFamilyDetails>();
 
 		List<EmployeeFamilyDetailsRequestDto> employeeFamilyDetailsRequestDtoList = emloyeeDetailsRequestDto
-				.getEmployeeFamilyDetailsRequestDto();
+				.getFamilyDetails();
 		if (employeeFamilyDetailsRequestDtoList != null)
 			for (EmployeeFamilyDetailsRequestDto employeeFamilyDetailsRequestDto : employeeFamilyDetailsRequestDtoList) {
 				EmployeeFamilyDetails employeeFamilyDetails = new EmployeeFamilyDetails();
@@ -90,7 +90,7 @@ public class AddEmployeeDetailsUtil {
 		Set<EmployeePassportDetails> employeePassportDetailsSet = new HashSet<EmployeePassportDetails>();
 
 		List<EmployeePassportDetailsRequestDto> employeePassportDetailsRequestDtoList = emloyeeDetailsRequestDto
-				.getEmployeePassportDetailRequestDto();
+				.getPassportDetails();
 
 		if (null != employeePassportDetailsRequestDtoList) {
 			for (EmployeePassportDetailsRequestDto employeePassportDetailsRequestDto : employeePassportDetailsRequestDtoList) {
@@ -113,7 +113,7 @@ public class AddEmployeeDetailsUtil {
 		Set<EmployeePaySlipDetails> employeePaySlipDetailsSet = new HashSet<EmployeePaySlipDetails>();
 
 		List<EmployeePaySlipDetailsRequestDto> employeePaySlipDetailsRequestDtoList = emloyeeDetailsRequestDto
-				.getEmployeePaySlipDetailsRequestDto();
+				.getPaySlipDetails();
 
 		if (null != employeePaySlipDetailsRequestDtoList) {
 			for (EmployeePaySlipDetailsRequestDto employeePaySlipDetailsRequestDto : employeePaySlipDetailsRequestDtoList) {
@@ -132,7 +132,7 @@ public class AddEmployeeDetailsUtil {
 	public static void mapAddEmployeeRequest(AddEmployeeRequestDto addEmployeeRequestDto, Users users,
 			EmployeeDetails employeeDetails, CompanyDetails companyDetails) {
 
-		EmployeeDetailsRequestDto emloyeeDetailsRequestDto = addEmployeeRequestDto.getEmployeeDetailsRequestDto();
+		EmployeeDetailsRequestDto emloyeeDetailsRequestDto = addEmployeeRequestDto.getEmployeeDetails();
 
 		users.setActive(1);
 		users.setCountry(emloyeeDetailsRequestDto.getCountry());

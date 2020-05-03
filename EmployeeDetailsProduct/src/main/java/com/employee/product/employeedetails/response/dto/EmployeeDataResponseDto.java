@@ -10,6 +10,6 @@ import lombok.Data;
 @Data
 public class EmployeeDataResponseDto {
 	
-	private List<EmployeeDetailsResponseDto> employeeDetailsResponseDto;
+	private List<EmployeeDetailsResponseDto> employeeDetailsList;
 
 }

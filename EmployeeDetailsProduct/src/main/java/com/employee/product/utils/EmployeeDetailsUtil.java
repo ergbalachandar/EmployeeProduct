@@ -35,7 +35,7 @@ public class EmployeeDetailsUtil {
 			}
 		}
 
-		employeeDataResponseDto.setEmployeeDetailsResponseDto(employeeDetailsResponseDtoList);
+		employeeDataResponseDto.setEmployeeDetailsList(employeeDetailsResponseDtoList);
 
 	}
 
@@ -57,19 +57,19 @@ public class EmployeeDetailsUtil {
 		if (!retrieveEmployeeService) {
 
 			// Mapping PassportDetails
-			employeeDetailsResponseDto.setEmployeePassportDetailResponseDto(
+			employeeDetailsResponseDto.setPassportDetails(
 					mapPassportDetails(employeeDetails.getEmployeePassportDetails()));
 
 			// Mapping workPermit Details
-			employeeDetailsResponseDto.setEmployeeWorkPermitDetailsResponseDto(
+			employeeDetailsResponseDto.setWorkPermitDetails(
 					mapWorkPermitDetails(employeeDetails.getEmployeeWorkPermitDetails()));
 
 			// Mapping Family Details
 			employeeDetailsResponseDto
-					.setEmployeeFamilyDetailsResponseDto(mapFamilyDetails(employeeDetails.getEmployeeFamilyDetails()));
+					.setFamilyDetails(mapFamilyDetails(employeeDetails.getEmployeeFamilyDetails()));
 
 			// Mapping Payslip Details
-			employeeDetailsResponseDto.setEmployeePaySlipDocumentDetailsResponseDto(
+			employeeDetailsResponseDto.setPayslipDetails(
 					mapPaySlipDetails(employeeDetails.getEmployeePaySlipDetails()));
 		}
 	}

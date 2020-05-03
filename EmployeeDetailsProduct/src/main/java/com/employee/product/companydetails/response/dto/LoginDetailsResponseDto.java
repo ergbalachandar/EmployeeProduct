@@ -15,6 +15,6 @@ public class LoginDetailsResponseDto {
 	
 	private String companyId;
 	
-	private EmployeeDetailsResponseDto employeeDetailsResponseDto;
+	private EmployeeDetailsResponseDto employeeDetails;
 
 }
