@@ -7,6 +7,5 @@ public class EmployeePaySlipDetailsRequestDto {
 
 	private String paySlipMonth;
 	private String paySlipNumber;
-	private String PaySlipDocumentData;
 
 }
