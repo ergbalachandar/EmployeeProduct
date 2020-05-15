@@ -38,6 +38,7 @@ public class EmployeeDetailsResponseDto {
 
 	private List<EmployeeFamilyDetailsResponseDto> familyDetails;
 
-	private List<EmployeePaySlipDocumentDetailsResponseDto> payslipDetails;
+	//Commenting the call to map Payslip details as it is not required in this module
+	//private List<EmployeePaySlipDocumentDetailsResponseDto> payslipDetails;
 
 }

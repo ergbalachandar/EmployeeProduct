@@ -69,8 +69,9 @@ public class EmployeeDetailsUtil {
 					.setFamilyDetails(mapFamilyDetails(employeeDetails.getEmployeeFamilyDetails()));
 
 			// Mapping Payslip Details
-			employeeDetailsResponseDto.setPayslipDetails(
-					mapPaySlipDetails(employeeDetails.getEmployeePaySlipDetails()));
+			//Commenting the call to map Payslip details as it is not required in this module
+			/*employeeDetailsResponseDto.setPayslipDetails(
+					mapPaySlipDetails(employeeDetails.getEmployeePaySlipDetails())); */
 		}
 	}
 
