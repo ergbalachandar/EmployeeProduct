@@ -126,7 +126,6 @@ public class GeneratePdfReportUtil {
 			PdfWriter.getInstance(document, out);
 			document.open();
 			document.add(header);
-			document.addHeader("Hello", "Hello");
 			document.add(table);
 
 			document.close();
