@@ -312,7 +312,6 @@ public class EmployeeProductController {
 			UploadDocumentUtil.uploadDocument(uploadDocumentDetailsRequestDto, bytes, documentManagementService,
 					uploadFile.getOriginalFilename());
 		} catch (Exception e) {
-			e.printStackTrace();
 			throw new Exception("Could not upload Document");
 		}
 		UploadDocumentUtil.mapResponseUploadDocumentResponseDto(uploadDocumentDetailsResponseDto);

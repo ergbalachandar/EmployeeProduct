@@ -31,34 +31,37 @@ public class UploadDocumentUtil {
 	}
 
 	private static void uploadWorkPermitDocumentDetails(UploadDocumentDetailsRequestDto uploadDocumentDetailsRequestDto,
-			byte[] bytes, DocumentManagementService documentManagementService, String fileName) {
+			byte[] bytes, DocumentManagementService documentManagementService, String fileName) throws Exception {
 
 		EmployeeWorkPermitDocumentDetails employeeWorkPermitDocumentDetails = new EmployeeWorkPermitDocumentDetails();
 		employeeWorkPermitDocumentDetails.setDocumentData(bytes);
 		employeeWorkPermitDocumentDetails.setWorkPermitNumber(uploadDocumentDetailsRequestDto.getDocumentNumber());
 		employeeWorkPermitDocumentDetails.setDocumentName(fileName);
-		documentManagementService.addWorkPermitDocument(employeeWorkPermitDocumentDetails);
+		documentManagementService.addWorkPermitDocument(employeeWorkPermitDocumentDetails,
+				uploadDocumentDetailsRequestDto.getLoggedInUserName());
 	}
 
 	private static void uploadPaySlipDocumentDetails(UploadDocumentDetailsRequestDto uploadDocumentDetailsRequestDto,
-			byte[] bytes, DocumentManagementService documentManagementService, String fileName) {
+			byte[] bytes, DocumentManagementService documentManagementService, String fileName) throws Exception {
 
 		EmployeePaySlipDocumentDetails employeePaySlipDocumentDetails = new EmployeePaySlipDocumentDetails();
 		employeePaySlipDocumentDetails.setDocumentData(bytes);
 		employeePaySlipDocumentDetails.setPaySlipNumber(uploadDocumentDetailsRequestDto.getDocumentNumber());
 		employeePaySlipDocumentDetails.setDocumentName(fileName);
-		documentManagementService.addPaySlipDocument(employeePaySlipDocumentDetails);
+		documentManagementService.addPaySlipDocument(employeePaySlipDocumentDetails,
+				uploadDocumentDetailsRequestDto.getLoggedInUserName());
 
 	}
 
 	private static void uploadPassportDocumentDetails(UploadDocumentDetailsRequestDto uploadDocumentDetailsRequestDto,
-			byte[] bytes, DocumentManagementService documentManagementService, String fileName) {
+			byte[] bytes, DocumentManagementService documentManagementService, String fileName) throws Exception {
 
 		EmployeePassportDocumentDetails employeePassportDocumentDetails = new EmployeePassportDocumentDetails();
 		employeePassportDocumentDetails.setDocumentData(bytes);
 		employeePassportDocumentDetails.setPassportNumber(uploadDocumentDetailsRequestDto.getDocumentNumber());
 		employeePassportDocumentDetails.setDocumentName(fileName);
-		documentManagementService.addPassportDocument(employeePassportDocumentDetails);
+		documentManagementService.addPassportDocument(employeePassportDocumentDetails,
+				uploadDocumentDetailsRequestDto.getLoggedInUserName());
 
 	}
 

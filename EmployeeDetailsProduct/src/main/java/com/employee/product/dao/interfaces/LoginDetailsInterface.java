@@ -1,13 +1,19 @@
 package com.employee.product.dao.interfaces;
 
-import java.util.List;
-
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.repository.CrudRepository;
 
 import com.employee.product.entity.companydetails.Users;
+import com.employee.product.entity.employeedetails.EmployeePassportDetails;
+import com.employee.product.entity.employeedetails.EmployeePaySlipDetails;
+import com.employee.product.entity.employeedetails.EmployeeWorkPermitDetails;
 
 public interface LoginDetailsInterface extends JpaRepository <Users, String> {
+	
+	Users findByEmployeeDetailsEmployeeWorkPermitDetails(EmployeeWorkPermitDetails employeeWorkPermitDetails);
+	
+	Users findByEmployeeDetailsEmployeePaySlipDetails(EmployeePaySlipDetails employeePaySlipDetails);
+	
+	Users findByEmployeeDetailsEmployeePassportDetails(EmployeePassportDetails employeePassportDetails);
 	
 	
 }

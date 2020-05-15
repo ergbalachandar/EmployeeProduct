@@ -9,5 +9,7 @@ public class UploadDocumentDetailsRequestDto {
 	
 	private String documentNumber;
 	
+	private String loggedInUserName;
+	
 	
 }
