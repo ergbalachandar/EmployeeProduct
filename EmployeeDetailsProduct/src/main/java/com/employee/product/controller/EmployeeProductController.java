@@ -253,7 +253,7 @@ public class EmployeeProductController {
 		List<EmployeeDetails> employeeDetailsList = employeeProductService
 				.findbyCompanyDetails(employeeDataRequestDto.getCompanyId());
 
-		ByteArrayInputStream bis = GeneratePdfReportUtil.employeeReport(employeeDetailsList);
+		ByteArrayInputStream bis = GeneratePdfReportUtil.employeeReport(employeeDetailsList,users.get().getCompanyDetails().getCompanyName());
 
 		HttpHeaders headers = new HttpHeaders();
 		headers.add("Content-Disposition", "inline; filename=EmployeeReport.pdf");
