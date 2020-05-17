@@ -120,7 +120,8 @@ public class EmployeeProductService {
 				Users userDetailsRetrieval = loginDetailsInterface
 						.findByEmployeeDetailsEmployeeWorkPermitDetails(employeeWorkPermitDetails);
 
-				DocumentManagementService.accessValidation(userRoleOfLoggedInEmployee, userDetailsRetrieval,employeeDetails.getId());
+				DocumentManagementService.accessValidation(userRoleOfLoggedInEmployee, userDetailsRetrieval,
+						employeeDetails.getId());
 
 			}
 
@@ -131,7 +132,8 @@ public class EmployeeProductService {
 				Users userDetailsRetrieval = loginDetailsInterface
 						.findByEmployeeDetailsEmployeePaySlipDetails(employeePaySlipDetails);
 
-				DocumentManagementService.accessValidation(userRoleOfLoggedInEmployee, userDetailsRetrieval, employeeDetails.getId());
+				DocumentManagementService.accessValidation(userRoleOfLoggedInEmployee, userDetailsRetrieval,
+						employeeDetails.getId());
 
 			}
 
@@ -142,7 +144,8 @@ public class EmployeeProductService {
 				Users userDetailsRetrieval = loginDetailsInterface
 						.findByEmployeeDetailsEmployeePassportDetails(employeePassportDetails);
 
-				DocumentManagementService.accessValidation(userRoleOfLoggedInEmployee, userDetailsRetrieval,employeeDetails.getId());
+				DocumentManagementService.accessValidation(userRoleOfLoggedInEmployee, userDetailsRetrieval,
+						employeeDetails.getId());
 
 			}
 		} else {
