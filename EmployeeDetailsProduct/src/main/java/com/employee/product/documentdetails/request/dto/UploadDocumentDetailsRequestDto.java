@@ -11,5 +11,7 @@ public class UploadDocumentDetailsRequestDto {
 	
 	private String loggedInUserName;
 	
+	private int employeeId; // EmployeeId for which document needs to be uploaded
+	
 	
 }

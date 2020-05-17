@@ -40,7 +40,7 @@ public class DocumentManagementService {
 
 	@Transactional
 	public void addWorkPermitDocument(EmployeeWorkPermitDocumentDetails employeeWorkPermitDocumentDetails,
-			String loggedInUserName) throws Exception {
+			String loggedInUserName, int employeeId) throws Exception {
 		EmployeeWorkPermitDetails employeeWorkPermitDetails = new EmployeeWorkPermitDetails();
 
 		employeeWorkPermitDetails.setWorkPermitNumber(employeeWorkPermitDocumentDetails.getWorkPermitNumber());
@@ -48,7 +48,7 @@ public class DocumentManagementService {
 		Users users = loginDetailsInterface.findByEmployeeDetailsEmployeeWorkPermitDetails(employeeWorkPermitDetails);
 
 		Optional<Users> userRoleOfLoggedInEmployee = loginDetailsInterface.findById(loggedInUserName);
-		accessValidation(userRoleOfLoggedInEmployee, users);
+		accessValidation(userRoleOfLoggedInEmployee, users,employeeId);
 
 		EmployeeWorkPermitDocumentDetails employeeWorkPermitDocumentDetailsRetrieval = entity
 				.find(EmployeeWorkPermitDocumentDetails.class, employeeWorkPermitDocumentDetails.getWorkPermitNumber());
@@ -67,7 +67,7 @@ public class DocumentManagementService {
 
 	@Transactional
 	public void addPaySlipDocument(EmployeePaySlipDocumentDetails employeePaySlipDocumentDetails,
-			String loggedInUserName) throws Exception {
+			String loggedInUserName, int employeeId) throws Exception {
 
 		EmployeePaySlipDetails employeePaySlipDetails = new EmployeePaySlipDetails();
 
@@ -76,7 +76,7 @@ public class DocumentManagementService {
 		Users users = loginDetailsInterface.findByEmployeeDetailsEmployeePaySlipDetails(employeePaySlipDetails);
 
 		Optional<Users> userRoleOfLoggedInEmployee = loginDetailsInterface.findById(loggedInUserName);
-		accessValidation(userRoleOfLoggedInEmployee, users);
+		accessValidation(userRoleOfLoggedInEmployee, users, employeeId);
 
 		EmployeePaySlipDocumentDetails employeePaySlipDocumentDetailsRetrieval = entity
 				.find(EmployeePaySlipDocumentDetails.class, employeePaySlipDocumentDetails.getPaySlipNumber());
@@ -93,7 +93,7 @@ public class DocumentManagementService {
 
 	@Transactional
 	public void addPassportDocument(EmployeePassportDocumentDetails employeePassportDocumentDetails,
-			String loggedInUserName) throws Exception {
+			String loggedInUserName, int employeeId) throws Exception {
 
 		EmployeePassportDetails employeePassportDetails = new EmployeePassportDetails();
 
@@ -102,7 +102,7 @@ public class DocumentManagementService {
 		Users users = loginDetailsInterface.findByEmployeeDetailsEmployeePassportDetails(employeePassportDetails);
 
 		Optional<Users> userRoleOfLoggedInEmployee = loginDetailsInterface.findById(loggedInUserName);
-		accessValidation(userRoleOfLoggedInEmployee, users);
+		accessValidation(userRoleOfLoggedInEmployee, users, employeeId);
 
 		EmployeePassportDocumentDetails employeePassportDocumentDetailsRetrieval = entity
 				.find(EmployeePassportDocumentDetails.class, employeePassportDocumentDetails.getPassportNumber());
@@ -149,7 +149,7 @@ public class DocumentManagementService {
 
 	}
 
-	private static void accessValidation(Optional<Users> userRoleOfLoggedInEmployee, Users users) throws Exception {
+	public static void accessValidation(Optional<Users> userRoleOfLoggedInEmployee, Users users, int employeeId) throws Exception {
 
 		if (userRoleOfLoggedInEmployee.get().getEmployeeDetails().stream().findFirst().get().getId() != users
 				.getEmployeeDetails().stream().findFirst().get().getId()
@@ -159,7 +159,11 @@ public class DocumentManagementService {
 
 		if (userRoleOfLoggedInEmployee.get().getRole().equalsIgnoreCase("Admin")
 				&& userRoleOfLoggedInEmployee.get().getCompanyDetails().getId() != users.getCompanyDetails().getId()) {
-			throw new Exception("you are not authorised to manage the document of other company employee");
+			throw new Exception("You are not authorised to manage the document of other company employee");
+		}
+		
+		if(userRoleOfLoggedInEmployee.get().getRole().equalsIgnoreCase("Admin") && users.getEmployeeDetails().stream().findFirst().get().getId() != employeeId) {
+			throw new Exception("Document you are trying to update is already associated with other employee");
 		}
 
 	}

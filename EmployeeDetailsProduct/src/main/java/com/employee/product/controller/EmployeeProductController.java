@@ -212,15 +212,16 @@ public class EmployeeProductController {
 	@ResponseBody
 
 	public EmployeeDetailsResponseDto addOrUpdateEmployeeList(
-			@RequestBody AddEmployeeRequestDto addEmployeeRequestDto) {
+			@RequestBody AddEmployeeRequestDto addEmployeeRequestDto) throws Exception {
 
 		Users users = new Users();
+		boolean newEmployee = false;
 		EmployeeDetails employeeDetails = new EmployeeDetails();
 		CompanyDetails companyDetails = employeeProductService.findCompanyDetails(addEmployeeRequestDto.getCompanyId());
 		System.out.println(companyDetails);
 		AddEmployeeDetailsUtil.mapAddEmployeeRequest(addEmployeeRequestDto, users, employeeDetails, companyDetails);
-
-		employeeDetails = employeeProductService.addOrUpdateEmployeeDetails(employeeDetails, users, companyDetails);
+		newEmployee = AddEmployeeDetailsUtil.checkForNewOrUpdateEmployee(newEmployee, addEmployeeRequestDto);
+		employeeDetails = employeeProductService.addOrUpdateEmployeeDetails(employeeDetails, users, companyDetails,newEmployee,addEmployeeRequestDto.getLoggedInUserName());
 		EmployeeDetailsResponseDto employeeDetailsResponseDto = new EmployeeDetailsResponseDto();
 		EmployeeDetailsUtil.mapEmployeeDetails(employeeDetailsResponseDto, employeeDetails, false);
 

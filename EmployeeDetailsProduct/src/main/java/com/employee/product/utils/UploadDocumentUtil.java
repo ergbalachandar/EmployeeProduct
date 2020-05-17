@@ -38,7 +38,7 @@ public class UploadDocumentUtil {
 		employeeWorkPermitDocumentDetails.setWorkPermitNumber(uploadDocumentDetailsRequestDto.getDocumentNumber());
 		employeeWorkPermitDocumentDetails.setDocumentName(fileName);
 		documentManagementService.addWorkPermitDocument(employeeWorkPermitDocumentDetails,
-				uploadDocumentDetailsRequestDto.getLoggedInUserName());
+				uploadDocumentDetailsRequestDto.getLoggedInUserName(),uploadDocumentDetailsRequestDto.getEmployeeId());
 	}
 
 	private static void uploadPaySlipDocumentDetails(UploadDocumentDetailsRequestDto uploadDocumentDetailsRequestDto,
@@ -49,7 +49,7 @@ public class UploadDocumentUtil {
 		employeePaySlipDocumentDetails.setPaySlipNumber(uploadDocumentDetailsRequestDto.getDocumentNumber());
 		employeePaySlipDocumentDetails.setDocumentName(fileName);
 		documentManagementService.addPaySlipDocument(employeePaySlipDocumentDetails,
-				uploadDocumentDetailsRequestDto.getLoggedInUserName());
+				uploadDocumentDetailsRequestDto.getLoggedInUserName(),uploadDocumentDetailsRequestDto.getEmployeeId());
 
 	}
 
@@ -61,7 +61,7 @@ public class UploadDocumentUtil {
 		employeePassportDocumentDetails.setPassportNumber(uploadDocumentDetailsRequestDto.getDocumentNumber());
 		employeePassportDocumentDetails.setDocumentName(fileName);
 		documentManagementService.addPassportDocument(employeePassportDocumentDetails,
-				uploadDocumentDetailsRequestDto.getLoggedInUserName());
+				uploadDocumentDetailsRequestDto.getLoggedInUserName(),uploadDocumentDetailsRequestDto.getEmployeeId());
 
 	}
 

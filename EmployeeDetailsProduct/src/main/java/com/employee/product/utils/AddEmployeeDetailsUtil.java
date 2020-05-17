@@ -158,4 +158,13 @@ public class AddEmployeeDetailsUtil {
 
 		//users.setCompanyDetails(companyDetails);
 	}
+	
+	public static boolean checkForNewOrUpdateEmployee(boolean newEmployee,AddEmployeeRequestDto addEmployeeRequestDto) {
+		
+		if(addEmployeeRequestDto.getEmployeeDetails().getId() == 0) {
+			newEmployee = true;
+		}
+		
+		return newEmployee;
+	}
 }
