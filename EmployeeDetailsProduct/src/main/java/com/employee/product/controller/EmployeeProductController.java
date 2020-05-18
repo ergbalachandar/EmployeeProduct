@@ -4,6 +4,7 @@ import java.io.ByteArrayInputStream;
 import java.util.List;
 import java.util.Optional;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,6 +53,8 @@ import com.employee.product.utils.DeleteDocumentUtil;
 import com.employee.product.utils.DeleteEmployeeResponseUtil;
 import com.employee.product.utils.DownloadDocumentUtil;
 import com.employee.product.utils.EmployeeDetailsUtil;
+import com.employee.product.utils.GenerateCsvReportUtil;
+import com.employee.product.utils.GenerateExcelReportUtil;
 import com.employee.product.utils.GeneratePdfReportUtil;
 import com.employee.product.utils.LoginUserUtil;
 import com.employee.product.utils.UploadDocumentUtil;
@@ -98,7 +101,7 @@ public class EmployeeProductController {
 		users = employeeProductService.signUpCompanyDetails(users);
 
 		CompanySignUpDetailsUtil.sendMessage(mailSender, companyDetailsDto.getEmailId(),
-				companyDetailsDto.getCompanyName(), users);
+		 companyDetailsDto.getCompanyName(), users);
 
 		CompanySignUpDetailsUtil.companyDetailsSignUpResponseMapping(companyDetailsResponseDto);
 		return companyDetailsResponseDto;
@@ -159,12 +162,11 @@ public class EmployeeProductController {
 		Optional<Users> users = loginValidation(employeeDataRequestDto.getUserName(),
 				employeeDataRequestDto.getPassword());
 
-		if (!users.get().getRole().equalsIgnoreCase("Admin") || !String.valueOf(users.get().getCompanyDetails().getId())
-				.equalsIgnoreCase(employeeDataRequestDto.getCompanyId())) {
+		if (!users.get().getRole().equalsIgnoreCase("Admin")) {
 			throw new Exception("You are not authorised to retrieve the list of Employees");
 		}
 		List<EmployeeDetails> employeeDetailsList = employeeProductService
-				.findbyCompanyDetails(employeeDataRequestDto.getCompanyId());
+				.findbyCompanyDetails(users.get().getCompanyDetails().getId());
 
 		EmployeeDetailsUtil.mappingEmployeeDataResponse(employeeDetailsList, employeeDataResponseDto);
 
@@ -211,8 +213,8 @@ public class EmployeeProductController {
 			@ApiResponse(code = 404, message = "The resource you were trying to reach is not found") })
 	@ResponseBody
 
-	public EmployeeDetailsResponseDto addOrUpdateEmployeeList(
-			@RequestBody AddEmployeeRequestDto addEmployeeRequestDto) throws Exception {
+	public EmployeeDetailsResponseDto addOrUpdateEmployeeList(@RequestBody AddEmployeeRequestDto addEmployeeRequestDto)
+			throws Exception {
 
 		Users users = new Users();
 		boolean newEmployee = false;
@@ -221,7 +223,8 @@ public class EmployeeProductController {
 		System.out.println(companyDetails);
 		AddEmployeeDetailsUtil.mapAddEmployeeRequest(addEmployeeRequestDto, users, employeeDetails, companyDetails);
 		newEmployee = AddEmployeeDetailsUtil.checkForNewOrUpdateEmployee(newEmployee, addEmployeeRequestDto);
-		employeeDetails = employeeProductService.addOrUpdateEmployeeDetails(employeeDetails, users, companyDetails,newEmployee,addEmployeeRequestDto.getLoggedInUserName());
+		employeeDetails = employeeProductService.addOrUpdateEmployeeDetails(employeeDetails, users, companyDetails,
+				newEmployee, addEmployeeRequestDto.getLoggedInUserName());
 		EmployeeDetailsResponseDto employeeDetailsResponseDto = new EmployeeDetailsResponseDto();
 		EmployeeDetailsUtil.mapEmployeeDetails(employeeDetailsResponseDto, employeeDetails, false);
 
@@ -235,14 +238,14 @@ public class EmployeeProductController {
 	 * @param EmployeeDetailsRequestDto
 	 * @throws Exception
 	 */
-	@RequestMapping(value = "/pdfReport", method = RequestMethod.POST, produces = MediaType.APPLICATION_PDF_VALUE)
-	@ApiOperation(value = "Generate EmployeeReport PDF")
+	@RequestMapping(value = "/employeeListReport", method = RequestMethod.POST, produces = MediaType.APPLICATION_PDF_VALUE)
+	@ApiOperation(value = "Generate EmployeeReport PDF or XLSX")
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "Successfully GeneratedPDF"),
 			@ApiResponse(code = 401, message = "You are not authorized to Log In"),
 			@ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
 			@ApiResponse(code = 404, message = "The resource you were trying to reach is not found") })
 	public ResponseEntity<InputStreamResource> employeePdfReport(
-			@RequestBody EmployeeDataRequestDto employeeDataRequestDto) throws Exception {
+			@RequestBody EmployeeDataRequestDto employeeDataRequestDto, HttpServletResponse response) throws Exception {
 
 		Optional<Users> users = loginValidation(employeeDataRequestDto.getUserName(),
 				employeeDataRequestDto.getPassword());
@@ -252,15 +255,56 @@ public class EmployeeProductController {
 		}
 
 		List<EmployeeDetails> employeeDetailsList = employeeProductService
-				.findbyCompanyDetails(employeeDataRequestDto.getCompanyId());
-
-		ByteArrayInputStream bis = GeneratePdfReportUtil.employeeReport(employeeDetailsList,users.get().getCompanyDetails().getCompanyName());
-
+				.findbyCompanyDetails(users.get().getCompanyDetails().getId());
+		ByteArrayInputStream bis = null;
 		HttpHeaders headers = new HttpHeaders();
-		headers.add("Content-Disposition", "inline; filename=EmployeeReport.pdf");
 
-		return ResponseEntity.ok().headers(headers).contentType(MediaType.APPLICATION_PDF)
-				.body(new InputStreamResource(bis));
+		if (employeeDataRequestDto.getDocumentType() == 1) {
+
+			bis = GeneratePdfReportUtil.employeeReport(employeeDetailsList,
+					users.get().getCompanyDetails().getCompanyName());
+
+			headers.add("Content-Disposition", "inline; filename=EmployeeReport.pdf");
+			return ResponseEntity.ok().headers(headers).contentType(MediaType.APPLICATION_PDF)
+					.body(new InputStreamResource(bis));
+		}
+
+		else if (employeeDataRequestDto.getDocumentType() == 2) {
+			bis = GenerateExcelReportUtil.employeeReport(employeeDetailsList,
+					users.get().getCompanyDetails().getCompanyName());
+			headers.add("Content-Disposition", "inline; filename=EmployeeReport.xlsx");
+			return ResponseEntity.ok().headers(headers).body(new InputStreamResource(bis));
+		} else {
+			throw new Exception("Invalid Document Type");
+		}
+
+	}
+
+	@ApiOperation(value = "Generate EmployeeReport CSV")
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "Successfully GeneratedCSV"),
+			@ApiResponse(code = 401, message = "You are not authorized to Log In"),
+			@ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
+			@ApiResponse(code = 404, message = "The resource you were trying to reach is not found") })
+	@RequestMapping(value = "/employeeListCsvReport", method = RequestMethod.POST)
+	public void generateCsvEmployeeReport(@RequestBody EmployeeDataRequestDto employeeDataRequestDto,
+			HttpServletResponse response) throws Exception {
+		if (employeeDataRequestDto.getDocumentType() == 3) {
+			Optional<Users> users = loginValidation(employeeDataRequestDto.getUserName(),
+					employeeDataRequestDto.getPassword());
+
+			if (!users.get().getRole().equalsIgnoreCase("Admin")) {
+				throw new Exception("You are not authorised to retrieve the list of Employees");
+			}
+
+			List<EmployeeDetails> employeeDetailsList = employeeProductService
+					.findbyCompanyDetails(users.get().getCompanyDetails().getId());
+
+			GenerateCsvReportUtil.generateEmployeeDetails(response.getWriter(), employeeDetailsList,
+					users.get().getCompanyDetails().getCompanyName());
+			response.setHeader("Content-Disposition", "attachment; filename=AllUsersCSVReport.csv");
+		} else {
+			throw new Exception("Invalid Document Type");
+		}
 
 	}
 

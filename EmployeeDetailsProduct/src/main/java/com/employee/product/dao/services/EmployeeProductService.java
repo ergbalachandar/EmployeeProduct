@@ -55,11 +55,11 @@ public class EmployeeProductService {
 		return entity.find(EmployeeDetails.class, id);
 	}
 
-	public List<EmployeeDetails> findbyCompanyDetails(String id) {
+	public List<EmployeeDetails> findbyCompanyDetails(int id) {
 
 		System.out.println("inside companyDetails");
 		CompanyDetails companyDetails = new CompanyDetails();
-		companyDetails.setId(Integer.valueOf(id));
+		companyDetails.setId(id);
 		List<EmployeeDetails> employeeDetailsList = employeeDetailsInterface.findByCompanyDetails(companyDetails);
 		return employeeDetailsList;
 

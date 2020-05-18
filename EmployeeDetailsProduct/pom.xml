@@ -35,6 +35,11 @@
 			<scope>runtime</scope>
 			<version>8.0.13</version>
 		</dependency>
+		<!-- Dependency for WebSocket Notification Service -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-websocket</artifactId>
+		</dependency>
 
 		<!-- Swagger Dependencies -->
 
@@ -58,12 +63,34 @@
 			<version>2.6.1</version>
 			<scope>compile</scope>
 		</dependency>
+		
 		<!-- Dependency for PDF Generation -->
 		<dependency>
 			<groupId>com.lowagie</groupId>
 			<artifactId>itext</artifactId>
 			<version>4.2.2</version>
 		</dependency>
+		
+		<!-- Dependency for Generating Excel Sheet -->
+		
+		<dependency>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi</artifactId>
+			<version>4.1.2</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi-ooxml</artifactId>
+			<version>4.1.2</version>
+		</dependency>
+		
+		<!-- Dependency for Generating csv Files -->
+		
+		<dependency>
+            <groupId>com.opencsv</groupId>
+            <artifactId>opencsv</artifactId>
+            <version>5.0</version>
+        </dependency>
 
 		<!-- Email Dependency -->
 
