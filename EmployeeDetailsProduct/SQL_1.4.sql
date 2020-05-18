@@ -133,4 +133,6 @@ DROP INDEX email_id ON employee;
 
 ALTER TABLE employee ADD CONSTRAINT email_id UNIQUE(email_id, active);
 
+ALTER TABLE employee add column postal_code varchar(255);
+
 

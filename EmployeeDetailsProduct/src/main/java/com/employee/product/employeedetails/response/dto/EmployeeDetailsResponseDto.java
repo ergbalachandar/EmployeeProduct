@@ -31,6 +31,10 @@ public class EmployeeDetailsResponseDto {
 	private String contactNumber;
 
 	private Date dateOfBirth;
+	
+	private String postalCode;
+	
+	private String jobRole;
 
 	private List<EmployeeWorkPermitDetailsResponseDto> workPermitDetails;
 

@@ -43,6 +43,8 @@ public class EmployeeDetailsRequestDto {
 	
 	private String workLocation;
 	
+	private String postalCode;
+	
     private List<EmployeeWorkPermitDetailsRequestDto> workPermitDetails;
     
     private List<EmployeePassportDetailsRequestDto> passportDetails;

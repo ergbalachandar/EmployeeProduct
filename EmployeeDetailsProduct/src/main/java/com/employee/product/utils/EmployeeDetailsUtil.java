@@ -54,6 +54,8 @@ public class EmployeeDetailsUtil {
 		employeeDetailsResponseDto.setSex(employeeDetails.getSex());
 		employeeDetailsResponseDto.setState(employeeDetails.getState());
 		employeeDetailsResponseDto.setId(employeeDetails.getId());
+		employeeDetailsResponseDto.setPostalCode(employeeDetails.getPostalCode());
+		employeeDetailsResponseDto.setJobRole(employeeDetails.getJobRole());
 		if (!retrieveEmployeeService) {
 
 			// Mapping PassportDetails

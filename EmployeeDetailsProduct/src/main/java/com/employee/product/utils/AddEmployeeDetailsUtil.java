@@ -40,6 +40,7 @@ public class AddEmployeeDetailsUtil {
 		employeeDetails.setState(emloyeeDetailsRequestDto.getState());
 		employeeDetails.setWorkLocation(emloyeeDetailsRequestDto.getWorkLocation());
 		employeeDetails.setActive(1);
+		employeeDetails.setPostalCode(emloyeeDetailsRequestDto.getPostalCode());
 		if (null != emloyeeDetailsRequestDto.getId()) {
 			employeeDetails.setId(emloyeeDetailsRequestDto.getId());
 		}
