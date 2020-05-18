@@ -135,4 +135,45 @@ ALTER TABLE employee ADD CONSTRAINT email_id UNIQUE(email_id, active);
 
 ALTER TABLE employee add column postal_code varchar(255);
 
+-- Changes for making employee ID as String - Starts --
+
+ALTER TABLE `family_details` DROP FOREIGN KEY `family_details_ibfk_1`;
+
+ALTER TABLE `passport_details` DROP FOREIGN KEY `passport_details_ibfk_1`;
+
+ALTER TABLE `payslip_details` DROP FOREIGN KEY `payslip_details_ibfk_1`;
+
+ALTER TABLE `workpermit_details` DROP FOREIGN KEY `workpermit_details_ibfk_1`;
+
+ALTER TABLE `family_details` DROP INDEX `employee_id`;
+
+ALTER TABLE `passport_details` DROP INDEX `employee_id`;
+
+ALTER TABLE `payslip_details` DROP INDEX `employee_id`;
+
+ALTER TABLE `workpermit_details` DROP INDEX `employee_id`;
+
+ALTER TABLE employee MODIFY COLUMN id varchar(255);
+
+ALTER TABLE family_details MODIFY COLUMN employee_id varchar(255);
+
+ALTER TABLE passport_details MODIFY COLUMN employee_id varchar(255);
+
+ALTER TABLE payslip_details MODIFY COLUMN employee_id varchar(255);
+
+ALTER TABLE workpermit_details MODIFY COLUMN employee_id varchar(255);
+
+ALTER TABLE `workpermit_details` ADD FOREIGN KEY (`employee_id`) REFERENCES `employee` (`id`);
+
+ALTER TABLE `family_details` ADD FOREIGN KEY (`employee_id`) REFERENCES `employee` (`id`);
+
+ALTER TABLE `passport_details` ADD FOREIGN KEY (`employee_id`) REFERENCES `employee` (`id`);
+
+ALTER TABLE `payslip_details` ADD FOREIGN KEY (`employee_id`) REFERENCES `employee` (`id`);
+
+-- Changes for making employee ID as String - ends --
+
+
+
+
 

@@ -8,7 +8,7 @@ import lombok.Data;
 @Data
 public class EmployeeDetailsResponseDto {
 
-	private int id;
+	private String id;
 	
 	private String firstName;
 

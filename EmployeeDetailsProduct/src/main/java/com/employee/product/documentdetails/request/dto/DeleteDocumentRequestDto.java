@@ -9,6 +9,6 @@ public class DeleteDocumentRequestDto {
 	private String password;
 	private String documentNumber;
 	private String documentType;
-	private Integer employeeId;
+	private String employeeId;
 
 }

@@ -3,11 +3,13 @@ package com.employee.product.dao.services;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 import java.util.Set;
 
 import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +21,7 @@ import com.employee.product.entity.employeedetails.EmployeeDetails;
 import com.employee.product.entity.employeedetails.EmployeePassportDetails;
 import com.employee.product.entity.employeedetails.EmployeePaySlipDetails;
 import com.employee.product.entity.employeedetails.EmployeeWorkPermitDetails;
+import com.employee.product.utils.AddEmployeeDetailsUtil;
 
 @Service
 public class EmployeeProductService {
@@ -51,7 +54,7 @@ public class EmployeeProductService {
 	}
 
 	@Transactional
-	public EmployeeDetails findByEmployeeId(Integer id) {
+	public EmployeeDetails findByEmployeeId(String id) {
 		return entity.find(EmployeeDetails.class, id);
 	}
 
@@ -84,6 +87,23 @@ public class EmployeeProductService {
 		EmployeeDetails employeeDetailsValue = new EmployeeDetails();
 		if (newEmployee) {
 			checkForDocumentAlreadyPresentWithOtherEmployee(employeeDetails, loggedInUserName);
+			String comp = null;
+			String fName = null;
+			String sName = null;
+				int num = AddEmployeeDetailsUtil.generateRandomNumber();
+				if(companyDetails.getCompanyName().length()>4) {
+				comp = companyDetails.getCompanyName().substring(0,4);
+				}
+				else
+				{
+					comp = companyDetails.getCompanyName();
+				}
+				fName = employeeDetails.getFirstName().toUpperCase().substring(0,1);
+				sName = employeeDetails.getLastName().toUpperCase().substring(0,1);
+				String employeeId = comp+ fName + sName + String.valueOf(num);
+				
+				employeeDetails.setId(employeeId);
+	
 			employeeDetailsValue = employeeDetailsInterface.save(employeeDetails);
 
 		} else {
@@ -110,7 +130,7 @@ public class EmployeeProductService {
 
 		Optional<Users> userRoleOfLoggedInEmployee = loginDetailsInterface.findById(userName);
 
-		if (employeeDetails.getId() != 0) {
+		if (StringUtils.isNotBlank(employeeDetails.getId())) {
 
 			Set<EmployeeWorkPermitDetails> employeeWorkPermitDetailsList = employeeDetails
 					.getEmployeeWorkPermitDetails();

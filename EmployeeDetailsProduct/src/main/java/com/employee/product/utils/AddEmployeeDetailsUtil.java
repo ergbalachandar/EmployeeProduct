@@ -3,7 +3,10 @@ package com.employee.product.utils;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Random;
 import java.util.Set;
+
+import org.apache.commons.lang3.StringUtils;
 
 import com.employee.product.employeedetails.request.dto.AddEmployeeRequestDto;
 import com.employee.product.employeedetails.request.dto.EmployeeDetailsRequestDto;
@@ -131,10 +134,10 @@ public class AddEmployeeDetailsUtil {
 	}
 
 	public static void mapAddEmployeeRequest(AddEmployeeRequestDto addEmployeeRequestDto, Users users,
-			EmployeeDetails employeeDetails, CompanyDetails companyDetails) {
+			EmployeeDetails employeeDetails, CompanyDetails companyDetails,boolean newEmployee) {
 
 		EmployeeDetailsRequestDto emloyeeDetailsRequestDto = addEmployeeRequestDto.getEmployeeDetails();
-
+		
 		users.setActive(1);
 		users.setCountry(emloyeeDetailsRequestDto.getCountry());
 		users.setFirstName(emloyeeDetailsRequestDto.getFirstName());
@@ -160,9 +163,19 @@ public class AddEmployeeDetailsUtil {
 		//users.setCompanyDetails(companyDetails);
 	}
 	
+	public static int generateRandomNumber() {
+		Random generator = new Random();
+		generator.setSeed(System.currentTimeMillis());
+		int num = generator.nextInt(900000) + 100000;
+		
+		System.out.println("asjdfaksdjflaksdjfl-------->" + num);
+		return num;
+		
+	}
+	
 	public static boolean checkForNewOrUpdateEmployee(boolean newEmployee,AddEmployeeRequestDto addEmployeeRequestDto) {
 		
-		if(addEmployeeRequestDto.getEmployeeDetails().getId() == 0) {
+		if(StringUtils.isBlank(addEmployeeRequestDto.getEmployeeDetails().getId())) {
 			newEmployee = true;
 		}
 		

@@ -40,7 +40,7 @@ public class DocumentManagementService {
 
 	@Transactional
 	public void addWorkPermitDocument(EmployeeWorkPermitDocumentDetails employeeWorkPermitDocumentDetails,
-			String loggedInUserName, int employeeId) throws Exception {
+			String loggedInUserName, String employeeId) throws Exception {
 		EmployeeWorkPermitDetails employeeWorkPermitDetails = new EmployeeWorkPermitDetails();
 
 		employeeWorkPermitDetails.setWorkPermitNumber(employeeWorkPermitDocumentDetails.getWorkPermitNumber());
@@ -67,7 +67,7 @@ public class DocumentManagementService {
 
 	@Transactional
 	public void addPaySlipDocument(EmployeePaySlipDocumentDetails employeePaySlipDocumentDetails,
-			String loggedInUserName, int employeeId) throws Exception {
+			String loggedInUserName, String employeeId) throws Exception {
 
 		EmployeePaySlipDetails employeePaySlipDetails = new EmployeePaySlipDetails();
 
@@ -93,7 +93,7 @@ public class DocumentManagementService {
 
 	@Transactional
 	public void addPassportDocument(EmployeePassportDocumentDetails employeePassportDocumentDetails,
-			String loggedInUserName, int employeeId) throws Exception {
+			String loggedInUserName, String employeeId) throws Exception {
 
 		EmployeePassportDetails employeePassportDetails = new EmployeePassportDetails();
 
@@ -149,7 +149,7 @@ public class DocumentManagementService {
 
 	}
 
-	public static void accessValidation(Optional<Users> userRoleOfLoggedInEmployee, Users users, int employeeId) throws Exception {
+	public static void accessValidation(Optional<Users> userRoleOfLoggedInEmployee, Users users, String employeeId) throws Exception {
 
 		if (userRoleOfLoggedInEmployee.get().getEmployeeDetails().stream().findFirst().get().getId() != users
 				.getEmployeeDetails().stream().findFirst().get().getId()

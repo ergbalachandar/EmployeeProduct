@@ -11,7 +11,7 @@ import lombok.Data;
 public class EmployeeDetailsRequestDto {
 	
 	
-	private Integer id;
+	private String id;
 	
 	private String firstName;
 
