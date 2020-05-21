@@ -87,22 +87,8 @@ public class EmployeeProductService {
 		EmployeeDetails employeeDetailsValue = new EmployeeDetails();
 		if (newEmployee) {
 			checkForDocumentAlreadyPresentWithOtherEmployee(employeeDetails, loggedInUserName);
-			String comp = null;
-			String fName = null;
-			String sName = null;
-				int num = AddEmployeeDetailsUtil.generateRandomNumber();
-				if(companyDetails.getCompanyName().length()>4) {
-				comp = companyDetails.getCompanyName().substring(0,4);
-				}
-				else
-				{
-					comp = companyDetails.getCompanyName();
-				}
-				fName = employeeDetails.getFirstName().toUpperCase().substring(0,1);
-				sName = employeeDetails.getLastName().toUpperCase().substring(0,1);
-				String employeeId = comp+ fName + sName + String.valueOf(num);
-				
-				employeeDetails.setId(employeeId);
+			
+			employeeDetails.setId(AddEmployeeDetailsUtil.generateEmployeeId(companyDetails.getCompanyName(), employeeDetails.getFirstName(), employeeDetails.getLastName()));
 	
 			employeeDetailsValue = employeeDetailsInterface.save(employeeDetails);
 

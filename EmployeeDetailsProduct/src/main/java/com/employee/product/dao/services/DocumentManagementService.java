@@ -162,7 +162,7 @@ public class DocumentManagementService {
 			throw new Exception("You are not authorised to manage the document of other company employee");
 		}
 		
-		if(userRoleOfLoggedInEmployee.get().getRole().equalsIgnoreCase("Admin") && users.getEmployeeDetails().stream().findFirst().get().getId() != employeeId) {
+		if(userRoleOfLoggedInEmployee.get().getRole().equalsIgnoreCase("Admin") && !users.getEmployeeDetails().stream().findFirst().get().getId() .equalsIgnoreCase( employeeId)) {
 			throw new Exception("Document you are trying to update is already associated with other employee");
 		}
 

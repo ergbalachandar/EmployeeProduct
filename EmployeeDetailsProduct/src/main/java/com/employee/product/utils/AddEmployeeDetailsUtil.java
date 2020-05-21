@@ -163,6 +163,27 @@ public class AddEmployeeDetailsUtil {
 		//users.setCompanyDetails(companyDetails);
 	}
 	
+	
+	public static String generateEmployeeId(String companyName, String firstName, String lastName) {
+		String comp = null;
+		String fName = null;
+		String sName = null;
+			int num = generateRandomNumber();
+			if(companyName.length()>4) {
+			comp = companyName.substring(0,4);
+			}
+			else
+			{
+				comp = companyName;
+			}
+			fName = firstName.toUpperCase().substring(0,1);
+			sName = lastName.toUpperCase().substring(0,1);
+			String employeeId = comp+ fName + sName + String.valueOf(num);
+			
+			return employeeId;
+		
+	}
+	
 	public static int generateRandomNumber() {
 		Random generator = new Random();
 		generator.setSeed(System.currentTimeMillis());
@@ -172,6 +193,7 @@ public class AddEmployeeDetailsUtil {
 		return num;
 		
 	}
+	
 	
 	public static boolean checkForNewOrUpdateEmployee(boolean newEmployee,AddEmployeeRequestDto addEmployeeRequestDto) {
 		
