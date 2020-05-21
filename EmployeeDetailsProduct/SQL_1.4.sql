@@ -174,6 +174,12 @@ ALTER TABLE `payslip_details` ADD FOREIGN KEY (`employee_id`) REFERENCES `employ
 -- Changes for making employee ID as String - ends --
 
 
+-- JWT changes starts --
+
+ALTER TABLE users RENAME COLUMN user_name TO username;
+
+-- JWT changes ends --
+
 
 
 
