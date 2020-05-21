@@ -6,7 +6,6 @@ import java.util.Set;
 import com.employee.product.dao.services.DocumentManagementService;
 import com.employee.product.documentdetails.request.dto.DeleteDocumentRequestDto;
 import com.employee.product.documentdetails.response.dto.DeleteDocumentResponseDto;
-import com.employee.product.entity.companydetails.Users;
 import com.employee.product.entity.employeedetails.EmployeeDetails;
 import com.employee.product.entity.employeedetails.EmployeePassportDetails;
 import com.employee.product.entity.employeedetails.EmployeePaySlipDetails;
@@ -14,12 +13,12 @@ import com.employee.product.entity.employeedetails.EmployeeWorkPermitDetails;
 
 public class DeleteDocumentUtil {
 
-	public static void validateRequestForOthers(Optional<Users> users, EmployeeDetails employeeDetails,
+	public static void validateRequestForOthers(String loggedInUserName, EmployeeDetails employeeDetails,
 			String documentNumber, String documentType) throws Exception {
 
 		boolean result = false;
 
-		if (!employeeDetails.getEmailId().equalsIgnoreCase(users.get().getUserName())) {
+		if (!employeeDetails.getEmailId().equalsIgnoreCase(loggedInUserName)) {
 			throw new Exception("You dont have permission to delete the document");
 		}
 

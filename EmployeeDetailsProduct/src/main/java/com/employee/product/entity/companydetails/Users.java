@@ -6,17 +6,13 @@ import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
 
 import com.employee.product.entity.employeedetails.EmployeeDetails;
-
 
 import lombok.Data;
 
@@ -26,7 +22,7 @@ import lombok.Data;
 public class Users {
 
 	@Id
-	@Column(name = "user_name")
+	@Column(name = "username")
 	private String userName;
 	@Column(name = "first_name")
 	private String firstName;
@@ -50,5 +46,14 @@ public class Users {
 	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "company_id")
 	private CompanyDetails companyDetails;
+	
+	public Users (String username, String password) {
+		this.userName = username;
+		this.password = password;
+	}
+	
+	public Users() {
+		
+	}
 
 }

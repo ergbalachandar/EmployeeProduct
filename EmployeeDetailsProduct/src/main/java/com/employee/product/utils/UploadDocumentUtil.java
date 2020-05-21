@@ -9,19 +9,19 @@ import com.employee.product.entity.employeedetails.EmployeeWorkPermitDocumentDet
 
 public class UploadDocumentUtil {
 
-	public static void uploadDocument(UploadDocumentDetailsRequestDto uploadDocumentDetailsRequestDto, byte[] bytes,
+	public static void uploadDocument(String loggedInUserName,UploadDocumentDetailsRequestDto uploadDocumentDetailsRequestDto, byte[] bytes,
 			DocumentManagementService documentManagementService, String fileName) throws Exception {
 
 		switch (uploadDocumentDetailsRequestDto.getDocumentType()) {
 		case "1":
-			uploadWorkPermitDocumentDetails(uploadDocumentDetailsRequestDto, bytes, documentManagementService,
+			uploadWorkPermitDocumentDetails(loggedInUserName,uploadDocumentDetailsRequestDto, bytes, documentManagementService,
 					fileName);
 			break;
 		case "2":
-			uploadPaySlipDocumentDetails(uploadDocumentDetailsRequestDto, bytes, documentManagementService, fileName);
+			uploadPaySlipDocumentDetails(loggedInUserName,uploadDocumentDetailsRequestDto, bytes, documentManagementService, fileName);
 			break;
 		case "3":
-			uploadPassportDocumentDetails(uploadDocumentDetailsRequestDto, bytes, documentManagementService, fileName);
+			uploadPassportDocumentDetails(loggedInUserName,uploadDocumentDetailsRequestDto, bytes, documentManagementService, fileName);
 			break;
 		default:
 			throw new Exception("Document type doesnt valid");
@@ -30,7 +30,7 @@ public class UploadDocumentUtil {
 
 	}
 
-	private static void uploadWorkPermitDocumentDetails(UploadDocumentDetailsRequestDto uploadDocumentDetailsRequestDto,
+	private static void uploadWorkPermitDocumentDetails(String loggedInUserName, UploadDocumentDetailsRequestDto uploadDocumentDetailsRequestDto,
 			byte[] bytes, DocumentManagementService documentManagementService, String fileName) throws Exception {
 
 		EmployeeWorkPermitDocumentDetails employeeWorkPermitDocumentDetails = new EmployeeWorkPermitDocumentDetails();
@@ -38,10 +38,10 @@ public class UploadDocumentUtil {
 		employeeWorkPermitDocumentDetails.setWorkPermitNumber(uploadDocumentDetailsRequestDto.getDocumentNumber());
 		employeeWorkPermitDocumentDetails.setDocumentName(fileName);
 		documentManagementService.addWorkPermitDocument(employeeWorkPermitDocumentDetails,
-				uploadDocumentDetailsRequestDto.getLoggedInUserName(),uploadDocumentDetailsRequestDto.getEmployeeId());
+				 loggedInUserName,uploadDocumentDetailsRequestDto.getEmployeeId());
 	}
 
-	private static void uploadPaySlipDocumentDetails(UploadDocumentDetailsRequestDto uploadDocumentDetailsRequestDto,
+	private static void uploadPaySlipDocumentDetails(String loggedInUserName, UploadDocumentDetailsRequestDto uploadDocumentDetailsRequestDto,
 			byte[] bytes, DocumentManagementService documentManagementService, String fileName) throws Exception {
 
 		EmployeePaySlipDocumentDetails employeePaySlipDocumentDetails = new EmployeePaySlipDocumentDetails();
@@ -49,11 +49,11 @@ public class UploadDocumentUtil {
 		employeePaySlipDocumentDetails.setPaySlipNumber(uploadDocumentDetailsRequestDto.getDocumentNumber());
 		employeePaySlipDocumentDetails.setDocumentName(fileName);
 		documentManagementService.addPaySlipDocument(employeePaySlipDocumentDetails,
-				uploadDocumentDetailsRequestDto.getLoggedInUserName(),uploadDocumentDetailsRequestDto.getEmployeeId());
+				 loggedInUserName,uploadDocumentDetailsRequestDto.getEmployeeId());
 
 	}
 
-	private static void uploadPassportDocumentDetails(UploadDocumentDetailsRequestDto uploadDocumentDetailsRequestDto,
+	private static void uploadPassportDocumentDetails(String loggedInUserName,UploadDocumentDetailsRequestDto uploadDocumentDetailsRequestDto,
 			byte[] bytes, DocumentManagementService documentManagementService, String fileName) throws Exception {
 
 		EmployeePassportDocumentDetails employeePassportDocumentDetails = new EmployeePassportDocumentDetails();
@@ -61,7 +61,7 @@ public class UploadDocumentUtil {
 		employeePassportDocumentDetails.setPassportNumber(uploadDocumentDetailsRequestDto.getDocumentNumber());
 		employeePassportDocumentDetails.setDocumentName(fileName);
 		documentManagementService.addPassportDocument(employeePassportDocumentDetails,
-				uploadDocumentDetailsRequestDto.getLoggedInUserName(),uploadDocumentDetailsRequestDto.getEmployeeId());
+				 loggedInUserName,uploadDocumentDetailsRequestDto.getEmployeeId());
 
 	}
 

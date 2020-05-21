@@ -6,7 +6,7 @@ import lombok.Data;
 public class RetrieveEmployeeDataRequestDto {
 	
 	private String employeeId;
-	private String userName;
-	private String password;
+//	private String userName;
+//	private String password;
 
 }

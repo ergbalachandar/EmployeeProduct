@@ -6,7 +6,7 @@ import lombok.Data;
 
 @Data
 public class LoginDetailsResponseDto {
-	
+
 	private String userName;
 	
 	private String role;
@@ -15,6 +15,9 @@ public class LoginDetailsResponseDto {
 	
 	private String companyId;
 	
+	private String jwt;
+	
 	private EmployeeDetailsResponseDto employeeDetails;
+	
 
 }

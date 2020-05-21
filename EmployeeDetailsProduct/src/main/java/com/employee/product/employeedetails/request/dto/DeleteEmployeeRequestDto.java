@@ -7,8 +7,8 @@ public class DeleteEmployeeRequestDto {
 	
 	private String userName;
 	
-	private String adminUserName;
-	
-	private String adminPassword;
+//	private String adminUserName;
+//	
+//	private String adminPassword;
 
 }

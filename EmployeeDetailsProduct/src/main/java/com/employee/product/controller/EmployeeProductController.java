@@ -2,7 +2,6 @@ package com.employee.product.controller;
 
 import java.io.ByteArrayInputStream;
 import java.util.List;
-import java.util.Optional;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -12,6 +11,11 @@ import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,6 +34,7 @@ import com.employee.product.companydetails.response.dto.LoginDetailsResponseDto;
 import com.employee.product.dao.services.DocumentManagementService;
 import com.employee.product.dao.services.EmployeeProductService;
 import com.employee.product.dao.services.LoginDetailsService;
+import com.employee.product.dao.services.UserDetailsImpl;
 import com.employee.product.documentdetails.request.dto.DeleteDocumentRequestDto;
 import com.employee.product.documentdetails.request.dto.UploadDocumentDetailsRequestDto;
 import com.employee.product.documentdetails.response.dto.DeleteDocumentResponseDto;
@@ -47,6 +52,7 @@ import com.employee.product.entity.employeedetails.EmployeeDetails;
 import com.employee.product.entity.employeedetails.EmployeePassportDocumentDetails;
 import com.employee.product.entity.employeedetails.EmployeePaySlipDocumentDetails;
 import com.employee.product.entity.employeedetails.EmployeeWorkPermitDocumentDetails;
+import com.employee.product.security.jwt.JwtUtils;
 import com.employee.product.utils.AddEmployeeDetailsUtil;
 import com.employee.product.utils.CompanySignUpDetailsUtil;
 import com.employee.product.utils.DeleteDocumentUtil;
@@ -63,6 +69,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import io.swagger.annotations.Authorization;
 
 @RestController
 
@@ -79,6 +86,15 @@ public class EmployeeProductController {
 	private DocumentManagementService documentManagementService;
 
 	@Autowired
+	AuthenticationManager authenticationManager;
+
+	@Autowired
+	PasswordEncoder encoder;
+
+	@Autowired
+	JwtUtils jwtUtils;
+
+	@Autowired
 	private MailSender mailSender;
 
 	/**
@@ -86,7 +102,7 @@ public class EmployeeProductController {
 	 * 
 	 * @param CompanyDetailsRequestDto
 	 */
-	@RequestMapping(method = RequestMethod.POST, value = "/companysignup")
+	@RequestMapping(method = RequestMethod.POST, value = "/user/companysignup")
 	@ApiOperation(value = "Sign Up Company")
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "Successfully Signed Up"),
 			@ApiResponse(code = 401, message = "You are not authorized to sign Up"),
@@ -98,10 +114,11 @@ public class EmployeeProductController {
 		Users users = new Users();
 		CompanyDetailsResponseDto companyDetailsResponseDto = new CompanyDetailsResponseDto();
 		CompanySignUpDetailsUtil.companySignUpDetailsMapping(companyDetailsDto, users);
+		users.setPassword(encoder.encode(companyDetailsDto.getPassword()));
 		users = employeeProductService.signUpCompanyDetails(users);
 
 		CompanySignUpDetailsUtil.sendMessage(mailSender, companyDetailsDto.getEmailId(),
-		 companyDetailsDto.getCompanyName(), users);
+				companyDetailsDto.getCompanyName(), users);
 
 		CompanySignUpDetailsUtil.companyDetailsSignUpResponseMapping(companyDetailsResponseDto);
 		return companyDetailsResponseDto;
@@ -113,31 +130,36 @@ public class EmployeeProductController {
 	 * @param LoginDetailsrequestDto
 	 * @throws Exception
 	 */
-	@RequestMapping(method = RequestMethod.POST, value = "/loginUser")
+	@RequestMapping(method = RequestMethod.POST, value = "/user/loginUser")
 	@ApiOperation(value = "LoginUser")
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "Successfully Logged In"),
 			@ApiResponse(code = 401, message = "You are not authorized to Log In"),
 			@ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
 			@ApiResponse(code = 404, message = "The resource you were trying to reach is not found") })
 	@ResponseBody
-	public LoginDetailsResponseDto loginUser(@RequestBody LoginDetailsRequestDto loginDetailsRequestDto,
+	public ResponseEntity<?> loginUser(@RequestBody LoginDetailsRequestDto loginDetailsRequestDto,
 			HttpSession httpSession) throws Exception {
 
 		LoginDetailsResponseDto loginDetailsResponseDto = new LoginDetailsResponseDto();
-		Users users = new Users();
-		Optional<Users> optionalUsers = loginValidation(loginDetailsRequestDto.getUserName(),
-				loginDetailsRequestDto.getPassword());
-		if (loginDetailsRequestDto.getReset() == 0) {
-			users = optionalUsers.get();
-			LoginUserUtil.mapLoginDetailsResponseDto(users, loginDetailsResponseDto);
-		} else {
-			Users usersWithNewPassword = loginDetailsService.updatePassword(loginDetailsRequestDto.getNewPassword(),
-					loginDetailsRequestDto.getUserName());
-			LoginUserUtil.mapLoginDetailsResponseDto(usersWithNewPassword, loginDetailsResponseDto);
-		}
-		httpSession.setAttribute("userName", users.getUserName());
+		Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
+				loginDetailsRequestDto.getUserName(), loginDetailsRequestDto.getPassword()));
 
-		return loginDetailsResponseDto;
+		SecurityContextHolder.getContext().setAuthentication(authentication);
+		String jwt = jwtUtils.generateJwtToken(authentication);
+
+		UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+
+		if (loginDetailsRequestDto.getReset() == 0) {
+			LoginUserUtil.mapLoginDetailsResponseDto(userDetails.getUsers(), loginDetailsResponseDto);
+			loginDetailsResponseDto.setJwt(jwt);
+		} else {
+			Users usersWithNewPassword = loginDetailsService.updatePassword(
+					encoder.encode(loginDetailsRequestDto.getNewPassword()), loginDetailsRequestDto.getUserName());
+			LoginUserUtil.mapLoginDetailsResponseDto(usersWithNewPassword, loginDetailsResponseDto);
+			loginDetailsResponseDto.setJwt(null);
+		}
+
+		return ResponseEntity.ok(loginDetailsResponseDto);
 
 	}
 
@@ -147,26 +169,22 @@ public class EmployeeProductController {
 	 * @param EmployeeDataResponseDto
 	 * @throws Exception
 	 */
-	@RequestMapping(method = RequestMethod.POST, value = "/retrieveEmployeeList")
-	@ApiOperation(value = "RetrieveEmployeeList")
+	@RequestMapping(method = RequestMethod.GET, value = "/retrieveEmployeeList")
+	@ApiOperation(value = "RetrieveEmployeeList", authorizations = { @Authorization(value = "jwtToken") })
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "Successfully retrieved EmployeeList"),
 			@ApiResponse(code = 401, message = "You are not authorized to Log In"),
 			@ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
 			@ApiResponse(code = 404, message = "The resource you were trying to reach is not found") })
 	@ResponseBody
-
-	public EmployeeDataResponseDto retrieveEmployeeList(@RequestBody EmployeeDataRequestDto employeeDataRequestDto,
-			HttpSession httpSession) throws Exception {
+	public EmployeeDataResponseDto retrieveEmployeeList() throws Exception {
 		EmployeeDataResponseDto employeeDataResponseDto = new EmployeeDataResponseDto();
+		UserDetailsImpl userDetailsImpl = generateUserDetailsFromJWT();
 
-		Optional<Users> users = loginValidation(employeeDataRequestDto.getUserName(),
-				employeeDataRequestDto.getPassword());
-
-		if (!users.get().getRole().equalsIgnoreCase("Admin")) {
+		if (!userDetailsImpl.getUsers().getRole().equalsIgnoreCase("Admin")) {
 			throw new Exception("You are not authorised to retrieve the list of Employees");
 		}
 		List<EmployeeDetails> employeeDetailsList = employeeProductService
-				.findbyCompanyDetails(users.get().getCompanyDetails().getId());
+				.findbyCompanyDetails(userDetailsImpl.getUsers().getCompanyDetails().getId());
 
 		EmployeeDetailsUtil.mappingEmployeeDataResponse(employeeDetailsList, employeeDataResponseDto);
 
@@ -181,7 +199,7 @@ public class EmployeeProductController {
 	 * @throws Exception
 	 */
 	@RequestMapping(method = RequestMethod.POST, value = "/retrieveEmployeeData")
-	@ApiOperation(value = "RetrieveEmployeeData")
+	@ApiOperation(value = "RetrieveEmployeeData", authorizations = { @Authorization(value = "jwtToken") })
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "Successfully retrieved Employee Data"),
 			@ApiResponse(code = 401, message = "You are not authorized to Log In"),
 			@ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
@@ -191,10 +209,14 @@ public class EmployeeProductController {
 	public EmployeeDetailsResponseDto retrieveEmployeeList(
 			@RequestBody RetrieveEmployeeDataRequestDto retrieveEmployeeDataRequestDto) throws Exception {
 		EmployeeDetailsResponseDto employeeDetailsResponseDto = new EmployeeDetailsResponseDto();
-		loginValidation(retrieveEmployeeDataRequestDto.getUserName(), retrieveEmployeeDataRequestDto.getPassword());
+		UserDetailsImpl userDetailsImpl = generateUserDetailsFromJWT();
 		EmployeeDetails employeeDetails = employeeProductService
 				.findByEmployeeId(retrieveEmployeeDataRequestDto.getEmployeeId());
-		EmployeeDetailsUtil.mapEmployeeDetails(employeeDetailsResponseDto, employeeDetails, false);
+		if (userDetailsImpl.getUsers().getCompanyDetails().getId() == employeeDetails.getCompanyDetails().getId()) {
+			EmployeeDetailsUtil.mapEmployeeDetails(employeeDetailsResponseDto, employeeDetails, false);
+		} else {
+			throw new Exception("You are not authorised to retrieve the employee Data of other Company");
+		}
 		return employeeDetailsResponseDto;
 
 	}
@@ -206,7 +228,7 @@ public class EmployeeProductController {
 	 * @throws Exception
 	 */
 	@RequestMapping(method = RequestMethod.POST, value = "/addModifyEmployee")
-	@ApiOperation(value = "Add or Update Employee")
+	@ApiOperation(value = "Add or Update Employee", authorizations = { @Authorization(value = "jwtToken") })
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "Successfully added or updated EmployeeDetails"),
 			@ApiResponse(code = 401, message = "You are not authorized to Log In"),
 			@ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
@@ -219,12 +241,13 @@ public class EmployeeProductController {
 		Users users = new Users();
 		boolean newEmployee = false;
 		EmployeeDetails employeeDetails = new EmployeeDetails();
+		UserDetailsImpl userDetailsImpl = generateUserDetailsFromJWT();
 		CompanyDetails companyDetails = employeeProductService.findCompanyDetails(addEmployeeRequestDto.getCompanyId());
-		System.out.println(companyDetails);
 		newEmployee = AddEmployeeDetailsUtil.checkForNewOrUpdateEmployee(newEmployee, addEmployeeRequestDto);
-		AddEmployeeDetailsUtil.mapAddEmployeeRequest(addEmployeeRequestDto, users, employeeDetails, companyDetails,newEmployee);
+		AddEmployeeDetailsUtil.mapAddEmployeeRequest(addEmployeeRequestDto, users, employeeDetails, companyDetails,
+				newEmployee);
 		employeeDetails = employeeProductService.addOrUpdateEmployeeDetails(employeeDetails, users, companyDetails,
-				newEmployee, addEmployeeRequestDto.getLoggedInUserName());
+				newEmployee, userDetailsImpl.getUsers().getUserName());
 		EmployeeDetailsResponseDto employeeDetailsResponseDto = new EmployeeDetailsResponseDto();
 		EmployeeDetailsUtil.mapEmployeeDetails(employeeDetailsResponseDto, employeeDetails, false);
 
@@ -239,7 +262,8 @@ public class EmployeeProductController {
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "/employeeListReport", method = RequestMethod.POST, produces = MediaType.APPLICATION_PDF_VALUE)
-	@ApiOperation(value = "Generate EmployeeReport PDF or XLSX")
+	@ApiOperation(value = "Generate EmployeeReport PDF or XLSX", authorizations = {
+			@Authorization(value = "jwtToken") })
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "Successfully GeneratedPDF"),
 			@ApiResponse(code = 401, message = "You are not authorized to Log In"),
 			@ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
@@ -247,22 +271,21 @@ public class EmployeeProductController {
 	public ResponseEntity<InputStreamResource> employeePdfReport(
 			@RequestBody EmployeeDataRequestDto employeeDataRequestDto, HttpServletResponse response) throws Exception {
 
-		Optional<Users> users = loginValidation(employeeDataRequestDto.getUserName(),
-				employeeDataRequestDto.getPassword());
+		UserDetailsImpl userDetailsImpl = generateUserDetailsFromJWT();
 
-		if (!users.get().getRole().equalsIgnoreCase("Admin")) {
+		if (!userDetailsImpl.getUsers().getRole().equalsIgnoreCase("Admin")) {
 			throw new Exception("You are not authorised to retrieve the list of Employees");
 		}
 
 		List<EmployeeDetails> employeeDetailsList = employeeProductService
-				.findbyCompanyDetails(users.get().getCompanyDetails().getId());
+				.findbyCompanyDetails(userDetailsImpl.getUsers().getCompanyDetails().getId());
 		ByteArrayInputStream bis = null;
 		HttpHeaders headers = new HttpHeaders();
 
 		if (employeeDataRequestDto.getDocumentType() == 1) {
 
 			bis = GeneratePdfReportUtil.employeeReport(employeeDetailsList,
-					users.get().getCompanyDetails().getCompanyName());
+					userDetailsImpl.getUsers().getCompanyDetails().getCompanyName());
 
 			headers.add("Content-Disposition", "inline; filename=EmployeeReport.pdf");
 			return ResponseEntity.ok().headers(headers).contentType(MediaType.APPLICATION_PDF)
@@ -271,7 +294,7 @@ public class EmployeeProductController {
 
 		else if (employeeDataRequestDto.getDocumentType() == 2) {
 			bis = GenerateExcelReportUtil.employeeReport(employeeDetailsList,
-					users.get().getCompanyDetails().getCompanyName());
+					userDetailsImpl.getUsers().getCompanyDetails().getCompanyName());
 			headers.add("Content-Disposition", "inline; filename=EmployeeReport.xlsx");
 			return ResponseEntity.ok().headers(headers).body(new InputStreamResource(bis));
 		} else {
@@ -280,7 +303,7 @@ public class EmployeeProductController {
 
 	}
 
-	@ApiOperation(value = "Generate EmployeeReport CSV")
+	@ApiOperation(value = "Generate EmployeeReport CSV", authorizations = { @Authorization(value = "jwtToken") })
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "Successfully GeneratedCSV"),
 			@ApiResponse(code = 401, message = "You are not authorized to Log In"),
 			@ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
@@ -288,19 +311,18 @@ public class EmployeeProductController {
 	@RequestMapping(value = "/employeeListCsvReport", method = RequestMethod.POST)
 	public void generateCsvEmployeeReport(@RequestBody EmployeeDataRequestDto employeeDataRequestDto,
 			HttpServletResponse response) throws Exception {
+		UserDetailsImpl userDetailsImpl = generateUserDetailsFromJWT();
 		if (employeeDataRequestDto.getDocumentType() == 3) {
-			Optional<Users> users = loginValidation(employeeDataRequestDto.getUserName(),
-					employeeDataRequestDto.getPassword());
 
-			if (!users.get().getRole().equalsIgnoreCase("Admin")) {
+			if (!userDetailsImpl.getUsers().getRole().equalsIgnoreCase("Admin")) {
 				throw new Exception("You are not authorised to retrieve the list of Employees");
 			}
 
 			List<EmployeeDetails> employeeDetailsList = employeeProductService
-					.findbyCompanyDetails(users.get().getCompanyDetails().getId());
+					.findbyCompanyDetails(userDetailsImpl.getUsers().getCompanyDetails().getId());
 
 			GenerateCsvReportUtil.generateEmployeeDetails(response.getWriter(), employeeDetailsList,
-					users.get().getCompanyDetails().getCompanyName());
+					userDetailsImpl.getUsers().getCompanyDetails().getCompanyName());
 			response.setHeader("Content-Disposition", "attachment; filename=AllUsersCSVReport.csv");
 		} else {
 			throw new Exception("Invalid Document Type");
@@ -315,7 +337,7 @@ public class EmployeeProductController {
 	 * @throws Exception
 	 */
 	@RequestMapping(method = RequestMethod.POST, value = "/deleteEmployee")
-	@ApiOperation(value = "Delete Employee")
+	@ApiOperation(value = "Delete Employee", authorizations = { @Authorization(value = "jwtToken") })
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "Successfully Deleted"),
 			@ApiResponse(code = 401, message = "You are not authorized to Log In"),
 			@ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
@@ -323,16 +345,15 @@ public class EmployeeProductController {
 	@ResponseBody
 	public DeleteEmployeeResponseDto deleteEmployee(@RequestBody DeleteEmployeeRequestDto deleteEmployeeRequestDto)
 			throws Exception {
-
+		UserDetailsImpl userDetailsImpl = generateUserDetailsFromJWT();
 		DeleteEmployeeResponseDto deleteEmployeeResponseDto = new DeleteEmployeeResponseDto();
-		Optional<Users> users = loginValidation(deleteEmployeeRequestDto.getAdminUserName(),
-				deleteEmployeeRequestDto.getAdminPassword());
 
-		if (!users.get().getRole().equalsIgnoreCase("Admin")) {
+		if (!userDetailsImpl.getUsers().getRole().equalsIgnoreCase("Admin")) {
 			throw new Exception("You are not authorised to Delete the employee");
 		}
 
-		employeeProductService.deleteEmployee(deleteEmployeeRequestDto.getUserName());
+		employeeProductService.deleteEmployee(deleteEmployeeRequestDto.getUserName(),
+				userDetailsImpl.getUsers().getCompanyDetails().getId());
 		DeleteEmployeeResponseUtil.mapResponseDeleteEmployeeResponse(deleteEmployeeResponseDto);
 
 		return deleteEmployeeResponseDto;
@@ -341,7 +362,7 @@ public class EmployeeProductController {
 
 	@RequestMapping(method = RequestMethod.POST, value = "/uploadDocument", consumes = { "multipart/form-data",
 			MediaType.APPLICATION_JSON_VALUE })
-	@ApiOperation(value = "Upload Document")
+	@ApiOperation(value = "Upload Document", authorizations = { @Authorization(value = "jwtToken") })
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "Successfully Uploaded"),
 			@ApiResponse(code = 401, message = "You are not authorized to Log In"),
 			@ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
@@ -351,11 +372,12 @@ public class EmployeeProductController {
 		UploadDocumentDetailsResponseDto uploadDocumentDetailsResponseDto = new UploadDocumentDetailsResponseDto();
 		byte[] bytes = uploadFile.getBytes();
 		ObjectMapper mapper = new ObjectMapper();
+		UserDetailsImpl userDetailsImpl = generateUserDetailsFromJWT();
 		UploadDocumentDetailsRequestDto uploadDocumentDetailsRequestDto = mapper.readValue(value,
 				UploadDocumentDetailsRequestDto.class);
 		try {
-			UploadDocumentUtil.uploadDocument(uploadDocumentDetailsRequestDto, bytes, documentManagementService,
-					uploadFile.getOriginalFilename());
+			UploadDocumentUtil.uploadDocument(userDetailsImpl.getUsers().getUserName(), uploadDocumentDetailsRequestDto,
+					bytes, documentManagementService, uploadFile.getOriginalFilename());
 		} catch (Exception e) {
 			throw new Exception("Could not upload Document");
 		}
@@ -365,15 +387,15 @@ public class EmployeeProductController {
 	}
 
 	@PostMapping("/downloadDocument")
-	@ApiOperation(value = "Download Document")
+	@ApiOperation(value = "Download Document", authorizations = { @Authorization(value = "jwtToken") })
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "Successfully Downloaded"),
 			@ApiResponse(code = 401, message = "You are not authorized to Download"),
 			@ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
 			@ApiResponse(code = 404, message = "The resource you were trying to reach is not found"),
 			@ApiResponse(code = 204, message = "No Content for the document") })
 	public ResponseEntity<?> downloadFromDB(
-			@RequestBody UploadDocumentDetailsRequestDto uploadDocumentDetailsRequestDto) {
-
+			@RequestBody UploadDocumentDetailsRequestDto uploadDocumentDetailsRequestDto) throws Exception {
+		generateUserDetailsFromJWT();
 		Object obj = DownloadDocumentUtil.downloadDocument(uploadDocumentDetailsRequestDto, documentManagementService);
 		if (obj instanceof EmployeeWorkPermitDocumentDetails) {
 			return ResponseEntity.ok().contentType(MediaType.parseMediaType("application/octet-stream"))
@@ -397,7 +419,7 @@ public class EmployeeProductController {
 	}
 
 	@PostMapping("/deleteDocument")
-	@ApiOperation(value = "Delete Document")
+	@ApiOperation(value = "Delete Document", authorizations = { @Authorization(value = "jwtToken") })
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "Successfully Deleted"),
 			@ApiResponse(code = 401, message = "You are not authorized to Delete Document"),
 			@ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
@@ -406,15 +428,14 @@ public class EmployeeProductController {
 	public DeleteDocumentResponseDto deleteDocument(@RequestBody DeleteDocumentRequestDto deleteDocumentRequestDto)
 			throws Exception {
 		DeleteDocumentResponseDto deleteDocumentResponseDto = new DeleteDocumentResponseDto();
-		Optional<Users> users = loginValidation(deleteDocumentRequestDto.getUserName(),
-				deleteDocumentRequestDto.getPassword());
+		UserDetailsImpl userDetailsImpl = generateUserDetailsFromJWT();
 		EmployeeDetails employeeDetails = employeeProductService
 				.findByEmployeeId(deleteDocumentRequestDto.getEmployeeId());
-		if (!users.get().getRole().equalsIgnoreCase("Admin")) {
-			DeleteDocumentUtil.validateRequestForOthers(users, employeeDetails,
+		if (!userDetailsImpl.getUsers().getRole().equalsIgnoreCase("Admin")) {
+			DeleteDocumentUtil.validateRequestForOthers(userDetailsImpl.getUsers().getUserName(), employeeDetails,
 					deleteDocumentRequestDto.getDocumentNumber(), deleteDocumentRequestDto.getDocumentType());
-		} else if (users.get().getRole().equalsIgnoreCase("Admin")) {
-			if (users.get().getCompanyDetails().getId() != employeeDetails.getCompanyDetails().getId()) {
+		} else if (userDetailsImpl.getUsers().getRole().equalsIgnoreCase("Admin")) {
+			if (userDetailsImpl.getUsers().getCompanyDetails().getId() != employeeDetails.getCompanyDetails().getId()) {
 				throw new Exception("You are not authorised to delete the document of the employee");
 			}
 		}
@@ -425,12 +446,26 @@ public class EmployeeProductController {
 
 	}
 
-	private Optional<Users> loginValidation(String userName, String password) throws Exception {
+	/*
+	 * private Optional<Users> loginValidation(String userName, String password)
+	 * throws Exception {
+	 * 
+	 * Optional<Users> optionalUsers = loginDetailsService.loginUser(userName);
+	 * 
+	 * LoginUserUtil.validateLoginDetails(optionalUsers, password);
+	 * 
+	 * return optionalUsers; }
+	 */
 
-		Optional<Users> optionalUsers = loginDetailsService.loginUser(userName);
+	private static UserDetailsImpl generateUserDetailsFromJWT() throws Exception {
 
-		LoginUserUtil.validateLoginDetails(optionalUsers, password);
+		UserDetailsImpl userDetailsImpl = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication()
+				.getPrincipal();
 
-		return optionalUsers;
+		if (userDetailsImpl.getUsers().getActive() == 0) {
+			throw new Exception("Your profile has been deleted");
+		}
+
+		return userDetailsImpl;
 	}
 }

@@ -3,7 +3,6 @@ package com.employee.product.dao.services;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
-import java.util.Random;
 import java.util.Set;
 
 import javax.persistence.EntityManager;
@@ -69,9 +68,12 @@ public class EmployeeProductService {
 	}
 
 	@Transactional
-	public void deleteEmployee(String userName) {
+	public void deleteEmployee(String userName, int companyId) throws Exception {
 
 		Users users = entity.find(Users.class, userName);
+		if(users.getCompanyDetails().getId()!= companyId) {
+			throw new Exception("You dont have authorise to delete employee of other company");
+		}
 		users.setActive(0);
 		Set<EmployeeDetails> employeeDetailsSet = users.getEmployeeDetails();
 		for (EmployeeDetails employeeDetails : employeeDetailsSet) {
