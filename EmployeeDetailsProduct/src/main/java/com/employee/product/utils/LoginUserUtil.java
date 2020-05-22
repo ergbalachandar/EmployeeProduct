@@ -23,7 +23,7 @@ public class LoginUserUtil {
 
 		loginDetailsResponseDto.setRole(users.getRole());
 		loginDetailsResponseDto.setUserName(users.getUserName());
-		loginDetailsResponseDto.setCompanyId(String.valueOf(users.getCompanyDetails().getId()));
+		loginDetailsResponseDto.setCompanyId(users.getCompanyDetails().getId());
 		loginDetailsResponseDto.setCompanyName(users.getCompanyDetails().getCompanyName());
 		Set<EmployeeDetails> employeeDetailsSet = users.getEmployeeDetails();
 		EmployeeDetailsResponseDto employeeDetailsResponseDto = new EmployeeDetailsResponseDto();

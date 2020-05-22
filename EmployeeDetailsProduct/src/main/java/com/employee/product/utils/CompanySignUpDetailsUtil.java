@@ -52,6 +52,9 @@ public class CompanySignUpDetailsUtil {
 		companyDetails.setContactNumber(companyDetailsDto.getContactNumber());
 		companyDetails.setSizeOfTheCompany(companyDetailsDto.getSizeOfTheCompany());
 		companyDetails.setActive(companyDetailsDto.getActive());
+		int num = AddEmployeeDetailsUtil.generateRandomNumber();
+		String cName = companyDetailsDto.getCompanyName().substring(0,4);
+		companyDetails.setId(cName.toUpperCase() + String.valueOf(num));
 
 	}
 

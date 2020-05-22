@@ -15,8 +15,8 @@ import lombok.Data;
 public class CompanyDetails {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int id;
+	//@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private String id;
 	@Column(name = "name")
 	private String companyName;
 	@Column(name = "email_id")

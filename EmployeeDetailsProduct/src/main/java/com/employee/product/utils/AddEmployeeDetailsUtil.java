@@ -178,7 +178,7 @@ public class AddEmployeeDetailsUtil {
 			}
 			fName = firstName.toUpperCase().substring(0,1);
 			sName = lastName.toUpperCase().substring(0,1);
-			String employeeId = comp+ fName + sName + String.valueOf(num);
+			String employeeId = comp.toUpperCase() + fName + sName + String.valueOf(num);
 			
 			return employeeId;
 		
@@ -188,8 +188,6 @@ public class AddEmployeeDetailsUtil {
 		Random generator = new Random();
 		generator.setSeed(System.currentTimeMillis());
 		int num = generator.nextInt(900000) + 100000;
-		
-		System.out.println("asjdfaksdjflaksdjfl-------->" + num);
 		return num;
 		
 	}

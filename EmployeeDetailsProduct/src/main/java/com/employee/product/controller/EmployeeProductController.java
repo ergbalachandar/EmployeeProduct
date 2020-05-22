@@ -212,7 +212,7 @@ public class EmployeeProductController {
 		UserDetailsImpl userDetailsImpl = generateUserDetailsFromJWT();
 		EmployeeDetails employeeDetails = employeeProductService
 				.findByEmployeeId(retrieveEmployeeDataRequestDto.getEmployeeId());
-		if (userDetailsImpl.getUsers().getCompanyDetails().getId() == employeeDetails.getCompanyDetails().getId()) {
+		if (userDetailsImpl.getUsers().getCompanyDetails().getId().equalsIgnoreCase(employeeDetails.getCompanyDetails().getId())) {
 			EmployeeDetailsUtil.mapEmployeeDetails(employeeDetailsResponseDto, employeeDetails, false);
 		} else {
 			throw new Exception("You are not authorised to retrieve the employee Data of other Company");
@@ -435,7 +435,7 @@ public class EmployeeProductController {
 			DeleteDocumentUtil.validateRequestForOthers(userDetailsImpl.getUsers().getUserName(), employeeDetails,
 					deleteDocumentRequestDto.getDocumentNumber(), deleteDocumentRequestDto.getDocumentType());
 		} else if (userDetailsImpl.getUsers().getRole().equalsIgnoreCase("Admin")) {
-			if (userDetailsImpl.getUsers().getCompanyDetails().getId() != employeeDetails.getCompanyDetails().getId()) {
+			if (!userDetailsImpl.getUsers().getCompanyDetails().getId().equalsIgnoreCase(employeeDetails.getCompanyDetails().getId())) {
 				throw new Exception("You are not authorised to delete the document of the employee");
 			}
 		}

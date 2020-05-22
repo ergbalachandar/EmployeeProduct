@@ -47,7 +47,7 @@ public class EmployeeProductService {
 	}
 
 	@Transactional
-	public CompanyDetails findCompanyDetails(int id) {
+	public CompanyDetails findCompanyDetails(String id) {
 
 		return entity.find(CompanyDetails.class, id);
 	}
@@ -57,7 +57,7 @@ public class EmployeeProductService {
 		return entity.find(EmployeeDetails.class, id);
 	}
 
-	public List<EmployeeDetails> findbyCompanyDetails(int id) {
+	public List<EmployeeDetails> findbyCompanyDetails(String id) {
 
 		System.out.println("inside companyDetails");
 		CompanyDetails companyDetails = new CompanyDetails();
@@ -68,10 +68,10 @@ public class EmployeeProductService {
 	}
 
 	@Transactional
-	public void deleteEmployee(String userName, int companyId) throws Exception {
+	public void deleteEmployee(String userName, String companyId) throws Exception {
 
 		Users users = entity.find(Users.class, userName);
-		if(users.getCompanyDetails().getId()!= companyId) {
+		if(!users.getCompanyDetails().getId().equalsIgnoreCase(companyId)) {
 			throw new Exception("You dont have authorise to delete employee of other company");
 		}
 		users.setActive(0);

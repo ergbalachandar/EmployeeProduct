@@ -158,7 +158,7 @@ public class DocumentManagementService {
 		}
 
 		if (userRoleOfLoggedInEmployee.get().getRole().equalsIgnoreCase("Admin")
-				&& userRoleOfLoggedInEmployee.get().getCompanyDetails().getId() != users.getCompanyDetails().getId()) {
+				&& !userRoleOfLoggedInEmployee.get().getCompanyDetails().getId().equalsIgnoreCase(users.getCompanyDetails().getId())) {
 			throw new Exception("You are not authorised to manage the document of other company employee");
 		}
 		
