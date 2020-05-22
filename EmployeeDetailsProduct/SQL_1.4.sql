@@ -180,6 +180,28 @@ ALTER TABLE users RENAME COLUMN user_name TO username;
 
 -- JWT changes ends --
 
+-- Changes for making company ID as string - starts --
+
+ALTER TABLE `users` DROP FOREIGN KEY `users_ibfk_1`;
+
+ALTER TABLE `employee` DROP FOREIGN KEY `employee_ibfk_2`;
+
+ALTER TABLE `users` DROP INDEX `company_id`;
+
+ALTER TABLE `employee` DROP INDEX `company_id`;
+
+ALTER TABLE company MODIFY COLUMN id varchar(255);
+
+ALTER TABLE employee MODIFY COLUMN company_id varchar(255);
+
+ALTER TABLE users MODIFY COLUMN company_id varchar(255);
+
+ALTER TABLE `users` ADD FOREIGN KEY (`company_id`) REFERENCES `company` (`id`);
+
+ALTER TABLE `employee` ADD FOREIGN KEY (`company_id`) REFERENCES `company` (`id`);
+
+-- Changes for making company ID as String - ends --
+
 
 
 
