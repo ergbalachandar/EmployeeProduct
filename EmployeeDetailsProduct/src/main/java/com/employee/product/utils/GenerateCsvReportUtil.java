@@ -1,7 +1,5 @@
 package com.employee.product.utils;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.PrintWriter;
 import java.util.List;
 
@@ -33,7 +31,7 @@ public class GenerateCsvReportUtil {
 	                    .withSeparator(',')
 	                    .build();
 	            
-	            ByteArrayOutputStream out = new ByteArrayOutputStream();
+	           // ByteArrayOutputStream out = new ByteArrayOutputStream();
 
 	            btcsv.write(employeeDetailsList);
 	       

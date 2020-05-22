@@ -2,8 +2,6 @@ package com.employee.product.entity.employeedetails;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
@@ -13,11 +11,11 @@ import lombok.Data;
 @Entity
 @Table(name = "payslip_details")
 public class EmployeePaySlipDetails {
-	
+
 	@Id
 	@Column(name = "payslip_number")
 	private String paySlipNumber;
-	
+
 	@Column(name = "payslip_month")
 	private String paySlipMonth;
 

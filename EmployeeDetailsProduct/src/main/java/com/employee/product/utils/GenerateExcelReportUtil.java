@@ -16,7 +16,6 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.VerticalAlignment;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.util.CellRangeAddress;
-import org.apache.poi.ss.util.CellUtil;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import com.employee.product.entity.employeedetails.EmployeeDetails;
@@ -25,6 +24,7 @@ public class GenerateExcelReportUtil {
 	public static ByteArrayInputStream employeeReport(List<EmployeeDetails> employeeDetailsList, String companyName)
 			throws IOException {
 
+		@SuppressWarnings("resource")
 		Workbook workbook = new XSSFWorkbook();
 		Sheet sheet = workbook.createSheet("Employee Report");
 		sheet.setDefaultColumnWidth(30);
