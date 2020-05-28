@@ -113,8 +113,9 @@ public class AddEmployeeDetailsUtil {
 			}
 		}
 		employeeDetails.setEmployeePassportDetails(employeePassportDetailsSet);
-
+		/*   Commenting as payslip is not required in this module
 		Set<EmployeePaySlipDetails> employeePaySlipDetailsSet = new HashSet<EmployeePaySlipDetails>();
+		
 
 		List<EmployeePaySlipDetailsRequestDto> employeePaySlipDetailsRequestDtoList = emloyeeDetailsRequestDto
 				.getPaySlipDetails();
@@ -129,7 +130,7 @@ public class AddEmployeeDetailsUtil {
 			}
 
 			employeeDetails.setEmployeePaySlipDetails(employeePaySlipDetailsSet);
-		}
+		} */
 
 	}
 

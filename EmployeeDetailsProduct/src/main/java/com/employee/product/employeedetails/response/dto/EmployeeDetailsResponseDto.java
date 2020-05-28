@@ -9,7 +9,7 @@ import lombok.Data;
 public class EmployeeDetailsResponseDto {
 
 	private String id;
-	
+
 	private String firstName;
 
 	private String lastName;
@@ -31,10 +31,16 @@ public class EmployeeDetailsResponseDto {
 	private String contactNumber;
 
 	private Date dateOfBirth;
-	
+
 	private String postalCode;
-	
+
 	private String jobRole;
+
+	private String department;
+
+	private String reportingPerson;
+
+	private String workLocation;
 
 	private List<EmployeeWorkPermitDetailsResponseDto> workPermitDetails;
 
@@ -42,7 +48,8 @@ public class EmployeeDetailsResponseDto {
 
 	private List<EmployeeFamilyDetailsResponseDto> familyDetails;
 
-	//Commenting the call to map Payslip details as it is not required in this module
-	//private List<EmployeePaySlipDocumentDetailsResponseDto> payslipDetails;
+	// Commenting the call to map Payslip details as it is not required in this
+	// module
+	// private List<EmployeePaySlipDocumentDetailsResponseDto> payslipDetails;
 
 }
