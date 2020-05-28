@@ -29,5 +29,8 @@ public class EmployeePassportDetails {
 
 	@Column(name = "validity")
 	private int validity;
+	
+	@Column(name ="birth_place")
+	private String birthPlace;
 
 }

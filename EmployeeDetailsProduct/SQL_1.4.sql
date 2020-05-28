@@ -1,4 +1,4 @@
-use innodb;
+use EmployeeProduct;
 
 CREATE TABLE `users` (
   `user_name` varchar(255) PRIMARY KEY,
@@ -201,6 +201,8 @@ ALTER TABLE `users` ADD FOREIGN KEY (`company_id`) REFERENCES `company` (`id`);
 ALTER TABLE `employee` ADD FOREIGN KEY (`company_id`) REFERENCES `company` (`id`);
 
 -- Changes for making company ID as String - ends --
+
+ALTER TABLE passport_details ADD COLUMN birth_place varchar(255);
 
 
 

@@ -12,5 +12,6 @@ public class EmployeePassportDetailsResponseDto {
 	private Date endDate;
 	private String issuePlace;
 	private int validity;
+	private String birthPlace;
 
 }

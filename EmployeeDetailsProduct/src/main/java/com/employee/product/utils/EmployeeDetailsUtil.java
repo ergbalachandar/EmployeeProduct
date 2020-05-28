@@ -96,6 +96,7 @@ public class EmployeeDetailsUtil {
 			employeePassportDetailsResponseDto.setPassportNumber(employeePassportDetails.getPassportNumber());
 			employeePassportDetailsResponseDto.setStartDate(employeePassportDetails.getStartDate());
 			employeePassportDetailsResponseDto.setValidity(employeePassportDetails.getValidity());
+			employeePassportDetailsResponseDto.setBirthPlace(employeePassportDetails.getBirthPlace());
 			employeePassportDetailsResponseDtoList.add(employeePassportDetailsResponseDto);
 		}
 
