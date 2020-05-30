@@ -7,6 +7,7 @@ import java.util.Random;
 import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.employee.product.employeedetails.request.dto.AddEmployeeRequestDto;
 import com.employee.product.employeedetails.request.dto.EmployeeDetailsRequestDto;
@@ -136,7 +137,7 @@ public class AddEmployeeDetailsUtil {
 	}
 
 	public static void mapAddEmployeeRequest(AddEmployeeRequestDto addEmployeeRequestDto, Users users,
-			EmployeeDetails employeeDetails, CompanyDetails companyDetails,boolean newEmployee) {
+			EmployeeDetails employeeDetails, CompanyDetails companyDetails,boolean newEmployee,PasswordEncoder encoder) {
 
 		EmployeeDetailsRequestDto emloyeeDetailsRequestDto = addEmployeeRequestDto.getEmployeeDetails();
 		
@@ -144,7 +145,7 @@ public class AddEmployeeDetailsUtil {
 		users.setCountry(emloyeeDetailsRequestDto.getCountry());
 		users.setFirstName(emloyeeDetailsRequestDto.getFirstName());
 		users.setLastName(emloyeeDetailsRequestDto.getLastName());
-		users.setPassword(emloyeeDetailsRequestDto.getEmailId());
+		users.setPassword(encoder.encode(emloyeeDetailsRequestDto.getEmailId()));
 		users.setRole("Employee");
 		users.setUserName(emloyeeDetailsRequestDto.getEmailId());
 		users.setCreatedAt(new Date());

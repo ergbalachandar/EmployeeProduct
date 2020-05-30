@@ -117,7 +117,7 @@ public class EmployeeProductController {
 		users.setPassword(encoder.encode(companyDetailsDto.getPassword()));
 		users = employeeProductService.signUpCompanyDetails(users);
 
-		CompanySignUpDetailsUtil.sendMessage(mailSender, companyDetailsDto.getEmailId(),
+	CompanySignUpDetailsUtil.sendMessage(mailSender, companyDetailsDto.getEmailId(),
 				companyDetailsDto.getCompanyName(), users);
 
 		CompanySignUpDetailsUtil.companyDetailsSignUpResponseMapping(companyDetailsResponseDto);
@@ -245,7 +245,7 @@ public class EmployeeProductController {
 		CompanyDetails companyDetails = employeeProductService.findCompanyDetails(addEmployeeRequestDto.getCompanyId());
 		newEmployee = AddEmployeeDetailsUtil.checkForNewOrUpdateEmployee(newEmployee, addEmployeeRequestDto);
 		AddEmployeeDetailsUtil.mapAddEmployeeRequest(addEmployeeRequestDto, users, employeeDetails, companyDetails,
-				newEmployee);
+				newEmployee,encoder);
 		employeeDetails = employeeProductService.addOrUpdateEmployeeDetails(employeeDetails, users, companyDetails,
 				newEmployee, userDetailsImpl.getUsers().getUserName());
 		EmployeeDetailsResponseDto employeeDetailsResponseDto = new EmployeeDetailsResponseDto();
