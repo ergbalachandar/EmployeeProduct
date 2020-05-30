@@ -132,8 +132,9 @@ public class EmployeeProductService {
 						employeeDetails.getId());
 
 			}
+			//Commented as Payslip is not required in this module.
 
-			Set<EmployeePaySlipDetails> employeePaySlipDetailsList = employeeDetails.getEmployeePaySlipDetails();
+		/*	Set<EmployeePaySlipDetails> employeePaySlipDetailsList = employeeDetails.getEmployeePaySlipDetails();
 
 			for (EmployeePaySlipDetails employeePaySlipDetails : employeePaySlipDetailsList) {
 
@@ -143,7 +144,7 @@ public class EmployeeProductService {
 				DocumentManagementService.accessValidation(userRoleOfLoggedInEmployee, userDetailsRetrieval,
 						employeeDetails.getId());
 
-			}
+			} */
 
 			Set<EmployeePassportDetails> employeePassportDetailsList = employeeDetails.getEmployeePassportDetails();
 
