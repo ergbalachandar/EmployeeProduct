@@ -5,6 +5,7 @@ import java.util.Optional;
 import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 
+import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -58,10 +59,15 @@ public class DocumentManagementService {
 					.setDocumentData(employeeWorkPermitDocumentDetails.getDocumentData());
 			employeeWorkPermitDocumentDetailsRetrieval
 					.setDocumentName(employeeWorkPermitDocumentDetails.getDocumentName());
+			employeeWorkPermitDocumentDetailsRetrieval.getWorkpermit_number().setDocumentName(employeeWorkPermitDocumentDetails.getDocumentName());
+			employeeWorkPermitDocumentDetailsRetrieval.getWorkpermit_number().setDocumentType(FilenameUtils.getExtension(employeeWorkPermitDocumentDetails.getDocumentName()));
+			
 		} else {
 			employeeWorkPermitDocumentDetails.setWorkpermit_number(users.getEmployeeDetails().stream().findFirst().get()
 					.getEmployeeWorkPermitDetails().stream().findFirst().get());
 			entity.persist(employeeWorkPermitDocumentDetails);
+			users.getEmployeeDetails().stream().findFirst().get().getEmployeeWorkPermitDetails().stream().findFirst().get().setDocumentName(employeeWorkPermitDocumentDetails.getDocumentName());
+			users.getEmployeeDetails().stream().findFirst().get().getEmployeeWorkPermitDetails().stream().findFirst().get().setDocumentType(FilenameUtils.getExtension(employeeWorkPermitDocumentDetails.getDocumentName()));
 		}
 	}
 
@@ -84,10 +90,14 @@ public class DocumentManagementService {
 
 			employeePaySlipDocumentDetailsRetrieval.setDocumentData(employeePaySlipDocumentDetails.getDocumentData());
 			employeePaySlipDocumentDetailsRetrieval.setDocumentName(employeePaySlipDocumentDetails.getDocumentName());
+			employeePaySlipDocumentDetailsRetrieval.getPayslip_number().setDocumentName(employeePaySlipDocumentDetails.getDocumentName());
+			employeePaySlipDocumentDetailsRetrieval.getPayslip_number().setDocumentType(FilenameUtils.getExtension(employeePaySlipDocumentDetails.getDocumentName()));
 		} else {
 			employeePaySlipDocumentDetails.setPayslip_number(users.getEmployeeDetails().stream().findFirst().get()
 					.getEmployeePaySlipDetails().stream().findFirst().get());
 			entity.persist(employeePaySlipDocumentDetails);
+			users.getEmployeeDetails().stream().findFirst().get().getEmployeePaySlipDetails().stream().findFirst().get().setDocumentName(employeePaySlipDocumentDetails.getDocumentName());
+			users.getEmployeeDetails().stream().findFirst().get().getEmployeePaySlipDetails().stream().findFirst().get().setDocumentType(FilenameUtils.getExtension(employeePaySlipDocumentDetails.getDocumentName()));
 		}
 	}
 
@@ -110,11 +120,17 @@ public class DocumentManagementService {
 
 			employeePassportDocumentDetailsRetrieval.setDocumentData(employeePassportDocumentDetails.getDocumentData());
 			employeePassportDocumentDetailsRetrieval.setDocumentName(employeePassportDocumentDetails.getDocumentName());
+			employeePassportDocumentDetailsRetrieval.getPassport_number().setDocumentName(employeePassportDocumentDetails.getDocumentName());
+			employeePassportDocumentDetailsRetrieval.getPassport_number().setDocumentType(FilenameUtils.getExtension(employeePassportDocumentDetails.getDocumentName()));
 		} else {
 			employeePassportDocumentDetails.setPassport_number(users.getEmployeeDetails().stream().findFirst().get()
 					.getEmployeePassportDetails().stream().findFirst().get());
 			entity.persist(employeePassportDocumentDetails);
+			users.getEmployeeDetails().stream().findFirst().get().getEmployeePassportDetails().stream().findFirst().get().setDocumentName(employeePassportDocumentDetails.getDocumentName());
+			users.getEmployeeDetails().stream().findFirst().get().getEmployeePassportDetails().stream().findFirst().get().setDocumentType(FilenameUtils.getExtension(employeePassportDocumentDetails.getDocumentName()));
+		
 		}
+		
 	}
 
 	@Transactional
@@ -150,6 +166,8 @@ public class DocumentManagementService {
 	}
 
 	public static void accessValidation(Optional<Users> userRoleOfLoggedInEmployee, Users users, String employeeId) throws Exception {
+		
+		if(users != null) {
 
 		if (userRoleOfLoggedInEmployee.get().getEmployeeDetails().stream().findFirst().get().getId() != users
 				.getEmployeeDetails().stream().findFirst().get().getId()
@@ -164,6 +182,14 @@ public class DocumentManagementService {
 		
 		if(userRoleOfLoggedInEmployee.get().getRole().equalsIgnoreCase("Admin") && !users.getEmployeeDetails().stream().findFirst().get().getId() .equalsIgnoreCase( employeeId)) {
 			throw new Exception("Document you are trying to update is already associated with other employee");
+		}
+		}
+		
+		else {
+			if(!userRoleOfLoggedInEmployee.get().getEmployeeDetails().stream().findFirst().get().getId().equalsIgnoreCase(employeeId)) {
+				
+				throw new Exception ("You are not authorised to manage document of other users");
+			}
 		}
 
 	}

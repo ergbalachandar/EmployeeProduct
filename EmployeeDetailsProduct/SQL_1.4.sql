@@ -204,6 +204,22 @@ ALTER TABLE `employee` ADD FOREIGN KEY (`company_id`) REFERENCES `company` (`id`
 
 ALTER TABLE passport_details ADD COLUMN birth_place varchar(255);
 
+-- Changes for adding document name and type in details table - starts -- 
+
+ALTER TABLE workpermit_details add column document_name varchar(255);
+
+ALTER TABLE workpermit_details add column document_type varchar(255);
+
+ALTER TABLE passport_details add column document_name varchar(255);
+
+ALTER TABLE passport_details add column document_type varchar(255);
+
+ALTER TABLE payslip_details add column document_name varchar(255);
+
+ALTER TABLE payslip_details add column document_type varchar(255);
+
+-- Changes for adding document name and type in details table - ends -- 
+
 
 
 

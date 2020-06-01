@@ -16,6 +16,9 @@ public class EmployeeWorkPermitDetailsResponseDto {
 	
 	private int validity;
 	
+	private String documentName;
+	
+	private String documentType;
 	
 
 }

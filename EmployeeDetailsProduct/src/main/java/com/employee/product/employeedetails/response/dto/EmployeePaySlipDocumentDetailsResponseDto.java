@@ -7,6 +7,7 @@ public class EmployeePaySlipDocumentDetailsResponseDto {
 
 	private String documentName;
 	private String documentNumber;
+	private String documentType;
 	
 
 }

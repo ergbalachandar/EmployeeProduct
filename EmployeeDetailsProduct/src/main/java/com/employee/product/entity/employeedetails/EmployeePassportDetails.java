@@ -32,5 +32,11 @@ public class EmployeePassportDetails {
 	
 	@Column(name ="birth_place")
 	private String birthPlace;
+	
+	@Column(name = "document_name")
+	private String documentName;
+	
+	@Column(name = "document_type")
+	private String documentType;
 
 }

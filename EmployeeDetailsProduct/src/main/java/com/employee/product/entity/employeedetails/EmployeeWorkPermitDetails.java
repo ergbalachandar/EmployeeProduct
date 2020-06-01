@@ -26,5 +26,11 @@ public class EmployeeWorkPermitDetails {
 
 	@Column(name = "validity")
 	private int validity;
+	
+	@Column(name = "document_name")
+	private String documentName;
+	
+	@Column(name = "document_type")
+	private String documentType;
 
 }

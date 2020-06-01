@@ -97,6 +97,8 @@ public class EmployeeDetailsUtil {
 			employeePassportDetailsResponseDto.setStartDate(employeePassportDetails.getStartDate());
 			employeePassportDetailsResponseDto.setValidity(employeePassportDetails.getValidity());
 			employeePassportDetailsResponseDto.setBirthPlace(employeePassportDetails.getBirthPlace());
+			employeePassportDetailsResponseDto.setDocumentName(employeePassportDetails.getDocumentName());
+			employeePassportDetailsResponseDto.setDocumentType(employeePassportDetails.getDocumentType());
 			employeePassportDetailsResponseDtoList.add(employeePassportDetailsResponseDto);
 		}
 
@@ -120,6 +122,8 @@ public class EmployeeDetailsUtil {
 			employeeWorkPermitDetailsResponseDto.setEndDate(employeeWorkPermitDetails.getEndDate());
 			employeeWorkPermitDetailsResponseDto.setStartDate(employeeWorkPermitDetails.getStartDate());
 			employeeWorkPermitDetailsResponseDto.setValidity(employeeWorkPermitDetails.getValidity());
+			employeeWorkPermitDetailsResponseDto.setDocumentName(employeeWorkPermitDetails.getDocumentName());
+			employeeWorkPermitDetailsResponseDto.setDocumentType(employeeWorkPermitDetails.getDocumentType());
 
 			employeeWorkPermitDetailsResponseDtoList.add(employeeWorkPermitDetailsResponseDto);
 		}
@@ -167,8 +171,9 @@ public class EmployeeDetailsUtil {
 
 				EmployeePaySlipDocumentDetailsResponseDto employeePaySlipDocumentDetailsResponseDto = new EmployeePaySlipDocumentDetailsResponseDto();
 
-				employeePaySlipDocumentDetailsResponseDto.setDocumentName(employeePaySlipDetails.getPaySlipMonth());
+				employeePaySlipDocumentDetailsResponseDto.setDocumentName(employeePaySlipDetails.getDocumentName());
 				employeePaySlipDocumentDetailsResponseDto.setDocumentNumber(employeePaySlipDetails.getPaySlipNumber());
+				employeePaySlipDocumentDetailsResponseDto.setDocumentType(employeePaySlipDetails.getDocumentType());
 				employeePaySlipDocumentDetailsResponseDtoList.add(employeePaySlipDocumentDetailsResponseDto);
 
 			}
