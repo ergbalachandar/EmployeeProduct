@@ -18,7 +18,7 @@ public class SesConfig {
     public AmazonSimpleEmailService amazonSimpleEmailService(AWSCredentialsProvider credentialsProvider) {
         return AmazonSimpleEmailServiceClientBuilder.standard()
                 .withCredentials(credentialsProvider)
-                .withRegion(Regions.EU_CENTRAL_1).build();
+                .withRegion(Regions.AP_SOUTH_1).build();
     }
 
     @Bean
