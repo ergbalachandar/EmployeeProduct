@@ -63,6 +63,8 @@ public class AddEmployeeDetailsUtil {
 				employeeWorkPermitDetails.setValidity(employeeWorPermitDetailsRequestDto.getValidity());
 				employeeWorkPermitDetails.setStartDate(employeeWorPermitDetailsRequestDto.getStartDate());
 				employeeWorkPermitDetails.setEndDate(employeeWorPermitDetailsRequestDto.getEndDate());
+				employeeWorkPermitDetails.setDocumentName(employeeWorPermitDetailsRequestDto.getDocumentName());
+				employeeWorkPermitDetails.setDocumentType(employeeWorPermitDetailsRequestDto.getDocumentType());
 
 				employeeWorkPermitDetailsSet.add(employeeWorkPermitDetails);
 

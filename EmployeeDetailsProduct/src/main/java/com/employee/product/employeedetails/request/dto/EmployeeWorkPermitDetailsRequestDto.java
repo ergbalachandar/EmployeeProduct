@@ -15,4 +15,8 @@ public class EmployeeWorkPermitDetailsRequestDto {
 	private Date endDate;
 
 	private int validity;
+	
+	private String documentName;
+	
+	private String documentType;
 }
