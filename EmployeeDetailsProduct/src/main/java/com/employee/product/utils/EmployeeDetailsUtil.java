@@ -50,7 +50,11 @@ public class EmployeeDetailsUtil {
 		employeeDetailsResponseDto.setCity(employeeDetails.getCity());
 		employeeDetailsResponseDto.setContactNumber(employeeDetails.getContactNumber());
 		employeeDetailsResponseDto.setCountry(employeeDetails.getCountry());
-		employeeDetailsResponseDto.setDateOfBirth(String.valueOf(employeeDetails.getDateOfBirth()));
+		if(employeeDetails.getDateOfBirth() == null) {
+			employeeDetailsResponseDto.setDateOfBirth(null);
+		}else{
+			employeeDetailsResponseDto.setDateOfBirth(String.valueOf(employeeDetails.getDateOfBirth()));
+		}
 		employeeDetailsResponseDto.setEmailId(employeeDetails.getEmailId());
 		employeeDetailsResponseDto.setFirstName(employeeDetails.getFirstName());
 		employeeDetailsResponseDto.setLastName(employeeDetails.getLastName());
