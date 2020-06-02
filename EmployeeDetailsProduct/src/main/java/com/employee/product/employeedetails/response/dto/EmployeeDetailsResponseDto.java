@@ -1,6 +1,6 @@
 package com.employee.product.employeedetails.response.dto;
 
-import java.sql.Date;
+
 import java.util.List;
 
 import lombok.Data;
@@ -30,7 +30,7 @@ public class EmployeeDetailsResponseDto {
 
 	private String contactNumber;
 
-	private Date dateOfBirth;
+	private String dateOfBirth;
 
 	private String postalCode;
 

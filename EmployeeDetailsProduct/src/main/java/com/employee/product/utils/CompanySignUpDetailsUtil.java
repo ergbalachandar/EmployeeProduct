@@ -133,8 +133,7 @@ public class CompanySignUpDetailsUtil {
 		simpleMailMessage.setSubject("SignUp Is Successfull");
 
 		mailSender.send(simpleMailMessage);
-
-	}
+	} 
 
 	public static CompanyDetailsResponseDto companyDetailsSignUpResponseMapping(
 			CompanyDetailsResponseDto companyDetailsResponseDto) {

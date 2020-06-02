@@ -1,8 +1,11 @@
 package com.employee.product.utils;
 
+import java.util.Date;
 import java.util.ArrayList;
+
 import java.util.List;
 import java.util.Set;
+
 
 import com.employee.product.employeedetails.response.dto.EmployeeDataResponseDto;
 import com.employee.product.employeedetails.response.dto.EmployeeDetailsResponseDto;
@@ -47,7 +50,7 @@ public class EmployeeDetailsUtil {
 		employeeDetailsResponseDto.setCity(employeeDetails.getCity());
 		employeeDetailsResponseDto.setContactNumber(employeeDetails.getContactNumber());
 		employeeDetailsResponseDto.setCountry(employeeDetails.getCountry());
-		employeeDetailsResponseDto.setDateOfBirth(employeeDetails.getDateOfBirth());
+		employeeDetailsResponseDto.setDateOfBirth(String.valueOf(employeeDetails.getDateOfBirth()));
 		employeeDetailsResponseDto.setEmailId(employeeDetails.getEmailId());
 		employeeDetailsResponseDto.setFirstName(employeeDetails.getFirstName());
 		employeeDetailsResponseDto.setLastName(employeeDetails.getLastName());
@@ -91,10 +94,10 @@ public class EmployeeDetailsUtil {
 
 			EmployeePassportDetailsResponseDto employeePassportDetailsResponseDto = new EmployeePassportDetailsResponseDto();
 
-			employeePassportDetailsResponseDto.setEndDate(employeePassportDetails.getEndDate());
+			employeePassportDetailsResponseDto.setEndDate(String.valueOf(employeePassportDetails.getEndDate()));
 			employeePassportDetailsResponseDto.setIssuePlace(employeePassportDetails.getIssuePlace());
 			employeePassportDetailsResponseDto.setPassportNumber(employeePassportDetails.getPassportNumber());
-			employeePassportDetailsResponseDto.setStartDate(employeePassportDetails.getStartDate());
+			employeePassportDetailsResponseDto.setStartDate(String.valueOf(employeePassportDetails.getStartDate()));
 			employeePassportDetailsResponseDto.setValidity(employeePassportDetails.getValidity());
 			employeePassportDetailsResponseDto.setBirthPlace(employeePassportDetails.getBirthPlace());
 			employeePassportDetailsResponseDto.setDocumentName(employeePassportDetails.getDocumentName());
@@ -119,8 +122,8 @@ public class EmployeeDetailsUtil {
 			EmployeeWorkPermitDetailsResponseDto employeeWorkPermitDetailsResponseDto = new EmployeeWorkPermitDetailsResponseDto();
 
 			employeeWorkPermitDetailsResponseDto.setWorkPermitNumber(employeeWorkPermitDetails.getWorkPermitNumber());
-			employeeWorkPermitDetailsResponseDto.setEndDate(employeeWorkPermitDetails.getEndDate());
-			employeeWorkPermitDetailsResponseDto.setStartDate(employeeWorkPermitDetails.getStartDate());
+			employeeWorkPermitDetailsResponseDto.setEndDate(String.valueOf(employeeWorkPermitDetails.getEndDate()));
+			employeeWorkPermitDetailsResponseDto.setStartDate(String.valueOf(employeeWorkPermitDetails.getStartDate()));
 			employeeWorkPermitDetailsResponseDto.setValidity(employeeWorkPermitDetails.getValidity());
 			employeeWorkPermitDetailsResponseDto.setDocumentName(employeeWorkPermitDetails.getDocumentName());
 			employeeWorkPermitDetailsResponseDto.setDocumentType(employeeWorkPermitDetails.getDocumentType());
