@@ -129,7 +129,7 @@ public class EmployeeProductService {
 						.findByEmployeeDetailsEmployeeWorkPermitDetails(employeeWorkPermitDetails);
 
 				DocumentManagementService.accessValidation(userRoleOfLoggedInEmployee, userDetailsRetrieval,
-						employeeDetails.getId());
+						employeeDetails.getId(),employeeDetails);
 
 			}
 			//Commented as Payslip is not required in this module.
@@ -154,7 +154,7 @@ public class EmployeeProductService {
 						.findByEmployeeDetailsEmployeePassportDetails(employeePassportDetails);
 
 				DocumentManagementService.accessValidation(userRoleOfLoggedInEmployee, userDetailsRetrieval,
-						employeeDetails.getId());
+						employeeDetails.getId(),employeeDetails);
 
 			}
 		} else {
