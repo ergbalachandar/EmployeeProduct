@@ -72,6 +72,7 @@ public class CompanySignUpDetailsUtil {
 		employeeDetails.setState(companyDetailsDto.getState());
 		employeeDetails.setCountry(companyDetailsDto.getCountry());
 		employeeDetails.setContactNumber(companyDetailsDto.getContactNumber());
+		employeeDetails.setCity(companyDetailsDto.getCity());
 
 		employeeDetails.setCompanyDetails(companyDetails);
 		employeeDetails.setActive(1);
