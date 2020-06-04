@@ -1,11 +1,8 @@
 package com.employee.product.utils;
 
-import java.util.Date;
 import java.util.ArrayList;
-
 import java.util.List;
 import java.util.Set;
-
 
 import com.employee.product.employeedetails.response.dto.EmployeeDataResponseDto;
 import com.employee.product.employeedetails.response.dto.EmployeeDetailsResponseDto;
@@ -50,7 +47,9 @@ public class EmployeeDetailsUtil {
 		employeeDetailsResponseDto.setCity(employeeDetails.getCity());
 		employeeDetailsResponseDto.setContactNumber(employeeDetails.getContactNumber());
 		employeeDetailsResponseDto.setCountry(employeeDetails.getCountry());
-		employeeDetailsResponseDto.setDateOfBirth(String.valueOf(employeeDetails.getDateOfBirth()));
+		if (null != employeeDetails.getDateOfBirth()) {
+			employeeDetailsResponseDto.setDateOfBirth(String.valueOf(employeeDetails.getDateOfBirth()));
+		}
 		employeeDetailsResponseDto.setEmailId(employeeDetails.getEmailId());
 		employeeDetailsResponseDto.setFirstName(employeeDetails.getFirstName());
 		employeeDetailsResponseDto.setLastName(employeeDetails.getLastName());
@@ -65,21 +64,23 @@ public class EmployeeDetailsUtil {
 		if (!retrieveEmployeeService) {
 
 			// Mapping PassportDetails
-			employeeDetailsResponseDto.setPassportDetails(
-					mapPassportDetails(employeeDetails.getEmployeePassportDetails()));
+			employeeDetailsResponseDto
+					.setPassportDetails(mapPassportDetails(employeeDetails.getEmployeePassportDetails()));
 
 			// Mapping workPermit Details
-			employeeDetailsResponseDto.setWorkPermitDetails(
-					mapWorkPermitDetails(employeeDetails.getEmployeeWorkPermitDetails()));
+			employeeDetailsResponseDto
+					.setWorkPermitDetails(mapWorkPermitDetails(employeeDetails.getEmployeeWorkPermitDetails()));
 
 			// Mapping Family Details
-			employeeDetailsResponseDto
-					.setFamilyDetails(mapFamilyDetails(employeeDetails.getEmployeeFamilyDetails()));
+			employeeDetailsResponseDto.setFamilyDetails(mapFamilyDetails(employeeDetails.getEmployeeFamilyDetails()));
 
 			// Mapping Payslip Details
-			//Commenting the call to map Payslip details as it is not required in this module
-			/*employeeDetailsResponseDto.setPayslipDetails(
-					mapPaySlipDetails(employeeDetails.getEmployeePaySlipDetails())); */
+			// Commenting the call to map Payslip details as it is not required in this
+			// module
+			/*
+			 * employeeDetailsResponseDto.setPayslipDetails(
+			 * mapPaySlipDetails(employeeDetails.getEmployeePaySlipDetails()));
+			 */
 		}
 	}
 
@@ -93,11 +94,14 @@ public class EmployeeDetailsUtil {
 		for (EmployeePassportDetails employeePassportDetails : employeePassportDetailsList) {
 
 			EmployeePassportDetailsResponseDto employeePassportDetailsResponseDto = new EmployeePassportDetailsResponseDto();
-
+			if(null!=employeePassportDetails.getEndDate()) {
 			employeePassportDetailsResponseDto.setEndDate(String.valueOf(employeePassportDetails.getEndDate()));
+			}
 			employeePassportDetailsResponseDto.setIssuePlace(employeePassportDetails.getIssuePlace());
 			employeePassportDetailsResponseDto.setPassportNumber(employeePassportDetails.getPassportNumber());
+			if(null!=employeePassportDetails.getStartDate()) {
 			employeePassportDetailsResponseDto.setStartDate(String.valueOf(employeePassportDetails.getStartDate()));
+			}
 			employeePassportDetailsResponseDto.setValidity(employeePassportDetails.getValidity());
 			employeePassportDetailsResponseDto.setBirthPlace(employeePassportDetails.getBirthPlace());
 			employeePassportDetailsResponseDto.setDocumentName(employeePassportDetails.getDocumentName());
@@ -122,8 +126,12 @@ public class EmployeeDetailsUtil {
 			EmployeeWorkPermitDetailsResponseDto employeeWorkPermitDetailsResponseDto = new EmployeeWorkPermitDetailsResponseDto();
 
 			employeeWorkPermitDetailsResponseDto.setWorkPermitNumber(employeeWorkPermitDetails.getWorkPermitNumber());
+			if(null!= employeeWorkPermitDetails.getEndDate()) {
 			employeeWorkPermitDetailsResponseDto.setEndDate(String.valueOf(employeeWorkPermitDetails.getEndDate()));
+			}
+			if(null!= employeeWorkPermitDetails.getStartDate()) {
 			employeeWorkPermitDetailsResponseDto.setStartDate(String.valueOf(employeeWorkPermitDetails.getStartDate()));
+			}
 			employeeWorkPermitDetailsResponseDto.setValidity(employeeWorkPermitDetails.getValidity());
 			employeeWorkPermitDetailsResponseDto.setDocumentName(employeeWorkPermitDetails.getDocumentName());
 			employeeWorkPermitDetailsResponseDto.setDocumentType(employeeWorkPermitDetails.getDocumentType());
