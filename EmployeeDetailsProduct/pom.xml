@@ -63,16 +63,16 @@
 			<version>2.9.2</version>
 			<scope>compile</scope>
 		</dependency>
-		
+
 		<!-- Dependency for PDF Generation -->
 		<dependency>
 			<groupId>com.lowagie</groupId>
 			<artifactId>itext</artifactId>
 			<version>4.2.2</version>
 		</dependency>
-		
+
 		<!-- Dependency for Generating Excel Sheet -->
-		
+
 		<dependency>
 			<groupId>org.apache.poi</groupId>
 			<artifactId>poi</artifactId>
@@ -83,14 +83,14 @@
 			<artifactId>poi-ooxml</artifactId>
 			<version>4.1.2</version>
 		</dependency>
-		
+
 		<!-- Dependency for Generating csv Files -->
-		
+
 		<dependency>
-            <groupId>com.opencsv</groupId>
-            <artifactId>opencsv</artifactId>
-            <version>5.0</version>
-        </dependency>
+			<groupId>com.opencsv</groupId>
+			<artifactId>opencsv</artifactId>
+			<version>5.0</version>
+		</dependency>
 
 		<!-- Email Dependency -->
 
@@ -112,6 +112,7 @@
 		</dependency>
 
 		<!-- Email Dependency Ends -->
+
 		<dependency>
 			<groupId>io.jsonwebtoken</groupId>
 			<artifactId>jjwt</artifactId>
@@ -123,10 +124,19 @@
 			<artifactId>validation-api</artifactId>
 			<version>2.0.1.Final</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-security</artifactId>
+		</dependency>
+		<!-- <dependency> <groupId>com.amazonaws.serverless</groupId> <artifactId>aws-serverless-java-container-springboot2</artifactId> 
+			<version>1.4</version> </dependency> -->
+
+		<!-- File Utils Dependency -->
+		<dependency>
+			<groupId>commons-io</groupId>
+			<artifactId>commons-io</artifactId>
+			<version>2.6</version>
 		</dependency>
 
 
@@ -140,15 +150,15 @@
 			<!-- <plugin> <groupId>org.springframework.boot</groupId> <artifactId>spring-boot-maven-plugin</artifactId> 
 				</plugin> -->
 
+			<!-- <plugin> <groupId>org.apache.maven.plugins</groupId> <artifactId>maven-shade-plugin</artifactId> 
+				<configuration> <createDependencyReducedPom>false</createDependencyReducedPom> 
+				</configuration> <executions> <execution> <phase>package</phase> <goals> 
+				<goal>shade</goal> </goals> <configuration> <artifactSet> <excludes> <exclude>org.apache.tomcat.embed:*</exclude> 
+				</excludes> </artifactSet> </configuration> </execution> </executions> </plugin> -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-war-plugin</artifactId>
 				<version>3.2.3</version>
-				<configuration>
-					<!-- <overlays> <overlay> <id>demoDatabase</id> <excludes> <exclude>WEB-INF/lib/demoDatabase-0.0.1-SNAPSHOT/BOOT-INF/classes/io/java/controller/SquadController.class</exclude> 
-						</excludes> </overlay> </overlays> -->
-				</configuration>
-
 			</plugin>
 		</plugins>
 	</build>
