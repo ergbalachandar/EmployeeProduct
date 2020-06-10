@@ -111,6 +111,8 @@ public class AddEmployeeDetailsUtil {
 				employeePassportDetails.setValidity(employeePassportDetailsRequestDto.getValidity());
 				employeePassportDetails.setEndDate(employeePassportDetailsRequestDto.getEndDate());
 				employeePassportDetails.setBirthPlace(employeePassportDetailsRequestDto.getBirthPlace());
+				employeePassportDetails.setDocumentName(employeePassportDetailsRequestDto.getDocumentName());
+				employeePassportDetails.setDocumentType(employeePassportDetailsRequestDto.getDocumentType());
 
 				employeePassportDetailsSet.add(employeePassportDetails);
 
