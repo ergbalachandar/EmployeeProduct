@@ -11,11 +11,13 @@ import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.MailSender;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,12 +27,13 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.mail.MailSender;
 
 import com.employee.product.companydetails.request.dto.CompanyDetailsRequestDto;
 import com.employee.product.companydetails.request.dto.LoginDetailsRequestDto;
 import com.employee.product.companydetails.response.dto.CompanyDetailsResponseDto;
+import com.employee.product.companydetails.response.dto.DeleteCompanyResponseDto;
 import com.employee.product.companydetails.response.dto.LoginDetailsResponseDto;
+import com.employee.product.dao.services.DeleteCompanyService;
 import com.employee.product.dao.services.DocumentManagementService;
 import com.employee.product.dao.services.EmployeeProductService;
 import com.employee.product.dao.services.LoginDetailsService;
@@ -55,6 +58,7 @@ import com.employee.product.entity.employeedetails.EmployeeWorkPermitDocumentDet
 import com.employee.product.security.jwt.JwtUtils;
 import com.employee.product.utils.AddEmployeeDetailsUtil;
 import com.employee.product.utils.CompanySignUpDetailsUtil;
+import com.employee.product.utils.DeleteCompanyUtil;
 import com.employee.product.utils.DeleteDocumentUtil;
 import com.employee.product.utils.DeleteEmployeeResponseUtil;
 import com.employee.product.utils.DownloadDocumentUtil;
@@ -96,6 +100,9 @@ public class EmployeeProductController {
 
 	@Autowired
 	private MailSender mailSender;
+
+	@Autowired
+	private DeleteCompanyService deleteCompanyService;
 
 	/**
 	 * Method to SignUp Company
@@ -212,7 +219,8 @@ public class EmployeeProductController {
 		UserDetailsImpl userDetailsImpl = generateUserDetailsFromJWT();
 		EmployeeDetails employeeDetails = employeeProductService
 				.findByEmployeeId(retrieveEmployeeDataRequestDto.getEmployeeId());
-		if (userDetailsImpl.getUsers().getCompanyDetails().getId().equalsIgnoreCase(employeeDetails.getCompanyDetails().getId())) {
+		if (userDetailsImpl.getUsers().getCompanyDetails().getId()
+				.equalsIgnoreCase(employeeDetails.getCompanyDetails().getId())) {
 			EmployeeDetailsUtil.mapEmployeeDetails(employeeDetailsResponseDto, employeeDetails, false);
 		} else {
 			throw new Exception("You are not authorised to retrieve the employee Data of other Company");
@@ -245,7 +253,7 @@ public class EmployeeProductController {
 		CompanyDetails companyDetails = employeeProductService.findCompanyDetails(addEmployeeRequestDto.getCompanyId());
 		newEmployee = AddEmployeeDetailsUtil.checkForNewOrUpdateEmployee(newEmployee, addEmployeeRequestDto);
 		AddEmployeeDetailsUtil.mapAddEmployeeRequest(addEmployeeRequestDto, users, employeeDetails, companyDetails,
-				newEmployee,encoder);
+				newEmployee, encoder);
 		employeeDetails = employeeProductService.addOrUpdateEmployeeDetails(employeeDetails, users, companyDetails,
 				newEmployee, userDetailsImpl.getUsers().getUserName());
 		EmployeeDetailsResponseDto employeeDetailsResponseDto = new EmployeeDetailsResponseDto();
@@ -435,7 +443,8 @@ public class EmployeeProductController {
 			DeleteDocumentUtil.validateRequestForOthers(userDetailsImpl.getUsers().getUserName(), employeeDetails,
 					deleteDocumentRequestDto.getDocumentNumber(), deleteDocumentRequestDto.getDocumentType());
 		} else if (userDetailsImpl.getUsers().getRole().equalsIgnoreCase("Admin")) {
-			if (!userDetailsImpl.getUsers().getCompanyDetails().getId().equalsIgnoreCase(employeeDetails.getCompanyDetails().getId())) {
+			if (!userDetailsImpl.getUsers().getCompanyDetails().getId()
+					.equalsIgnoreCase(employeeDetails.getCompanyDetails().getId())) {
 				throw new Exception("You are not authorised to delete the document of the employee");
 			}
 		}
@@ -443,6 +452,35 @@ public class EmployeeProductController {
 		DeleteDocumentUtil.mapResponse(deleteDocumentResponseDto);
 
 		return deleteDocumentResponseDto;
+
+	}
+
+	@DeleteMapping("/deleteCompany")
+	@ApiOperation(value = "Delete Company", authorizations = { @Authorization(value = "jwtToken") })
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "Successfully Deleted"),
+			@ApiResponse(code = 401, message = "You are not authorized to Delete Company"),
+			@ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
+			@ApiResponse(code = 404, message = "The resource you were trying to reach is not found"),
+			@ApiResponse(code = 204, message = "No Content for the document") })
+	public DeleteCompanyResponseDto deleteCompany() throws Exception {
+		DeleteCompanyResponseDto deleteCompanyResponseDto = new DeleteCompanyResponseDto();
+		UserDetailsImpl userDetailsImpl = generateUserDetailsFromJWT();
+
+		if (userDetailsImpl.getUsers().getRole().equalsIgnoreCase("Admin")) {
+
+			deleteCompanyService.deleteCompany(userDetailsImpl.getUsers().getCompanyDetails().getId());
+			List<EmployeeDetails> employeeDetailsList = employeeProductService
+					.findbyCompanyDetails(userDetailsImpl.getUsers().getCompanyDetails().getId());
+			for (EmployeeDetails employeeDetails : employeeDetailsList) {
+				employeeProductService.deleteEmployee(employeeDetails.getEmailId(),
+						employeeDetails.getCompanyDetails().getId());
+			}
+
+		} else {
+			throw new Exception("You are not authorised to delete the company");
+		}
+		DeleteCompanyUtil.deleteCompanyResponse(deleteCompanyResponseDto);
+		return deleteCompanyResponseDto;
 
 	}
 

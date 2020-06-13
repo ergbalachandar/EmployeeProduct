@@ -220,6 +220,14 @@ ALTER TABLE payslip_details add column document_type varchar(255);
 
 -- Changes for adding document name and type in details table - ends -- 
 
+-- changes for employee deletion and add in other company and delete - starts --
+
+DROP INDEX email_id ON employee;
+
+ALTER TABLE employee ADD CONSTRAINT email_id UNIQUE(email_id, active, company_id);
+
+-- changes for employee deletion and add in other company and delete - ends --
+
 
 
 
