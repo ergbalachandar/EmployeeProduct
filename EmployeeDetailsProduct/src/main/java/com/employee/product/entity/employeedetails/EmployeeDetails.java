@@ -65,6 +65,13 @@ public class EmployeeDetails {
 	@Column (name ="postal_code")
 	private String postalCode;
 	
+	@Column (name ="iban", length = 25)
+	private String iban;
+	
+	@Column (name ="bic", length = 20)
+	private String bic;
+	
+	
 	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "company_id")
 	private CompanyDetails companyDetails;

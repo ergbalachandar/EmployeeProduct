@@ -41,6 +41,10 @@ public class EmployeeDetailsResponseDto {
 	private String reportingPerson;
 
 	private String workLocation;
+	
+	private String iban;
+	
+	private String bic;
 
 	private List<EmployeeWorkPermitDetailsResponseDto> workPermitDetails;
 

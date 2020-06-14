@@ -344,7 +344,7 @@ public class EmployeeProductController {
 	 * @param DeleteEmployeeRequestDto
 	 * @throws Exception
 	 */
-	@RequestMapping(method = RequestMethod.POST, value = "/deleteEmployee")
+	@RequestMapping(method = RequestMethod.DELETE, value = "/deleteEmployee")
 	@ApiOperation(value = "Delete Employee", authorizations = { @Authorization(value = "jwtToken") })
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "Successfully Deleted"),
 			@ApiResponse(code = 401, message = "You are not authorized to Log In"),
@@ -426,7 +426,7 @@ public class EmployeeProductController {
 
 	}
 
-	@PostMapping("/deleteDocument")
+	@DeleteMapping("/deleteDocument")
 	@ApiOperation(value = "Delete Document", authorizations = { @Authorization(value = "jwtToken") })
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "Successfully Deleted"),
 			@ApiResponse(code = 401, message = "You are not authorized to Delete Document"),

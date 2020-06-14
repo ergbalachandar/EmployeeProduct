@@ -228,6 +228,14 @@ ALTER TABLE employee ADD CONSTRAINT email_id UNIQUE(email_id, active, company_id
 
 -- changes for employee deletion and add in other company and delete - ends --
 
+-- Changes for adding IBan and BIC in employeedetails -- starts -- 
+
+ALTER table employee add column bic varchar(20);
+
+ALTER table employee add column iban varchar(25);
+
+-- Changes for adding IBan and BIC in employeedetails -- ends -- 
+
 
 
 

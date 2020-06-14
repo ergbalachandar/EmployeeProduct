@@ -49,6 +49,8 @@ public class AddEmployeeDetailsUtil {
 			employeeDetails.setId(emloyeeDetailsRequestDto.getId());
 		}
 		employeeDetails.setUpdated_at(new Date());
+		employeeDetails.setIban(emloyeeDetailsRequestDto.getIban());
+		employeeDetails.setBic(emloyeeDetailsRequestDto.getBic());
 
 		Set<EmployeeWorkPermitDetails> employeeWorkPermitDetailsSet = new HashSet<EmployeeWorkPermitDetails>();
 

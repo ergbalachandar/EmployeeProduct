@@ -60,6 +60,8 @@ public class EmployeeDetailsUtil {
 		employeeDetailsResponseDto.setJobRole(employeeDetails.getJobRole());
 		employeeDetailsResponseDto.setDepartment(employeeDetails.getDepartment());
 		employeeDetailsResponseDto.setWorkLocation(employeeDetails.getWorkLocation());
+		employeeDetailsResponseDto.setIban(employeeDetails.getIban());
+		employeeDetailsResponseDto.setBic(employeeDetails.getBic());
 		employeeDetailsResponseDto.setReportingPerson(employeeDetails.getReportingPerson());
 		if (!retrieveEmployeeService) {
 

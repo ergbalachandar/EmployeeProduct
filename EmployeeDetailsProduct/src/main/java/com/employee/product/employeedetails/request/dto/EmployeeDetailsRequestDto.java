@@ -3,6 +3,7 @@ package com.employee.product.employeedetails.request.dto;
 import java.sql.Date;
 import java.util.List;
 
+import org.hibernate.validator.constraints.Length;
 
 import lombok.Data;
 
@@ -44,6 +45,12 @@ public class EmployeeDetailsRequestDto {
 	private String workLocation;
 	
 	private String postalCode;
+	
+	@Length(max = 25)
+	private String iban;
+	
+	@Length(max = 20)
+	private String bic;
 	
     private List<EmployeeWorkPermitDetailsRequestDto> workPermitDetails;
     
