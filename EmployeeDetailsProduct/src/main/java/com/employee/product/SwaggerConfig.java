@@ -1,7 +1,5 @@
 package com.employee.product;
 
-import static springfox.documentation.builders.PathSelectors.regex;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -9,6 +7,7 @@ import java.util.List;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.service.ApiInfo;
 import springfox.documentation.service.ApiKey;
@@ -26,7 +25,7 @@ public class SwaggerConfig {
 	public Docket productApi() {
 		return new Docket(DocumentationType.SWAGGER_2).select()
 				.apis(RequestHandlerSelectors.basePackage("com.employee.product.controller"))
-				.paths(regex("/EProduct.*")).build().apiInfo(metaData()).securitySchemes(Arrays.asList(apiKey()));
+				.paths(PathSelectors.any()).build().apiInfo(metaData()).securitySchemes(Arrays.asList(apiKey()));
 		// securitySchemes(securitySchemes()).securityContexts(Arrays.asList(securityContext()));
 	}
 
