@@ -17,6 +17,7 @@ public class EMasterService  {
     @Autowired
     IEMasterServiceInterface ieMasterServiceInterface;
     
+    
 
     @Transactional
     public MasterUsers findByUser(String username) throws UsernameNotFoundException {
