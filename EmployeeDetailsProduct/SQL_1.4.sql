@@ -236,6 +236,18 @@ ALTER table employee add column iban varchar(25);
 
 -- Changes for adding IBan and BIC in employeedetails -- ends -- 
 
+-- Changes for adding MUsers -- starts --
+-- Changes for master login -- begins --
 
+Create TABLE `master_users`(
+ `muser_name` varchar(255) PRIMARY KEY DEFAULT '' NOT NULL ,
+  `mfirst_name` varchar(255),
+  `mlast_name` varchar(255),
+  `mpassword` varchar(255),
+  `mrole` varchar(255),
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+  );
 
+-- Changes for master login -- ends--
 
+-- Changes for adding MUsers -- Ends --
