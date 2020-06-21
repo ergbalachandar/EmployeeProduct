@@ -53,6 +53,12 @@ public class EmployeeDetails {
 	@Column(name = "work_location")
 	private String workLocation;
 
+	@Column(name = "marital_status")
+	private String maritalStatus;
+	
+	@Column(name = "date_of_joining")
+	private java.sql.Date dateOfJoin;
+	
 	@Column(name = "department")
 	private String department;
 	

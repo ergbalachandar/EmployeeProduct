@@ -13,14 +13,12 @@ import com.employee.product.employeedetails.request.dto.AddEmployeeRequestDto;
 import com.employee.product.employeedetails.request.dto.EmployeeDetailsRequestDto;
 import com.employee.product.employeedetails.request.dto.EmployeeFamilyDetailsRequestDto;
 import com.employee.product.employeedetails.request.dto.EmployeePassportDetailsRequestDto;
-import com.employee.product.employeedetails.request.dto.EmployeePaySlipDetailsRequestDto;
 import com.employee.product.employeedetails.request.dto.EmployeeWorkPermitDetailsRequestDto;
 import com.employee.product.entity.companydetails.CompanyDetails;
 import com.employee.product.entity.companydetails.Users;
 import com.employee.product.entity.employeedetails.EmployeeDetails;
 import com.employee.product.entity.employeedetails.EmployeeFamilyDetails;
 import com.employee.product.entity.employeedetails.EmployeePassportDetails;
-import com.employee.product.entity.employeedetails.EmployeePaySlipDetails;
 import com.employee.product.entity.employeedetails.EmployeeWorkPermitDetails;
 
 public class AddEmployeeDetailsUtil {
@@ -51,7 +49,8 @@ public class AddEmployeeDetailsUtil {
 		employeeDetails.setUpdated_at(new Date());
 		employeeDetails.setIban(emloyeeDetailsRequestDto.getIban());
 		employeeDetails.setBic(emloyeeDetailsRequestDto.getBic());
-
+		employeeDetails.setMaritalStatus(emloyeeDetailsRequestDto.getMaritalStatus().name());
+		employeeDetails.setDateOfJoin(emloyeeDetailsRequestDto.getDateOfJoin());
 		Set<EmployeeWorkPermitDetails> employeeWorkPermitDetailsSet = new HashSet<EmployeeWorkPermitDetails>();
 
 		List<EmployeeWorkPermitDetailsRequestDto> employeeWorkPermitDetailsRequestDtoList = emloyeeDetailsRequestDto

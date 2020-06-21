@@ -18,7 +18,8 @@ public class EmployeeDetailsDto {
 	private String country;
 	private String contactNumber;
 	private Date dateOfBirth;
-	
+	private Date dateOfJoin;
+	private MaritalStat maritalStatus;
 	
 
 }

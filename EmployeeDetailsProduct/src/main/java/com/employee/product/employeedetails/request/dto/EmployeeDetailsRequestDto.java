@@ -5,6 +5,8 @@ import java.util.List;
 
 import org.hibernate.validator.constraints.Length;
 
+import com.employee.product.employeedetails.dto.MaritalStat;
+
 import lombok.Data;
 
 
@@ -52,6 +54,9 @@ public class EmployeeDetailsRequestDto {
 	@Length(max = 20)
 	private String bic;
 	
+	private Date dateOfJoin;
+	
+	private MaritalStat maritalStatus;
     private List<EmployeeWorkPermitDetailsRequestDto> workPermitDetails;
     
     private List<EmployeePassportDetailsRequestDto> passportDetails;

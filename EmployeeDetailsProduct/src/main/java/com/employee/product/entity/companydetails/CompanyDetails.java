@@ -34,6 +34,8 @@ public class CompanyDetails {
 	private int sizeOfTheCompany;
 	@Column(name = "active")
 	private int active;
+	@Column(name = "vat_number")
+	private String vatNumber;
 	
    
 	

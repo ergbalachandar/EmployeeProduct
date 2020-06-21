@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import com.employee.product.employeedetails.dto.MaritalStat;
 import com.employee.product.employeedetails.response.dto.EmployeeDataResponseDto;
 import com.employee.product.employeedetails.response.dto.EmployeeDetailsResponseDto;
 import com.employee.product.employeedetails.response.dto.EmployeeFamilyDetailsResponseDto;
@@ -63,6 +64,14 @@ public class EmployeeDetailsUtil {
 		employeeDetailsResponseDto.setIban(employeeDetails.getIban());
 		employeeDetailsResponseDto.setBic(employeeDetails.getBic());
 		employeeDetailsResponseDto.setReportingPerson(employeeDetails.getReportingPerson());
+		if (null != employeeDetails.getDateOfJoin()) {
+			employeeDetailsResponseDto.setDateOfJoin(String.valueOf(employeeDetails.getDateOfJoin()));
+		}
+		if(null != employeeDetails.getMaritalStatus()) {
+		employeeDetailsResponseDto.setMartialStatus(MaritalStat.valueOf(employeeDetails.getMaritalStatus()));
+		}
+		
+		
 		if (!retrieveEmployeeService) {
 
 			// Mapping PassportDetails

@@ -3,6 +3,8 @@ package com.employee.product.employeedetails.response.dto;
 
 import java.util.List;
 
+import com.employee.product.employeedetails.dto.MaritalStat;
+
 import lombok.Data;
 
 @Data
@@ -46,6 +48,10 @@ public class EmployeeDetailsResponseDto {
 	
 	private String bic;
 
+	private String dateOfJoin;
+	
+	private MaritalStat martialStatus;
+	
 	private List<EmployeeWorkPermitDetailsResponseDto> workPermitDetails;
 
 	private List<EmployeePassportDetailsResponseDto> passportDetails;
