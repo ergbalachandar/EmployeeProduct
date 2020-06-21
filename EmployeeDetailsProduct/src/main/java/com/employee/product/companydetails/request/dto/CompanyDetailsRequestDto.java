@@ -19,6 +19,7 @@ public class CompanyDetailsRequestDto {
 	private int sizeOfTheCompany;
 	private int active;
 	private String password;
+	private String vatNumber;
 	private EmployeeDetailsDto employeeDetails;
 	
 }
