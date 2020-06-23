@@ -251,3 +251,11 @@ Create TABLE `master_users`(
 -- Changes for master login -- ends--
 
 -- Changes for adding MUsers -- Ends --
+
+-- Changes for Date of joining and Marital status in employeedetails -- starts -- 
+
+ALTER table employee add column date_of_joining date;
+
+ALTER table employee add column marital_status varchar(25);
+
+-- Changes for adding IBan and BIC in employeedetails -- ends -- 

@@ -68,7 +68,7 @@ public class EmployeeDetailsUtil {
 			employeeDetailsResponseDto.setDateOfJoin(String.valueOf(employeeDetails.getDateOfJoin()));
 		}
 		if(null != employeeDetails.getMaritalStatus()) {
-		employeeDetailsResponseDto.setMartialStatus(MaritalStat.valueOf(employeeDetails.getMaritalStatus()));
+		employeeDetailsResponseDto.setMaritalStatus(MaritalStat.valueOf(employeeDetails.getMaritalStatus()));
 		}
 		
 		
