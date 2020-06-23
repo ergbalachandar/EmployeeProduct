@@ -18,7 +18,6 @@ import com.employee.product.entity.companydetails.CompanyDetails;
 import com.employee.product.entity.companydetails.Users;
 import com.employee.product.entity.employeedetails.EmployeeDetails;
 import com.employee.product.entity.employeedetails.EmployeePassportDetails;
-import com.employee.product.entity.employeedetails.EmployeePaySlipDetails;
 import com.employee.product.entity.employeedetails.EmployeeWorkPermitDetails;
 import com.employee.product.utils.AddEmployeeDetailsUtil;
 
@@ -44,6 +43,11 @@ public class EmployeeProductService {
 
 		return entity.merge(users);
 		// return companySignupDetailsInterface.save(users);
+	}
+	
+	@Transactional
+	public CompanyDetails updateCompany(CompanyDetails companyDetails) {
+		return entity.merge(companyDetails);
 	}
 
 	@Transactional

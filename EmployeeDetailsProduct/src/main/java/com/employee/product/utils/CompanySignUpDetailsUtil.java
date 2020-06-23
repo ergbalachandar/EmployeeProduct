@@ -7,6 +7,7 @@ import java.util.Set;
 import org.springframework.mail.MailSender;
 import org.springframework.mail.SimpleMailMessage;
 
+import com.employee.product.companydetails.dto.CompanyDetailsDto;
 import com.employee.product.companydetails.request.dto.CompanyDetailsRequestDto;
 import com.employee.product.companydetails.response.dto.CompanyDetailsResponseDto;
 import com.employee.product.employeedetails.dto.EmployeeDetailsDto;
@@ -84,6 +85,37 @@ public class CompanySignUpDetailsUtil {
 
 		users.setEmployeeDetails(employeeDetailsSet);
 
+	}
+    
+	public static void viewCompanyDetailsMapping(CompanyDetails companyDetails,
+			CompanyDetailsDto companyDetailsDto) {
+		companyDetailsDto.setCompanyName(companyDetails.getCompanyName());
+		companyDetailsDto.setEmailId(companyDetails.getEmailId());
+		companyDetailsDto.setAddressLineOne(companyDetails.getAddressLineOne());
+		companyDetailsDto.setAddressLineTwo(companyDetails.getAddressLineTwo());
+		companyDetailsDto.setCity(companyDetails.getCity());
+		companyDetailsDto.setState(companyDetails.getState());
+		companyDetailsDto.setCountry(companyDetails.getCountry());
+		companyDetailsDto.setContactNumber(companyDetails.getContactNumber());
+		companyDetailsDto.setSizeOfTheCompany(companyDetails.getSizeOfTheCompany());
+		companyDetailsDto.setVatNumber(companyDetails.getVatNumber());
+		companyDetailsDto.setCompanyId(companyDetails.getId());
+
+	}
+	
+	public static void modifyCompanyDetailsMapping(CompanyDetails companyDetails,
+			CompanyDetailsDto companyDetailsDto) {
+		companyDetails.setCompanyName(companyDetailsDto.getCompanyName());
+		companyDetails.setEmailId(companyDetailsDto.getEmailId());
+		companyDetails.setAddressLineOne(companyDetailsDto.getAddressLineOne());
+		companyDetails.setAddressLineTwo(companyDetailsDto.getAddressLineTwo());
+		companyDetails.setCity(companyDetailsDto.getCity());
+		companyDetails.setState(companyDetailsDto.getState());
+		companyDetails.setCountry(companyDetailsDto.getCountry());
+		companyDetails.setContactNumber(companyDetailsDto.getContactNumber());
+		companyDetails.setSizeOfTheCompany(companyDetailsDto.getSizeOfTheCompany());
+		companyDetails.setVatNumber(companyDetailsDto.getVatNumber());
+		companyDetails.setId(companyDetailsDto.getCompanyId());
 	}
 
 	/*

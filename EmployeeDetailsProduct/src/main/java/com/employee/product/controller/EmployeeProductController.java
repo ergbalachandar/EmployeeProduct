@@ -18,6 +18,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,6 +29,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.employee.product.companydetails.dto.CompanyDetailsDto;
 import com.employee.product.companydetails.request.dto.CompanyDetailsRequestDto;
 import com.employee.product.companydetails.request.dto.LoginDetailsRequestDto;
 import com.employee.product.companydetails.response.dto.CompanyDetailsResponseDto;
@@ -97,17 +99,17 @@ public class EmployeeProductController {
 
 	@Autowired
 	JwtUtils jwtUtils;
-
-	@Autowired
+	
+	@Autowired 
 	private MailSender mailSender;
-
+	 
 	@Autowired
 	private DeleteCompanyService deleteCompanyService;
 
 	/**
 	 * Method to SignUp Company
 	 * 
-	 * @param CompanyDetailsRequestDto
+	 * @param CompanyDetailsDto
 	 */
 	@RequestMapping(method = RequestMethod.POST, value = "/user/companysignup")
 	@ApiOperation(value = "Sign Up Company")
@@ -124,8 +126,10 @@ public class EmployeeProductController {
 		users.setPassword(encoder.encode(companyDetailsDto.getPassword()));
 		users = employeeProductService.signUpCompanyDetails(users);
 
-	CompanySignUpDetailsUtil.sendMessage(mailSender, companyDetailsDto.getEmailId(),
-				companyDetailsDto.getCompanyName(), users);
+		
+	    CompanySignUpDetailsUtil.sendMessage(mailSender,
+		  companyDetailsDto.getEmailId(), companyDetailsDto.getCompanyName(), users);
+		 
 
 		CompanySignUpDetailsUtil.companyDetailsSignUpResponseMapping(companyDetailsResponseDto);
 		return companyDetailsResponseDto;
@@ -484,6 +488,47 @@ public class EmployeeProductController {
 
 	}
 
+	@RequestMapping(method = RequestMethod.GET, value = "/vmCompany/{id}")
+	@ApiOperation(value = "View or Modify Company", authorizations = { @Authorization(value = "jwtToken") })
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "Successfully Modified Company Details"),
+			@ApiResponse(code = 401, message = "You are not authorized to Log In"),
+			@ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
+			@ApiResponse(code = 404, message = "The resource you were trying to reach is not found") })
+	@ResponseBody
+	public CompanyDetailsDto viewCompany(@PathVariable String id)
+			throws Exception {
+		UserDetailsImpl userDetailsImpl = generateUserDetailsFromJWT();
+		CompanyDetailsDto companyDetailsDto= new CompanyDetailsDto();
+		if (!userDetailsImpl.getUsers().getRole().equalsIgnoreCase("Admin")) {
+			throw new Exception("You are not authorised to use this service");
+		}
+		CompanyDetails companyDetails = employeeProductService.findCompanyDetails(id);
+		CompanySignUpDetailsUtil.viewCompanyDetailsMapping(companyDetails,companyDetailsDto);
+
+		return companyDetailsDto;
+
+	}
+	@RequestMapping(method = RequestMethod.PUT, value = "/vmCompany")
+	@ApiOperation(value = "View or Modify Company", authorizations = { @Authorization(value = "jwtToken") })
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "Successfully Modified Company Details"),
+			@ApiResponse(code = 401, message = "You are not authorized to Log In"),
+			@ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
+			@ApiResponse(code = 404, message = "The resource you were trying to reach is not found") })
+	@ResponseBody
+	public CompanyDetailsDto UpdateCompany(@RequestBody CompanyDetailsDto companyDetailsDto)
+			throws Exception {
+		UserDetailsImpl userDetailsImpl = generateUserDetailsFromJWT();
+		CompanyDetails companyDetails = new CompanyDetails();
+		CompanyDetailsDto compRes = new CompanyDetailsDto();
+		if (!userDetailsImpl.getUsers().getRole().equalsIgnoreCase("Admin")) {
+			throw new Exception("You are not authorised to use this service");
+		}
+		CompanySignUpDetailsUtil.modifyCompanyDetailsMapping(companyDetails, companyDetailsDto);
+		employeeProductService.updateCompany(companyDetails);
+		compRes = companyDetailsDto;
+		return compRes;
+
+	}
 	/*
 	 * private Optional<Users> loginValidation(String userName, String password)
 	 * throws Exception {
