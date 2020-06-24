@@ -252,12 +252,10 @@ Create TABLE `master_users`(
 
 -- Changes for adding MUsers -- Ends --
 
--- Changes for adding marital status and joining date and vatnumber -- starts -- 
+-- Changes for Date of joining and Marital status in employeedetails -- starts -- 
 
-ALTER TABLE company add column vat_number varchar(255);
+ALTER table employee add column date_of_joining date;
 
-ALTER TABLE employee add column date_of_joining date;
+ALTER table employee add column marital_status varchar(25);
 
-ALTER TABLE employee add column marital_status varchar(255);
-
--- Changes for adding marital status and joining date and vatnumber -- ends -- 
+-- Changes for adding IBan and BIC in employeedetails -- ends -- 

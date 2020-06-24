@@ -50,7 +50,7 @@ public class EmployeeDetailsResponseDto {
 
 	private String dateOfJoin;
 	
-	private MaritalStat martialStatus;
+	private MaritalStat maritalStatus;
 	
 	private List<EmployeeWorkPermitDetailsResponseDto> workPermitDetails;
 
