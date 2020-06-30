@@ -19,4 +19,5 @@ public class CompanyDetailsDto {
 	private String vatNumber;
 	private String companyId;
 	private String postalCode;
+	
 }
