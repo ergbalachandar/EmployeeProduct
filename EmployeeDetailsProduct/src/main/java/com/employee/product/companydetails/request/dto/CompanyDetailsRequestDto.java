@@ -20,6 +20,7 @@ public class CompanyDetailsRequestDto {
 	private int active;
 	private String password;
 	private String vatNumber;
+	private String postalCode;
 	private EmployeeDetailsDto employeeDetails;
 	
 }

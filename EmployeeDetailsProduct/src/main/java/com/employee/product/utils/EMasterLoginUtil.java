@@ -2,6 +2,7 @@ package com.employee.product.utils;
 
 import com.employee.product.dao.services.EMasterService;
 import com.employee.product.entity.masterdetails.MasterUsers;
+import com.employee.product.masterdetails.dto.ECDARes;
 import com.employee.product.masterdetails.dto.EMasterLoginReq;
 import com.employee.product.masterdetails.dto.EMasterLoginRes;
 import com.employee.product.masterdetails.dto.EMasterSignReq;
@@ -46,5 +47,18 @@ public class EMasterLoginUtil {
 	public static void validateMSignDetails(EMasterService eMasterService, EMasterSignReq eMasterSignReq,
 			EMasterSignRes emaster) {
 		emaster.setMessage(eMasterService.signUpMaster(eMasterSignReq));
+	}
+	
+	/**
+	 * 
+	 * @param eCDARes
+	 * @param id
+	 * @throws Exception 
+	 */
+	public static void retrieveMComDetails(EMasterService eMasterService,ECDARes eCDARes, String userName) throws Exception {
+		MasterUsers masterAcc = eMasterService.findByUser(userName);
+		if(masterAcc.getMRole().equals("mAdmin")) {
+			eMasterService.comDetails(eCDARes);	
+		}
 	}
     }

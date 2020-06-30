@@ -259,3 +259,27 @@ ALTER table employee add column date_of_joining date;
 ALTER table employee add column marital_status varchar(25);
 
 -- Changes for adding IBan and BIC in employeedetails -- ends -- 
+
+-- Changes for postal code of company -- Begins --
+ALTER table company add column postal_code varchar(25);
+-- Changes for postal code of company -- Ends --
+
+-- Changes for getting view of companydetails to MAdmin -- Begins -- 
+CREATE VIEW COMPANY_DETAILS_MADM AS
+select 
+c.id,
+c.name,
+c.email_id,
+c.address1,
+c.address2,
+c.city,
+c.state,
+c.country,
+c.active,
+c.vat_number,
+c.postal_code,
+c.contact_number, 
+count(*) total
+from company c,employee;
+
+-- Changes for getting view of companydetails to MAdmin -- Ends --

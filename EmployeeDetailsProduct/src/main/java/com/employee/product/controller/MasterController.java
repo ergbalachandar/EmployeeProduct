@@ -2,6 +2,7 @@ package com.employee.product.controller;
 
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -10,6 +11,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.employee.product.dao.services.EMasterService;
+import com.employee.product.masterdetails.dto.ECDAReq;
+import com.employee.product.masterdetails.dto.ECDARes;
 import com.employee.product.masterdetails.dto.EMasterLoginReq;
 import com.employee.product.masterdetails.dto.EMasterLoginRes;
 import com.employee.product.masterdetails.dto.EMasterSignReq;
@@ -47,7 +50,25 @@ public class MasterController {
 		return emaster;
 	}
 
-	@RequestMapping(method = RequestMethod.POST, value = "/eSignUp")
+	@RequestMapping(method = RequestMethod.POST, value = "/comDetails")
+    @ApiOperation(value = "Master Admin retrieves all company Info")
+    @ApiResponses(value = {@ApiResponse(code = 200, message = "company information"),
+            @ApiResponse(code = 401, message = "You are not authorized as Master Signup"),
+            @ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
+            @ApiResponse(code = 404, message = "The resource you were trying to reach is not found")})
+    @ResponseBody
+    public ECDARes companyDetailsForAudit(@RequestBody ECDAReq eCDAReq,
+                                                          HttpSession httpSession) throws Exception {
+    	if(null == eCDAReq || StringUtils.isBlank(eCDAReq.getUserName())) {
+    		throw new Exception("InValid Request");
+    	}	
+    	ECDARes eCDARes = new ECDARes();
+    	EMasterLoginUtil.retrieveMComDetails(eMasterService, eCDARes, eCDAReq.getUserName());	
+        
+        return eCDARes;
+    }
+	
+	@RequestMapping(method = RequestMethod.POST, value = "/get")
     @ApiOperation(value = "Master Admin ESignup")
     @ApiResponses(value = {@ApiResponse(code = 200, message = "Master Login"),
             @ApiResponse(code = 401, message = "You are not authorized as Master Signup"),
