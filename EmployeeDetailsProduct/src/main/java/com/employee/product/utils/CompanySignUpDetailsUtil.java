@@ -54,6 +54,7 @@ public class CompanySignUpDetailsUtil {
 		companyDetails.setSizeOfTheCompany(companyDetailsDto.getSizeOfTheCompany());
 		companyDetails.setActive(companyDetailsDto.getActive());
 		companyDetails.setVatNumber(companyDetailsDto.getVatNumber());
+		companyDetails.setPostalCode(companyDetailsDto.getPostalCode());
 		int num = AddEmployeeDetailsUtil.generateRandomNumber();
 		String cName = companyDetailsDto.getCompanyName().substring(0,4);
 		companyDetails.setId(cName.toUpperCase() + String.valueOf(num));
@@ -100,6 +101,7 @@ public class CompanySignUpDetailsUtil {
 		companyDetailsDto.setSizeOfTheCompany(companyDetails.getSizeOfTheCompany());
 		companyDetailsDto.setVatNumber(companyDetails.getVatNumber());
 		companyDetailsDto.setCompanyId(companyDetails.getId());
+		companyDetailsDto.setPostalCode(companyDetails.getPostalCode());
 
 	}
 	
@@ -116,6 +118,8 @@ public class CompanySignUpDetailsUtil {
 		companyDetails.setSizeOfTheCompany(companyDetailsDto.getSizeOfTheCompany());
 		companyDetails.setVatNumber(companyDetailsDto.getVatNumber());
 		companyDetails.setId(companyDetailsDto.getCompanyId());
+		companyDetails.setPostalCode(companyDetailsDto.getPostalCode());
+
 	}
 
 	/*

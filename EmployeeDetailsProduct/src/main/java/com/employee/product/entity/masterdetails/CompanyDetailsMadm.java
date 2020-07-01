@@ -1,4 +1,4 @@
-package com.employee.product.entity.companydetails;
+package com.employee.product.entity.masterdetails;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -9,8 +9,8 @@ import lombok.Data;
 
 @Entity
 @Data
-@Table(name = "COMPANY")
-public class CompanyDetails {
+@Table(name = "COMPANY_DETAILS_MADM")
+public class CompanyDetailsMadm {
 
 	@Id
 	private String id;
@@ -30,21 +30,13 @@ public class CompanyDetails {
 	private String country;
 	@Column(name = "contact_number")
 	private String contactNumber;
-	@Column(name = "size")
-	private int sizeOfTheCompany;
 	@Column(name = "active")
 	private int active;
 	@Column(name = "vat_number")
 	private String vatNumber;
+	@Column(name = "total")
+	private int countOfEmp;
 	@Column(name = "postal_code")
 	private String postalCode;
-	
-   
-	
-   /*@OneToMany(cascade = CascadeType.ALL)
-	@JoinColumn(name = "company_id")
-	private Set<Users> users; */
-    
-    
 
 }
