@@ -38,6 +38,8 @@ public class CompanyDetails {
 	private String vatNumber;
 	@Column(name = "postal_code")
 	private String postalCode;
+	@Column(name = "company_type")
+	private String companyType;
 	
    
 	

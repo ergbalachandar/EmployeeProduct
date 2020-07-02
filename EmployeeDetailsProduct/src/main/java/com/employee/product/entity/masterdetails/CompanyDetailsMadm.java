@@ -38,5 +38,7 @@ public class CompanyDetailsMadm {
 	private int countOfEmp;
 	@Column(name = "postal_code")
 	private String postalCode;
+	@Column(name = "company_type")
+	private String companyType;
 
 }
