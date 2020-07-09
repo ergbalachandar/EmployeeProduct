@@ -264,6 +264,12 @@ ALTER table employee add column marital_status varchar(25);
 ALTER table company add column postal_code varchar(25);
 -- Changes for postal code of company -- Ends --
 
+-- Changes for company_type of company -- Begins --
+ALTER table company add column company_type varchar(25);
+-- Changes for company_type of company -- Ends --
+
+Drop VIEW COMPANY_DETAILS_MADM;
+
 -- Changes for getting view of companydetails to MAdmin -- Begins -- 
 CREATE VIEW COMPANY_DETAILS_MADM AS
 select 
@@ -279,6 +285,7 @@ c.active,
 c.vat_number,
 c.postal_code,
 c.contact_number, 
+c.company_type,
 count(*) total
 from company c,employee;
 

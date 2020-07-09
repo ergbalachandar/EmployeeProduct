@@ -42,7 +42,6 @@ public class CompanySignUpDetailsUtil {
 
 	private static void companyDetailsMapping(CompanyDetailsRequestDto companyDetailsDto,
 			CompanyDetails companyDetails) {
-
 		companyDetails.setCompanyName(companyDetailsDto.getCompanyName());
 		companyDetails.setEmailId(companyDetailsDto.getEmailId());
 		companyDetails.setAddressLineOne(companyDetailsDto.getAddressLineOne());
@@ -55,10 +54,10 @@ public class CompanySignUpDetailsUtil {
 		companyDetails.setActive(companyDetailsDto.getActive());
 		companyDetails.setVatNumber(companyDetailsDto.getVatNumber());
 		companyDetails.setPostalCode(companyDetailsDto.getPostalCode());
+		companyDetails.setCompanyType(companyDetailsDto.getCompanyType());
 		int num = AddEmployeeDetailsUtil.generateRandomNumber();
 		String cName = companyDetailsDto.getCompanyName().substring(0,4);
 		companyDetails.setId(cName.toUpperCase() + String.valueOf(num));
-
 	}
 
 	private static void employeeDetailsMapping(Users users, CompanyDetailsRequestDto companyDetailsDto,
@@ -102,7 +101,7 @@ public class CompanySignUpDetailsUtil {
 		companyDetailsDto.setVatNumber(companyDetails.getVatNumber());
 		companyDetailsDto.setCompanyId(companyDetails.getId());
 		companyDetailsDto.setPostalCode(companyDetails.getPostalCode());
-
+		companyDetailsDto.setCompanyType(companyDetails.getCompanyType());
 	}
 	
 	public static void modifyCompanyDetailsMapping(CompanyDetails companyDetails,
@@ -119,7 +118,7 @@ public class CompanySignUpDetailsUtil {
 		companyDetails.setVatNumber(companyDetailsDto.getVatNumber());
 		companyDetails.setId(companyDetailsDto.getCompanyId());
 		companyDetails.setPostalCode(companyDetailsDto.getPostalCode());
-
+		companyDetails.setCompanyType(companyDetailsDto.getCompanyType());
 	}
 
 	/*

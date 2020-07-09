@@ -21,6 +21,7 @@ public class CompanyDetailsRequestDto {
 	private String password;
 	private String vatNumber;
 	private String postalCode;
+	private String companyType;
 	private EmployeeDetailsDto employeeDetails;
 	
 }

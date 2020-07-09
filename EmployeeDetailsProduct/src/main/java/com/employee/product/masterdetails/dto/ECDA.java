@@ -25,4 +25,5 @@ public class ECDA {
 	private String vatNumber;
 	private int empCount;
 	private String postalCode;
+	private String companyType;
 }

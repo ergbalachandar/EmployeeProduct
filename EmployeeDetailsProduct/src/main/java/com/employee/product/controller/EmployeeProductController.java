@@ -12,6 +12,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.MailSender;
+/*import org.springframework.mail.MailSender;*/
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -39,6 +40,7 @@ import com.employee.product.dao.services.DeleteCompanyService;
 import com.employee.product.dao.services.DocumentManagementService;
 import com.employee.product.dao.services.EmployeeProductService;
 import com.employee.product.dao.services.LoginDetailsService;
+import com.employee.product.dao.services.PaySlipService;
 import com.employee.product.dao.services.UserDetailsImpl;
 import com.employee.product.documentdetails.request.dto.DeleteDocumentRequestDto;
 import com.employee.product.documentdetails.request.dto.UploadDocumentDetailsRequestDto;
@@ -57,6 +59,7 @@ import com.employee.product.entity.employeedetails.EmployeeDetails;
 import com.employee.product.entity.employeedetails.EmployeePassportDocumentDetails;
 import com.employee.product.entity.employeedetails.EmployeePaySlipDocumentDetails;
 import com.employee.product.entity.employeedetails.EmployeeWorkPermitDocumentDetails;
+import com.employee.product.payslipsdetails.response.dto.EPaySlipResDto;
 import com.employee.product.security.jwt.JwtUtils;
 import com.employee.product.utils.AddEmployeeDetailsUtil;
 import com.employee.product.utils.CompanySignUpDetailsUtil;
@@ -69,6 +72,7 @@ import com.employee.product.utils.GenerateCsvReportUtil;
 import com.employee.product.utils.GenerateExcelReportUtil;
 import com.employee.product.utils.GeneratePdfReportUtil;
 import com.employee.product.utils.LoginUserUtil;
+import com.employee.product.utils.PaySlipsDetailsUtil;
 import com.employee.product.utils.UploadDocumentUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -103,9 +107,13 @@ public class EmployeeProductController {
 	@Autowired 
 	private MailSender mailSender;
 	 
+	 
 	@Autowired
 	private DeleteCompanyService deleteCompanyService;
 
+	
+	@Autowired
+	private PaySlipService paySlipService;
 	/**
 	 * Method to SignUp Company
 	 * 
@@ -125,12 +133,7 @@ public class EmployeeProductController {
 		CompanySignUpDetailsUtil.companySignUpDetailsMapping(companyDetailsDto, users);
 		users.setPassword(encoder.encode(companyDetailsDto.getPassword()));
 		users = employeeProductService.signUpCompanyDetails(users);
-
-		
-	    CompanySignUpDetailsUtil.sendMessage(mailSender,
-		  companyDetailsDto.getEmailId(), companyDetailsDto.getCompanyName(), users);
-		 
-
+		CompanySignUpDetailsUtil.sendMessage(mailSender,companyDetailsDto.getEmailId(), companyDetailsDto.getCompanyName(), users);
 		CompanySignUpDetailsUtil.companyDetailsSignUpResponseMapping(companyDetailsResponseDto);
 		return companyDetailsResponseDto;
 	}
@@ -391,6 +394,7 @@ public class EmployeeProductController {
 			UploadDocumentUtil.uploadDocument(userDetailsImpl.getUsers().getUserName(), uploadDocumentDetailsRequestDto,
 					bytes, documentManagementService, uploadFile.getOriginalFilename());
 		} catch (Exception e) {
+			e.printStackTrace();
 			throw new Exception("Could not upload Document");
 		}
 		UploadDocumentUtil.mapResponseUploadDocumentResponseDto(uploadDocumentDetailsResponseDto);
@@ -508,6 +512,8 @@ public class EmployeeProductController {
 		return companyDetailsDto;
 
 	}
+	
+	
 	@RequestMapping(method = RequestMethod.PUT, value = "/vmCompany")
 	@ApiOperation(value = "View or Modify Company", authorizations = { @Authorization(value = "jwtToken") })
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "Successfully Modified Company Details"),
@@ -529,6 +535,26 @@ public class EmployeeProductController {
 		return compRes;
 
 	}
+	
+
+	@RequestMapping(method = RequestMethod.POST, value = "/payAdmlist")
+	@ApiOperation(value = "View Payslips", authorizations = { @Authorization(value = "jwtToken") })
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "Successfully retrieved Payslips"),
+			@ApiResponse(code = 401, message = "You are not authorized to Log In"),
+			@ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
+			@ApiResponse(code = 404, message = "The resource you were trying to reach is not found") })
+	@ResponseBody
+	public EPaySlipResDto retrievePayslips()
+			throws Exception {
+		UserDetailsImpl userDetailsImpl = generateUserDetailsFromJWT();
+		List<EmployeeDetails> paySlipDetails = paySlipService.retrievePayslipsByCompanyId(userDetailsImpl.getUsers().getCompanyDetails());
+		EPaySlipResDto ePaySlipRes = new EPaySlipResDto();
+		PaySlipsDetailsUtil.mapPaySlipDetails(ePaySlipRes, paySlipDetails);
+		return ePaySlipRes;
+	}
+
+	
+	
 	/*
 	 * private Optional<Users> loginValidation(String userName, String password)
 	 * throws Exception {

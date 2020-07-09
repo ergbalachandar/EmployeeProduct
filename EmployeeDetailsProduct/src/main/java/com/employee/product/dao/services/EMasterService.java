@@ -70,6 +70,7 @@ public class EMasterService  {
         	ecda.setCountry(cdm.getCountry());
         	ecda.setEmpCount(cdm.getCountOfEmp());
         	ecda.setVatNumber(cdm.getVatNumber());
+        	ecda.setCompanyType(cdm.getCompanyType());
 			ecdaList.add(ecda);	
         }
 		eCDARes.setEcda(ecdaList);
