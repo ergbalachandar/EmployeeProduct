@@ -102,6 +102,7 @@ public class CompanySignUpDetailsUtil {
 		companyDetailsDto.setCompanyId(companyDetails.getId());
 		companyDetailsDto.setPostalCode(companyDetails.getPostalCode());
 		companyDetailsDto.setCompanyType(companyDetails.getCompanyType());
+		companyDetailsDto.setCompanyFlag(companyDetails.getCompanyFlag());
 	}
 	
 	public static void modifyCompanyDetailsMapping(CompanyDetails companyDetails,
@@ -119,6 +120,7 @@ public class CompanySignUpDetailsUtil {
 		companyDetails.setId(companyDetailsDto.getCompanyId());
 		companyDetails.setPostalCode(companyDetailsDto.getPostalCode());
 		companyDetails.setCompanyType(companyDetailsDto.getCompanyType());
+		companyDetails.setCompanyFlag(companyDetailsDto.getCompanyFlag());
 	}
 
 	/*
