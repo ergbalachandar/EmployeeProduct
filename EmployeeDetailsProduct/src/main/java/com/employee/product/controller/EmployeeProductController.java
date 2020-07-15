@@ -163,6 +163,10 @@ public class EmployeeProductController {
 
 		UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
 
+		if(userDetails.getUsers().getCompanyDetails().getActive() == 0) {
+			//Need to trigger mail with support email id
+			throw new Exception("You are not authorized to Log In Please contact Us");
+		}
 		if (loginDetailsRequestDto.getReset() == 0) {
 			LoginUserUtil.mapLoginDetailsResponseDto(userDetails.getUsers(), loginDetailsResponseDto);
 			loginDetailsResponseDto.setJwt(jwt);
