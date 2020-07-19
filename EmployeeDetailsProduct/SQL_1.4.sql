@@ -290,3 +290,7 @@ count(*) total
 from company c,employee;
 
 -- Changes for getting view of companydetails to MAdmin -- Ends --
+
+-- Changes for company_type of company -- Begins --
+ALTER table company add column flag int(1) DEFAULT 0 NOT NULL;
+-- Changes for company_type of company -- Ends --

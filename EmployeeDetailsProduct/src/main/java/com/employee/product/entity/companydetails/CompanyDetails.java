@@ -40,6 +40,8 @@ public class CompanyDetails {
 	private String postalCode;
 	@Column(name = "company_type")
 	private String companyType;
+	@Column(name = "flag")
+	private int companyFlag;
 	
    
 	

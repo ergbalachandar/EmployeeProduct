@@ -25,6 +25,7 @@ public class LoginUserUtil {
 		loginDetailsResponseDto.setUserName(users.getUserName());
 		loginDetailsResponseDto.setCompanyId(users.getCompanyDetails().getId());
 		loginDetailsResponseDto.setCompanyName(users.getCompanyDetails().getCompanyName());
+		loginDetailsResponseDto.setCompanyFlag(users.getCompanyDetails().getCompanyFlag());
 		Set<EmployeeDetails> employeeDetailsSet = users.getEmployeeDetails();
 		EmployeeDetailsResponseDto employeeDetailsResponseDto = new EmployeeDetailsResponseDto();
 		for (EmployeeDetails employeeDetails : employeeDetailsSet) {
