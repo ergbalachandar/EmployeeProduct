@@ -178,7 +178,7 @@ public class AddEmployeeDetailsUtil {
 		String sName = null;
 			int num = generateRandomNumber();
 			if(companyName.length()>4) {
-			comp = companyName.substring(0,4);
+			comp = removeSpaces(companyName).substring(0,4);
 			}
 			else
 			{
@@ -191,7 +191,11 @@ public class AddEmployeeDetailsUtil {
 			return employeeId;
 		
 	}
-	
+
+	// Remove all space characters
+	private static String removeSpaces(String input) {
+		return input.replaceAll(" ", "");
+	}
 	public static int generateRandomNumber() {
 		Random generator = new Random();
 		generator.setSeed(System.currentTimeMillis());
