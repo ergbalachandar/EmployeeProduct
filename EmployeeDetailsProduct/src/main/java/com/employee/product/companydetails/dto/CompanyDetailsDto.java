@@ -20,5 +20,6 @@ public class CompanyDetailsDto {
 	private String companyId;
 	private String postalCode;
 	private String companyType;
+	private int companyFlag;
 	
 }

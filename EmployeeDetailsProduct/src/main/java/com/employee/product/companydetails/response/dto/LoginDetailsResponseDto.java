@@ -16,6 +16,8 @@ public class LoginDetailsResponseDto {
 	private String companyId;
 	
 	private String jwt;
+
+	private int companyFlag;
 	
 	private EmployeeDetailsResponseDto employeeDetails;
 	
