@@ -63,7 +63,7 @@ public class GeneratePdfReportUtil {
 			hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
 			table.addCell(hcell);
 
-			hcell = new PdfPCell(new Phrase("Active", headFont));
+			hcell = new PdfPCell(new Phrase("Status", headFont));
 			hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
 			table.addCell(hcell);
 
@@ -102,14 +102,14 @@ public class GeneratePdfReportUtil {
 				cell.setPaddingRight(5);
 				table.addCell(cell);
 
-				cell = new PdfPCell(new Phrase(employeeDetails.getCountry()));
+				cell = new PdfPCell(new Phrase(String.valueOf(employeeDetails.getDateOfJoin())));
 				cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
 				cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
 				cell.setPaddingRight(5);
 				table.addCell(cell);
 
 				if (employeeDetails.getActive() == 0) {
-					cell = new PdfPCell(new Phrase("Deleted"));
+					cell = new PdfPCell(new Phrase("In-Active"));
 					cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
 					cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
 					cell.setPaddingRight(5);

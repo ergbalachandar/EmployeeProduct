@@ -60,9 +60,9 @@ public class GenerateExcelReportUtil {
 		header.getCell(3).setCellStyle(style);
 		header.createCell(4).setCellValue("EmailId");
 		header.getCell(4).setCellStyle(style);
-		header.createCell(5).setCellValue("Country");
+		header.createCell(5).setCellValue("Date Of Join");
 		header.getCell(5).setCellStyle(style);
-		header.createCell(6).setCellValue("Active");
+		header.createCell(6).setCellValue("Status");
 		header.getCell(6).setCellStyle(style);
 
 		int rowCount = 2;
@@ -83,10 +83,10 @@ public class GenerateExcelReportUtil {
 			userRow.getCell(3).setCellStyle(styleForData);
 			userRow.createCell(4).setCellValue(employeeDetails.getEmailId());
 			userRow.getCell(4).setCellStyle(styleForData);
-			userRow.createCell(5).setCellValue(employeeDetails.getCountry());
+			userRow.createCell(5).setCellValue(String.valueOf(employeeDetails.getDateOfJoin()));
 			userRow.getCell(5).setCellStyle(styleForData);
 			if (employeeDetails.getActive() == 0) {
-				userRow.createCell(6).setCellValue("Deleted");
+				userRow.createCell(6).setCellValue("In-Active");
 				userRow.getCell(6).setCellStyle(styleForData);
 			} else if (employeeDetails.getActive() == 1) {
 				userRow.createCell(6).setCellValue("Active");

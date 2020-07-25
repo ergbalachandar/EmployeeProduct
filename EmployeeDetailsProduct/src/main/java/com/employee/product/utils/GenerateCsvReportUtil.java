@@ -22,7 +22,7 @@ public class GenerateCsvReportUtil {
 	            
 	            mapStrategy.setType(EmployeeDetails.class);
 
-	            String[] columns = new String[]{"id", "firstName", "lastName", "sex", "emailId", "country", "active"};
+	            String[] columns = new String[]{"id", "firstName", "lastName", "sex", "emailId", "dateOfJoin", "active"};
 	            mapStrategy.setColumnMapping(columns);
 
 	            StatefulBeanToCsv<EmployeeDetails> btcsv = new StatefulBeanToCsvBuilder<EmployeeDetails>(writer)
