@@ -56,8 +56,14 @@ public class CompanySignUpDetailsUtil {
 		companyDetails.setPostalCode(companyDetailsDto.getPostalCode());
 		companyDetails.setCompanyType(companyDetailsDto.getCompanyType());
 		int num = AddEmployeeDetailsUtil.generateRandomNumber();
-		String cName = companyDetailsDto.getCompanyName().substring(0,4);
+		String cName = removeSpaces(companyDetailsDto.getCompanyName()).substring(0,4);
 		companyDetails.setId(cName.toUpperCase() + String.valueOf(num));
+	}
+
+
+	// Remove all space characters
+	private static String removeSpaces(String input) {
+		return input.replaceAll(" ", "");
 	}
 
 	private static void employeeDetailsMapping(Users users, CompanyDetailsRequestDto companyDetailsDto,
