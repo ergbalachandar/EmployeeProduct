@@ -8,5 +8,5 @@ import lombok.Setter;
 @Setter
 @Getter
 public class EPaySlipResDto {
-	List<EPaySlips> epayList;
+	List<EPaySlips> ePaySlips;
 }
