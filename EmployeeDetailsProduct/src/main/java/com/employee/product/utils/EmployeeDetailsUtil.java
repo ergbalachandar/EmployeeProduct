@@ -29,11 +29,11 @@ public class EmployeeDetailsUtil {
 		List<EmployeeDetailsResponseDto> employeeDetailsResponseDtoList = new ArrayList<EmployeeDetailsResponseDto>();
 
 		for (EmployeeDetails employeeDetails : employeeDetailsList) {
-			if (employeeDetails.getActive() != 0) {
+			//if (employeeDetails.getActive() != 0) {
 				EmployeeDetailsResponseDto employeeDetailsResponseDto = new EmployeeDetailsResponseDto();
 				mapEmployeeDetails(employeeDetailsResponseDto, employeeDetails, true);
 				employeeDetailsResponseDtoList.add(employeeDetailsResponseDto);
-			}
+		//	}
 		}
 
 		employeeDataResponseDto.setEmployeeDetailsList(employeeDetailsResponseDtoList);
