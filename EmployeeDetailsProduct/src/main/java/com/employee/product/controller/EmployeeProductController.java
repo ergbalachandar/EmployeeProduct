@@ -103,9 +103,9 @@ public class EmployeeProductController {
 
 	@Autowired
 	JwtUtils jwtUtils;
-	
-	@Autowired 
-	private MailSender mailSender;
+	/*
+	 * @Autowired private MailSender mailSender;
+	 */
 	 
 	 
 	@Autowired
@@ -133,7 +133,7 @@ public class EmployeeProductController {
 		CompanySignUpDetailsUtil.companySignUpDetailsMapping(companyDetailsDto, users);
 		users.setPassword(encoder.encode(companyDetailsDto.getPassword()));
 		users = employeeProductService.signUpCompanyDetails(users);
-		CompanySignUpDetailsUtil.sendMessage(mailSender,companyDetailsDto.getEmailId(), companyDetailsDto.getCompanyName(), users);
+		//CompanySignUpDetailsUtil.sendMessage(mailSender,companyDetailsDto.getEmailId(), companyDetailsDto.getCompanyName(), users);
 		CompanySignUpDetailsUtil.companyDetailsSignUpResponseMapping(companyDetailsResponseDto);
 		return companyDetailsResponseDto;
 	}
@@ -539,25 +539,7 @@ public class EmployeeProductController {
 		return compRes;
 
 	}
-	
-
-	@RequestMapping(method = RequestMethod.POST, value = "/payAdmlist")
-	@ApiOperation(value = "View Payslips", authorizations = { @Authorization(value = "jwtToken") })
-	@ApiResponses(value = { @ApiResponse(code = 200, message = "Successfully retrieved Payslips"),
-			@ApiResponse(code = 401, message = "You are not authorized to Log In"),
-			@ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
-			@ApiResponse(code = 404, message = "The resource you were trying to reach is not found") })
-	@ResponseBody
-	public EPaySlipResDto retrievePayslips()
-			throws Exception {
-		UserDetailsImpl userDetailsImpl = generateUserDetailsFromJWT();
-		List<EmployeeDetails> paySlipDetails = paySlipService.retrievePayslipsByCompanyId(userDetailsImpl.getUsers().getCompanyDetails());
-		EPaySlipResDto ePaySlipRes = new EPaySlipResDto();
-		PaySlipsDetailsUtil.mapPaySlipDetails(ePaySlipRes, paySlipDetails);
-		return ePaySlipRes;
-	}
-
-	
+		
 	
 	/*
 	 * private Optional<Users> loginValidation(String userName, String password)
