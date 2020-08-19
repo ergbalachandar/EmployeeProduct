@@ -18,6 +18,7 @@ import com.employee.product.entity.companydetails.CompanyDetails;
 import com.employee.product.entity.companydetails.Users;
 import com.employee.product.entity.employeedetails.EmployeeDetails;
 import com.employee.product.entity.employeedetails.EmployeePassportDetails;
+import com.employee.product.entity.employeedetails.EmployeePaySlipDetails;
 import com.employee.product.entity.employeedetails.EmployeeWorkPermitDetails;
 import com.employee.product.utils.AddEmployeeDetailsUtil;
 
@@ -92,13 +93,44 @@ public class EmployeeProductService {
 			CompanyDetails companyDetails, boolean newEmployee, String loggedInUserName) throws Exception {
 		EmployeeDetails employeeDetailsValue = new EmployeeDetails();
 		if (newEmployee) {
+			if(employeeDetails.getEmployeePaySlipDetails().size() != 0) {
+				Set<EmployeePaySlipDetails> employeePaySlipDetailsSet = employeeDetails.getEmployeePaySlipDetails();
+				Set<EmployeePaySlipDetails> employeePaySlipDetailsSetWithNumber = new  HashSet<EmployeePaySlipDetails>();
+				for(EmployeePaySlipDetails employeePaySlipDetails :employeePaySlipDetailsSet) {
+					
+					EmployeePaySlipDetails employeePaySlipDetailsUpdated = new EmployeePaySlipDetails();
+					employeePaySlipDetailsUpdated.setDocumentName(employeePaySlipDetails.getDocumentName());
+					employeePaySlipDetailsUpdated.setDocumentType(employeePaySlipDetails.getDocumentType());
+					employeePaySlipDetailsUpdated.setPaySlipMonth(employeePaySlipDetails.getPaySlipMonth());
+					employeePaySlipDetailsUpdated.setPaySlipNumber(employeeDetails.getId()+ employeePaySlipDetails.getPaySlipNumber());
+					employeePaySlipDetailsSetWithNumber.add(employeePaySlipDetailsUpdated);					
+					
+				}
+				employeeDetails.setEmployeePaySlipDetails(employeePaySlipDetailsSetWithNumber);
+			}
 			checkForDocumentAlreadyPresentWithOtherEmployee(employeeDetails, loggedInUserName);
 			
 			employeeDetails.setId(AddEmployeeDetailsUtil.generateEmployeeId(companyDetails.getCompanyName(), employeeDetails.getFirstName(), employeeDetails.getLastName()));
-	
+			
+		
 			employeeDetailsValue = employeeDetailsInterface.save(employeeDetails);
 
 		} else {
+			if(employeeDetails.getEmployeePaySlipDetails().size() != 0) {
+				Set<EmployeePaySlipDetails> employeePaySlipDetailsSet = employeeDetails.getEmployeePaySlipDetails();
+				Set<EmployeePaySlipDetails> employeePaySlipDetailsSetWithNumber = new  HashSet<EmployeePaySlipDetails>();
+				for(EmployeePaySlipDetails employeePaySlipDetails :employeePaySlipDetailsSet) {
+					
+					EmployeePaySlipDetails employeePaySlipDetailsUpdated = new EmployeePaySlipDetails();
+					employeePaySlipDetailsUpdated.setDocumentName(employeePaySlipDetails.getDocumentName());
+					employeePaySlipDetailsUpdated.setDocumentType(employeePaySlipDetails.getDocumentType());
+					employeePaySlipDetailsUpdated.setPaySlipMonth(employeePaySlipDetails.getPaySlipMonth());
+					employeePaySlipDetailsUpdated.setPaySlipNumber(employeeDetails.getId()+ employeePaySlipDetails.getPaySlipNumber());
+					employeePaySlipDetailsSetWithNumber.add(employeePaySlipDetailsUpdated);					
+					
+				}
+				employeeDetails.setEmployeePaySlipDetails(employeePaySlipDetailsSetWithNumber);
+			}
 			checkForDocumentAlreadyPresentWithOtherEmployee(employeeDetails, loggedInUserName);
 			employeeDetailsValue = entity.merge(employeeDetails);
 		}
@@ -138,7 +170,7 @@ public class EmployeeProductService {
 			}
 			//Commented as Payslip is not required in this module.
 
-		/*	Set<EmployeePaySlipDetails> employeePaySlipDetailsList = employeeDetails.getEmployeePaySlipDetails();
+			Set<EmployeePaySlipDetails> employeePaySlipDetailsList = employeeDetails.getEmployeePaySlipDetails();
 
 			for (EmployeePaySlipDetails employeePaySlipDetails : employeePaySlipDetailsList) {
 
@@ -146,9 +178,9 @@ public class EmployeeProductService {
 						.findByEmployeeDetailsEmployeePaySlipDetails(employeePaySlipDetails);
 
 				DocumentManagementService.accessValidation(userRoleOfLoggedInEmployee, userDetailsRetrieval,
-						employeeDetails.getId());
+						employeeDetails.getId(),employeeDetails);
 
-			} */
+			} 
 
 			Set<EmployeePassportDetails> employeePassportDetailsList = employeeDetails.getEmployeePassportDetails();
 

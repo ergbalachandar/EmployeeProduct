@@ -46,7 +46,7 @@ public class UploadDocumentUtil {
 
 		EmployeePaySlipDocumentDetails employeePaySlipDocumentDetails = new EmployeePaySlipDocumentDetails();
 		employeePaySlipDocumentDetails.setDocumentData(bytes);
-		employeePaySlipDocumentDetails.setPaySlipNumber(uploadDocumentDetailsRequestDto.getEmployeeId() + uploadDocumentDetailsRequestDto.getDocumentNumber());
+		employeePaySlipDocumentDetails.setPaySlipNumber(uploadDocumentDetailsRequestDto.getDocumentNumber());
 		employeePaySlipDocumentDetails.setDocumentName(fileName);
 		documentManagementService.addPaySlipDocument(employeePaySlipDocumentDetails,
 				 loggedInUserName,uploadDocumentDetailsRequestDto.getEmployeeId());

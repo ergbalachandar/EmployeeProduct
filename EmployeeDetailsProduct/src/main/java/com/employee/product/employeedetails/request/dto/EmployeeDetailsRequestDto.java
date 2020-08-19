@@ -63,6 +63,6 @@ public class EmployeeDetailsRequestDto {
     
     private List<EmployeeFamilyDetailsRequestDto> familyDetails;
     
-   // private List<EmployeePaySlipDetailsRequestDto> paySlipDetails;
+    private List<EmployeePaySlipDetailsRequestDto> paySlipDetails;
 
 }

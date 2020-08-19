@@ -13,12 +13,14 @@ import com.employee.product.employeedetails.request.dto.AddEmployeeRequestDto;
 import com.employee.product.employeedetails.request.dto.EmployeeDetailsRequestDto;
 import com.employee.product.employeedetails.request.dto.EmployeeFamilyDetailsRequestDto;
 import com.employee.product.employeedetails.request.dto.EmployeePassportDetailsRequestDto;
+import com.employee.product.employeedetails.request.dto.EmployeePaySlipDetailsRequestDto;
 import com.employee.product.employeedetails.request.dto.EmployeeWorkPermitDetailsRequestDto;
 import com.employee.product.entity.companydetails.CompanyDetails;
 import com.employee.product.entity.companydetails.Users;
 import com.employee.product.entity.employeedetails.EmployeeDetails;
 import com.employee.product.entity.employeedetails.EmployeeFamilyDetails;
 import com.employee.product.entity.employeedetails.EmployeePassportDetails;
+import com.employee.product.entity.employeedetails.EmployeePaySlipDetails;
 import com.employee.product.entity.employeedetails.EmployeeWorkPermitDetails;
 
 public class AddEmployeeDetailsUtil {
@@ -120,7 +122,7 @@ public class AddEmployeeDetailsUtil {
 			}
 		}
 		employeeDetails.setEmployeePassportDetails(employeePassportDetailsSet);
-		/*   Commenting as payslip is not required in this module
+		
 		Set<EmployeePaySlipDetails> employeePaySlipDetailsSet = new HashSet<EmployeePaySlipDetails>();
 		
 
@@ -137,7 +139,7 @@ public class AddEmployeeDetailsUtil {
 			}
 
 			employeeDetails.setEmployeePaySlipDetails(employeePaySlipDetailsSet);
-		} */
+		} 
 
 	}
 
