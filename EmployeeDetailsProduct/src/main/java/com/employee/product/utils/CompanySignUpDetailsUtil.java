@@ -20,7 +20,7 @@ public class CompanySignUpDetailsUtil {
 	public static void companySignUpDetailsMapping(CompanyDetailsRequestDto companyDetailsDto, Users users) {
 
 		CompanyDetails companyDetails = new CompanyDetails();
-		users.setActive(companyDetailsDto.getActive());
+		users.setActive(1);
 		users.setUserName(companyDetailsDto.getEmailId());
 		if (null != companyDetailsDto.getEmployeeDetails()) {
 			users.setFirstName(companyDetailsDto.getEmployeeDetails().getFirstName());
@@ -111,6 +111,7 @@ public class CompanySignUpDetailsUtil {
 	public static void modifyCompanyDetailsMapping(CompanyDetails companyDetails,
 			CompanyDetailsDto companyDetailsDto) {
 		companyDetails.setCompanyName(companyDetailsDto.getCompanyName());
+		companyDetails.setActive(1);
 		companyDetails.setEmailId(companyDetailsDto.getEmailId());
 		companyDetails.setAddressLineOne(companyDetailsDto.getAddressLineOne());
 		companyDetails.setAddressLineTwo(companyDetailsDto.getAddressLineTwo());
