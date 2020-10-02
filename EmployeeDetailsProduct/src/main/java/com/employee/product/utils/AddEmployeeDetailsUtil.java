@@ -26,6 +26,7 @@ public class AddEmployeeDetailsUtil {
 	private static void mapEmployeeDetails(EmployeeDetailsRequestDto emloyeeDetailsRequestDto,
 			EmployeeDetails employeeDetails) {
 
+		
 		employeeDetails.setAddressLine1(emloyeeDetailsRequestDto.getAddressLine1());
 		employeeDetails.setAddressLine2(emloyeeDetailsRequestDto.getAddressLine2());
 		employeeDetails.setCity(emloyeeDetailsRequestDto.getCity());
