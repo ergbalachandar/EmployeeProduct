@@ -93,21 +93,30 @@ public class EmployeeProductService {
 			CompanyDetails companyDetails, boolean newEmployee, String loggedInUserName) throws Exception {
 		EmployeeDetails employeeDetailsValue = new EmployeeDetails();
 		if (newEmployee) {
-			if(employeeDetails.getEmployeePaySlipDetails().size() != 0) {
-				Set<EmployeePaySlipDetails> employeePaySlipDetailsSet = employeeDetails.getEmployeePaySlipDetails();
-				Set<EmployeePaySlipDetails> employeePaySlipDetailsSetWithNumber = new  HashSet<EmployeePaySlipDetails>();
-				for(EmployeePaySlipDetails employeePaySlipDetails :employeePaySlipDetailsSet) {
-					
-					EmployeePaySlipDetails employeePaySlipDetailsUpdated = new EmployeePaySlipDetails();
-					employeePaySlipDetailsUpdated.setDocumentName(employeePaySlipDetails.getDocumentName());
-					employeePaySlipDetailsUpdated.setDocumentType(employeePaySlipDetails.getDocumentType());
-					employeePaySlipDetailsUpdated.setPaySlipMonth(employeePaySlipDetails.getPaySlipMonth());
-					employeePaySlipDetailsUpdated.setPaySlipNumber(employeeDetails.getId()+ employeePaySlipDetails.getPaySlipNumber());
-					employeePaySlipDetailsSetWithNumber.add(employeePaySlipDetailsUpdated);					
-					
-				}
-				employeeDetails.setEmployeePaySlipDetails(employeePaySlipDetailsSetWithNumber);
-			}
+			/*
+			 * if(employeeDetails.getEmployeePaySlipDetails().size() != 0) {
+			 * Set<EmployeePaySlipDetails> employeePaySlipDetailsSet =
+			 * employeeDetails.getEmployeePaySlipDetails(); Set<EmployeePaySlipDetails>
+			 * employeePaySlipDetailsSetWithNumber = new HashSet<EmployeePaySlipDetails>();
+			 * for(EmployeePaySlipDetails employeePaySlipDetails :employeePaySlipDetailsSet)
+			 * {
+			 * 
+			 * EmployeePaySlipDetails employeePaySlipDetailsUpdated = new
+			 * EmployeePaySlipDetails();
+			 * employeePaySlipDetailsUpdated.setDocumentName(employeePaySlipDetails.
+			 * getDocumentName());
+			 * employeePaySlipDetailsUpdated.setDocumentType(employeePaySlipDetails.
+			 * getDocumentType());
+			 * employeePaySlipDetailsUpdated.setPaySlipMonth(employeePaySlipDetails.
+			 * getPaySlipMonth());
+			 * employeePaySlipDetailsUpdated.setPaySlipNumber(employeeDetails.getId()+
+			 * employeePaySlipDetails.getPaySlipNumber());
+			 * employeePaySlipDetailsSetWithNumber.add(employeePaySlipDetailsUpdated);
+			 * 
+			 * }
+			 * employeeDetails.setEmployeePaySlipDetails(employeePaySlipDetailsSetWithNumber
+			 * ); }
+			 */
 			checkForDocumentAlreadyPresentWithOtherEmployee(employeeDetails, loggedInUserName);
 			
 			employeeDetails.setId(AddEmployeeDetailsUtil.generateEmployeeId(companyDetails.getCompanyName(), employeeDetails.getFirstName(), employeeDetails.getLastName()));
@@ -116,21 +125,30 @@ public class EmployeeProductService {
 			employeeDetailsValue = employeeDetailsInterface.save(employeeDetails);
 
 		} else {
-			if(employeeDetails.getEmployeePaySlipDetails().size() != 0) {
-				Set<EmployeePaySlipDetails> employeePaySlipDetailsSet = employeeDetails.getEmployeePaySlipDetails();
-				Set<EmployeePaySlipDetails> employeePaySlipDetailsSetWithNumber = new  HashSet<EmployeePaySlipDetails>();
-				for(EmployeePaySlipDetails employeePaySlipDetails :employeePaySlipDetailsSet) {
-					
-					EmployeePaySlipDetails employeePaySlipDetailsUpdated = new EmployeePaySlipDetails();
-					employeePaySlipDetailsUpdated.setDocumentName(employeePaySlipDetails.getDocumentName());
-					employeePaySlipDetailsUpdated.setDocumentType(employeePaySlipDetails.getDocumentType());
-					employeePaySlipDetailsUpdated.setPaySlipMonth(employeePaySlipDetails.getPaySlipMonth());
-					employeePaySlipDetailsUpdated.setPaySlipNumber(employeeDetails.getId()+ employeePaySlipDetails.getPaySlipNumber());
-					employeePaySlipDetailsSetWithNumber.add(employeePaySlipDetailsUpdated);					
-					
-				}
-				employeeDetails.setEmployeePaySlipDetails(employeePaySlipDetailsSetWithNumber);
-			}
+			/*
+			 * if(employeeDetails.getEmployeePaySlipDetails().size() != 0) {
+			 * Set<EmployeePaySlipDetails> employeePaySlipDetailsSet =
+			 * employeeDetails.getEmployeePaySlipDetails(); Set<EmployeePaySlipDetails>
+			 * employeePaySlipDetailsSetWithNumber = new HashSet<EmployeePaySlipDetails>();
+			 * for(EmployeePaySlipDetails employeePaySlipDetails :employeePaySlipDetailsSet)
+			 * {
+			 * 
+			 * EmployeePaySlipDetails employeePaySlipDetailsUpdated = new
+			 * EmployeePaySlipDetails();
+			 * employeePaySlipDetailsUpdated.setDocumentName(employeePaySlipDetails.
+			 * getDocumentName());
+			 * employeePaySlipDetailsUpdated.setDocumentType(employeePaySlipDetails.
+			 * getDocumentType());
+			 * employeePaySlipDetailsUpdated.setPaySlipMonth(employeePaySlipDetails.
+			 * getPaySlipMonth());
+			 * employeePaySlipDetailsUpdated.setPaySlipNumber(employeeDetails.getId()+
+			 * employeePaySlipDetails.getPaySlipNumber());
+			 * employeePaySlipDetailsSetWithNumber.add(employeePaySlipDetailsUpdated);
+			 * 
+			 * }
+			 * employeeDetails.setEmployeePaySlipDetails(employeePaySlipDetailsSetWithNumber
+			 * ); }
+			 */
 			checkForDocumentAlreadyPresentWithOtherEmployee(employeeDetails, loggedInUserName);
 			employeeDetailsValue = entity.merge(employeeDetails);
 		}
