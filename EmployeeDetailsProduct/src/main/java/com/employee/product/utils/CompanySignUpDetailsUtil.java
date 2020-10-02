@@ -20,7 +20,6 @@ public class CompanySignUpDetailsUtil {
 	public static void companySignUpDetailsMapping(CompanyDetailsRequestDto companyDetailsDto, Users users) {
 
 		CompanyDetails companyDetails = new CompanyDetails();
-
 		users.setActive(companyDetailsDto.getActive());
 		users.setUserName(companyDetailsDto.getEmailId());
 		if (null != companyDetailsDto.getEmployeeDetails()) {
@@ -33,9 +32,7 @@ public class CompanySignUpDetailsUtil {
 		users.setActive(1);
 		users.setCreatedAt(new Date());
 		companyDetailsMapping(companyDetailsDto, companyDetails);
-
 		users.setCompanyDetails(companyDetails);
-
 		employeeDetailsMapping(users, companyDetailsDto, companyDetails);
 
 	}
@@ -51,7 +48,7 @@ public class CompanySignUpDetailsUtil {
 		companyDetails.setCountry(companyDetailsDto.getCountry());
 		companyDetails.setContactNumber(companyDetailsDto.getContactNumber());
 		companyDetails.setSizeOfTheCompany(companyDetailsDto.getSizeOfTheCompany());
-		companyDetails.setActive(companyDetailsDto.getActive());
+		companyDetails.setActive(1);
 		companyDetails.setVatNumber(companyDetailsDto.getVatNumber());
 		companyDetails.setPostalCode(companyDetailsDto.getPostalCode());
 		companyDetails.setCompanyType(companyDetailsDto.getCompanyType());
@@ -126,7 +123,7 @@ public class CompanySignUpDetailsUtil {
 		companyDetails.setId(companyDetailsDto.getCompanyId());
 		companyDetails.setPostalCode(companyDetailsDto.getPostalCode());
 		companyDetails.setCompanyType(companyDetailsDto.getCompanyType());
-		companyDetails.setCompanyFlag(companyDetailsDto.getCompanyFlag());
+		companyDetails.setCompanyFlag(1);
 	}
 
 	/*
