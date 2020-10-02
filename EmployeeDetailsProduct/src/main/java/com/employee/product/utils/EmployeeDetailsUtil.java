@@ -9,12 +9,10 @@ import com.employee.product.employeedetails.response.dto.EmployeeDataResponseDto
 import com.employee.product.employeedetails.response.dto.EmployeeDetailsResponseDto;
 import com.employee.product.employeedetails.response.dto.EmployeeFamilyDetailsResponseDto;
 import com.employee.product.employeedetails.response.dto.EmployeePassportDetailsResponseDto;
-import com.employee.product.employeedetails.response.dto.EmployeePaySlipDocumentDetailsResponseDto;
 import com.employee.product.employeedetails.response.dto.EmployeeWorkPermitDetailsResponseDto;
 import com.employee.product.entity.employeedetails.EmployeeDetails;
 import com.employee.product.entity.employeedetails.EmployeeFamilyDetails;
 import com.employee.product.entity.employeedetails.EmployeePassportDetails;
-import com.employee.product.entity.employeedetails.EmployeePaySlipDetails;
 import com.employee.product.entity.employeedetails.EmployeeWorkPermitDetails;
 
 public class EmployeeDetailsUtil {
@@ -183,24 +181,32 @@ public class EmployeeDetailsUtil {
 	 * Method to Map Payslip details of an employee
 	 */
 
-	private static List<EmployeePaySlipDocumentDetailsResponseDto> mapPaySlipDetails(
-			Set<EmployeePaySlipDetails> employeePaySlipDetailsList) {
-
-		List<EmployeePaySlipDocumentDetailsResponseDto> employeePaySlipDocumentDetailsResponseDtoList = new ArrayList<EmployeePaySlipDocumentDetailsResponseDto>();
-		if (null != employeePaySlipDetailsList) {
-
-			for (EmployeePaySlipDetails employeePaySlipDetails : employeePaySlipDetailsList) {
-
-				EmployeePaySlipDocumentDetailsResponseDto employeePaySlipDocumentDetailsResponseDto = new EmployeePaySlipDocumentDetailsResponseDto();
-
-				employeePaySlipDocumentDetailsResponseDto.setDocumentName(employeePaySlipDetails.getDocumentName());
-				employeePaySlipDocumentDetailsResponseDto.setDocumentNumber(employeePaySlipDetails.getPaySlipNumber());
-				employeePaySlipDocumentDetailsResponseDto.setDocumentType(employeePaySlipDetails.getDocumentType());
-				employeePaySlipDocumentDetailsResponseDtoList.add(employeePaySlipDocumentDetailsResponseDto);
-
-			}
-		}
-		return employeePaySlipDocumentDetailsResponseDtoList;
-	}
+	/*
+	 * private static List<EmployeePaySlipDocumentDetailsResponseDto>
+	 * mapPaySlipDetails( Set<EmployeePaySlipDetails> employeePaySlipDetailsList) {
+	 * 
+	 * List<EmployeePaySlipDocumentDetailsResponseDto>
+	 * employeePaySlipDocumentDetailsResponseDtoList = new
+	 * ArrayList<EmployeePaySlipDocumentDetailsResponseDto>(); if (null !=
+	 * employeePaySlipDetailsList) {
+	 * 
+	 * for (EmployeePaySlipDetails employeePaySlipDetails :
+	 * employeePaySlipDetailsList) {
+	 * 
+	 * EmployeePaySlipDocumentDetailsResponseDto
+	 * employeePaySlipDocumentDetailsResponseDto = new
+	 * EmployeePaySlipDocumentDetailsResponseDto();
+	 * 
+	 * employeePaySlipDocumentDetailsResponseDto.setDocumentName(
+	 * employeePaySlipDetails.getDocumentName());
+	 * employeePaySlipDocumentDetailsResponseDto.setDocumentNumber(
+	 * employeePaySlipDetails.getPaySlipNumber());
+	 * employeePaySlipDocumentDetailsResponseDto.setDocumentType(
+	 * employeePaySlipDetails.getDocumentType());
+	 * employeePaySlipDocumentDetailsResponseDtoList.add(
+	 * employeePaySlipDocumentDetailsResponseDto);
+	 * 
+	 * } } return employeePaySlipDocumentDetailsResponseDtoList; }
+	 */
 
 }
