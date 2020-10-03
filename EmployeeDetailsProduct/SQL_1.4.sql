@@ -1,19 +1,21 @@
+drop database EmployeeProduct;
+create database EmployeeProduct;
 use EmployeeProduct;
 
 CREATE TABLE `users` (
-  `user_name` varchar(255) PRIMARY KEY,
+  `username` varchar(255) PRIMARY KEY,
   `first_name` varchar(255),
   `last_name` varchar(255),
   `password` varchar(255),
   `role` varchar(255),
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `country` varchar(255),
-  `company_id` int,
+  `company_id` varchar(255),
   `active` int
 );
 
 CREATE TABLE `employee` (
-  `id` int PRIMARY KEY AUTO_INCREMENT,
+  `id` varchar(255) PRIMARY KEY,
   `first_name` varchar(255),
   `last_name` varchar(255),
   `email_id` varchar(255) UNIQUE,
@@ -27,18 +29,27 @@ CREATE TABLE `employee` (
   `date_of_birth` date,
   `updated_by` varchar(255),
   `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  `company_id` int,
+  `company_id` varchar(255),
   `job_role` varchar(255),
   `work_location` varchar(255),
-  `department` varchar(255)
+  `department` varchar(255),
+  `reporting_person` varchar(255),
+  `active` integer,
+  `postal_code` varchar(255),
+  `bic` varchar(20),
+  `iban` varchar(25),
+  `date_of_joining` date,
+  `marital_status` varchar(25)
 );
 
 CREATE TABLE `workpermit_details` (
-  `employee_id` int,
+  `employee_id` varchar(255),
   `workpermit_number` varchar(255) PRIMARY KEY,
   `start_date` date,
   `end_date` date,
-  `validity` int
+  `validity` int,
+  `document_name` varchar(255),
+  `document_type` varchar(255)
 );
 
 CREATE TABLE `workpermit_document_details` (
@@ -49,8 +60,10 @@ CREATE TABLE `workpermit_document_details` (
 
 CREATE TABLE `payslip_details` (
   `payslip_number` varchar(255)  PRIMARY KEY,
-  `employee_id` int,
-  `payslip_month` varchar(255)
+  `employee_id` varchar(255),
+  `payslip_month` varchar(255),
+  `document_name` varchar(255),
+  `document_type` varchar(255)
 );
 
 CREATE TABLE `payslip_document_details` (
@@ -60,12 +73,15 @@ CREATE TABLE `payslip_document_details` (
 );
 
 CREATE TABLE `passport_details` (
-  `employee_id` int,
+  `employee_id` varchar(255),
   `passport_number` varchar(255) PRIMARY KEY,
   `start_date` date,
   `end_date` date,
   `issue_place` varchar(255),
-  `validity` int
+  `validity` int,
+  `birth_place` varchar(255),
+  `document_name` varchar(255),
+  `document_type` varchar(255)
 );
 
 CREATE TABLE `passport_document_details` (
@@ -76,7 +92,7 @@ CREATE TABLE `passport_document_details` (
 
 CREATE TABLE `family_details` (
   `id` int PRIMARY KEY AUTO_INCREMENT,
-  `employee_id` int,
+  `employee_id` varchar(255),
   `first_name` varchar(255),
   `last_name` varchar(255),
   `relation` int,
@@ -84,7 +100,7 @@ CREATE TABLE `family_details` (
 );
 
 CREATE TABLE `company` (
-  `id` int PRIMARY KEY AUTO_INCREMENT,
+  `id` varchar(255) PRIMARY KEY,
   `name` varchar(255) UNIQUE,
   `email_id` varchar(255),
   `address1` varchar(255),
@@ -94,7 +110,11 @@ CREATE TABLE `company` (
   `country` varchar(255),
   `contact_number` varchar(255),
   `size` int,
-  `active` int
+  `active` int,
+  `flag` int DEFAULT 0 NOT NULL,
+  `postal_code` varchar(25),
+  `company_type` varchar(25),
+  `vat_number` varchar(25)
 );
 
 CREATE TABLE `Audit_Trial` (
@@ -107,7 +127,7 @@ CREATE TABLE `Audit_Trial` (
 
 ALTER TABLE `users` ADD FOREIGN KEY (`company_id`) REFERENCES `company` (`id`);
 
-ALTER TABLE `employee` ADD FOREIGN KEY (`updated_by`) REFERENCES `users` (`user_name`);
+ALTER TABLE `employee` ADD FOREIGN KEY (`updated_by`) REFERENCES `users` (`username`);
 
 ALTER TABLE `employee` ADD FOREIGN KEY (`company_id`) REFERENCES `company` (`id`);
 
@@ -125,15 +145,9 @@ ALTER TABLE `passport_document_details` ADD FOREIGN KEY (`passport_number`) REFE
 
 ALTER TABLE `family_details` ADD FOREIGN KEY (`employee_id`) REFERENCES `employee` (`id`);
 
-ALTER TABLE employee add column reporting_person varchar(255);
-
-ALTER TABLE employee add column active integer;
-
 DROP INDEX email_id ON employee;
 
 ALTER TABLE employee ADD CONSTRAINT email_id UNIQUE(email_id, active);
-
-ALTER TABLE employee add column postal_code varchar(255);
 
 -- Changes for making employee ID as String - Starts --
 
@@ -153,16 +167,6 @@ ALTER TABLE `payslip_details` DROP INDEX `employee_id`;
 
 ALTER TABLE `workpermit_details` DROP INDEX `employee_id`;
 
-ALTER TABLE employee MODIFY COLUMN id varchar(255);
-
-ALTER TABLE family_details MODIFY COLUMN employee_id varchar(255);
-
-ALTER TABLE passport_details MODIFY COLUMN employee_id varchar(255);
-
-ALTER TABLE payslip_details MODIFY COLUMN employee_id varchar(255);
-
-ALTER TABLE workpermit_details MODIFY COLUMN employee_id varchar(255);
-
 ALTER TABLE `workpermit_details` ADD FOREIGN KEY (`employee_id`) REFERENCES `employee` (`id`);
 
 ALTER TABLE `family_details` ADD FOREIGN KEY (`employee_id`) REFERENCES `employee` (`id`);
@@ -170,17 +174,6 @@ ALTER TABLE `family_details` ADD FOREIGN KEY (`employee_id`) REFERENCES `employe
 ALTER TABLE `passport_details` ADD FOREIGN KEY (`employee_id`) REFERENCES `employee` (`id`);
 
 ALTER TABLE `payslip_details` ADD FOREIGN KEY (`employee_id`) REFERENCES `employee` (`id`);
-
--- Changes for making employee ID as String - ends --
-
-
--- JWT changes starts --
-
-ALTER TABLE users RENAME COLUMN user_name TO username;
-
--- JWT changes ends --
-
--- Changes for making company ID as string - starts --
 
 ALTER TABLE `users` DROP FOREIGN KEY `users_ibfk_1`;
 
@@ -190,52 +183,13 @@ ALTER TABLE `users` DROP INDEX `company_id`;
 
 ALTER TABLE `employee` DROP INDEX `company_id`;
 
-ALTER TABLE company MODIFY COLUMN id varchar(255);
-
-ALTER TABLE employee MODIFY COLUMN company_id varchar(255);
-
-ALTER TABLE users MODIFY COLUMN company_id varchar(255);
-
 ALTER TABLE `users` ADD FOREIGN KEY (`company_id`) REFERENCES `company` (`id`);
 
 ALTER TABLE `employee` ADD FOREIGN KEY (`company_id`) REFERENCES `company` (`id`);
 
--- Changes for making company ID as String - ends --
-
-ALTER TABLE passport_details ADD COLUMN birth_place varchar(255);
-
--- Changes for adding document name and type in details table - starts -- 
-
-ALTER TABLE workpermit_details add column document_name varchar(255);
-
-ALTER TABLE workpermit_details add column document_type varchar(255);
-
-ALTER TABLE passport_details add column document_name varchar(255);
-
-ALTER TABLE passport_details add column document_type varchar(255);
-
-ALTER TABLE payslip_details add column document_name varchar(255);
-
-ALTER TABLE payslip_details add column document_type varchar(255);
-
--- Changes for adding document name and type in details table - ends -- 
-
--- changes for employee deletion and add in other company and delete - starts --
-
 DROP INDEX email_id ON employee;
 
 ALTER TABLE employee ADD CONSTRAINT email_id UNIQUE(email_id, active, company_id);
-
--- changes for employee deletion and add in other company and delete - ends --
-
--- Changes for adding IBan and BIC in employeedetails -- starts -- 
-
-ALTER table employee add column bic varchar(20);
-
-ALTER table employee add column iban varchar(25);
-
--- Changes for adding IBan and BIC in employeedetails -- ends -- 
-
 -- Changes for adding MUsers -- starts --
 -- Changes for master login -- begins --
 
@@ -247,28 +201,6 @@ Create TABLE `master_users`(
   `mrole` varchar(255),
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
   );
-
--- Changes for master login -- ends--
-
--- Changes for adding MUsers -- Ends --
-
--- Changes for Date of joining and Marital status in employeedetails -- starts -- 
-
-ALTER table employee add column date_of_joining date;
-
-ALTER table employee add column marital_status varchar(25);
-
--- Changes for adding IBan and BIC in employeedetails -- ends -- 
-
--- Changes for postal code of company -- Begins --
-ALTER table company add column postal_code varchar(25);
--- Changes for postal code of company -- Ends --
-
--- Changes for company_type of company -- Begins --
-ALTER table company add column company_type varchar(25);
--- Changes for company_type of company -- Ends --
-
-Drop VIEW COMPANY_DETAILS_MADM;
 
 -- Changes for getting view of companydetails to MAdmin -- Begins -- 
 CREATE VIEW COMPANY_DETAILS_MADM AS
@@ -290,7 +222,3 @@ count(*) total
 from company c,employee;
 
 -- Changes for getting view of companydetails to MAdmin -- Ends --
-
--- Changes for company_type of company -- Begins --
-ALTER table company add column flag int(1) DEFAULT 0 NOT NULL;
--- Changes for company_type of company -- Ends --
