@@ -17,7 +17,7 @@ import lombok.Setter;
 public class MasterUsers {
 
 	@Id
-	@Column(name = "musername")
+	@Column(name = "muser_name")
 	private String mUserName;
 	@Column(name = "mfirst_name")
 	private String mFirstName;
