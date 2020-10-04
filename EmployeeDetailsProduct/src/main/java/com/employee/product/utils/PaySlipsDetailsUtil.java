@@ -2,11 +2,14 @@ package com.employee.product.utils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import com.employee.product.employeedetails.dto.EmployeeDetailsDto;
+import com.employee.product.employeedetails.dto.MaritalStat;
 import com.employee.product.entity.employeedetails.EmployeeDetails;
 import com.employee.product.entity.employeedetails.EmployeePaySlipDetails;
 import com.employee.product.payslipsdetails.response.dto.EPaySlip;
+import com.employee.product.payslipsdetails.response.dto.EPaySlipEmpRes;
 import com.employee.product.payslipsdetails.response.dto.EPaySlipResDto;
 import com.employee.product.payslipsdetails.response.dto.EPaySlips;
 /**
@@ -35,6 +38,7 @@ public class PaySlipsDetailsUtil {
 							ePaySlip.setDocumentNumber(employeePaySlipDetails.getPaySlipNumber());
 							ePaySlip.setDocumentType(employeePaySlipDetails.getDocumentType());
 							ePaySlip.setMonth(employeePaySlipDetails.getPaySlipMonth());
+							ePaySlip.setYear(employeePaySlipDetails.getPaySlipYear());
 							epaySlipList.add(ePaySlip);
 				}
 				ePaySlips.setEPaySlip(epaySlipList);
@@ -63,7 +67,29 @@ public class PaySlipsDetailsUtil {
 		empDetails.setLastName(employeeDetails.getLastName());
 		empDetails.setSex(employeeDetails.getSex());
 		empDetails.setState(employeeDetails.getState());
+		empDetails.setMaritalStatus(MaritalStat.valueOf(employeeDetails.getMaritalStatus()));
+		empDetails.setJobRole(employeeDetails.getJobRole());
 		ePaySlips.setEmpDetails(empDetails);
 	}
+
+	/**
+	 * 
+	 * @param paySlipDetails
+	 * @param ePaySlipEmpRes
+	 */
+	public static void mapEmpPaySlipDetails(Set<EmployeePaySlipDetails> paySlipDetails,
+			EPaySlipEmpRes ePaySlipEmpRes) {
+			List<EPaySlip> ePaySlipList = new ArrayList<EPaySlip>();
+			for(EmployeePaySlipDetails paySlip:paySlipDetails) {
+				EPaySlip paySlipEmp = new EPaySlip();
+				paySlipEmp.setDocumentName(paySlip.getDocumentName());
+				paySlipEmp.setDocumentType(paySlip.getDocumentType());
+				paySlipEmp.setMonth(paySlip.getPaySlipMonth());
+				paySlipEmp.setDocumentNumber(paySlip.getPaySlipNumber());
+				paySlipEmp.setYear(paySlip.getPaySlipYear());
+				ePaySlipList.add(paySlipEmp);
+			}
+			ePaySlipEmpRes.setEPaySlip(ePaySlipList);
+		}
 
 }
