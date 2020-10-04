@@ -19,6 +19,8 @@ public class EmployeePaySlipDetails {
 	@Column(name = "payslip_month")
 	private String paySlipMonth;
 	
+	@Column(name = "payslip_year")
+	private String paySlipYear;
 
 	@Column(name = "document_name")
 	private String documentName;
