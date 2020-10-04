@@ -203,8 +203,8 @@ Create TABLE `master_users`(
   );
 
 -- Changes for getting view of companydetails to MAdmin -- Begins -- 
-CREATE VIEW COMPANY_DETAILS_MADM AS
-select 
+CREATE OR REPLACE VIEW COMPANY_DETAILS_MADW AS
+select DISTINCT
 c.id,
 c.name,
 c.email_id,
@@ -218,7 +218,21 @@ c.vat_number,
 c.postal_code,
 c.contact_number, 
 c.company_type,
-count(*) total
-from company c,employee;
+c1.ct
+from company c,employee e,
+(select count(*) ct,c.id from employee e,company c where e.company_id= c.id group by e.company_id) c1 where c1.id = c.id;
+
 
 -- Changes for getting view of companydetails to MAdmin -- Ends --
+
+
+---Added new payslip_year ---------Begin-----
+alter table payslip_details add column payslip_year varchar(50);
+
+---Added new payslip_year ---------End-----
+
+---Added new resignation_date ---------Begin-----
+
+alter table employee add column resignation_date date;
+
+---Added new resignation_date ---------End-----
