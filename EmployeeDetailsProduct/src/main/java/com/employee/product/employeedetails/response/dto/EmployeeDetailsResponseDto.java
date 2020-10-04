@@ -50,6 +50,10 @@ public class EmployeeDetailsResponseDto {
 
 	private String dateOfJoin;
 	
+	private String dateOfResign;
+	
+	private int active;
+	
 	private MaritalStat maritalStatus;
 	
 	private List<EmployeeWorkPermitDetailsResponseDto> workPermitDetails;
