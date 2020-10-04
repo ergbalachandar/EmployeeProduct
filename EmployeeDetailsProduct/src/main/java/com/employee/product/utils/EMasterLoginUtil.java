@@ -57,6 +57,9 @@ public class EMasterLoginUtil {
 	 */
 	public static void retrieveMComDetails(EMasterService eMasterService,ECDARes eCDARes, String userName) throws Exception {
 		MasterUsers masterAcc = eMasterService.findByUser(userName);
+		eCDARes.setMfirstName(masterAcc.getMFirstName());
+		eCDARes.setMLastName(masterAcc.getMLastName());
+		eCDARes.setMRole(masterAcc.getMRole());
 		if(masterAcc.getMRole().equals("mAdmin")) {
 			eMasterService.comDetails(eCDARes);	
 		}

@@ -49,6 +49,10 @@ public class EmployeeDetailsUtil {
 		if (null != employeeDetails.getDateOfBirth()) {
 			employeeDetailsResponseDto.setDateOfBirth(String.valueOf(employeeDetails.getDateOfBirth()));
 		}
+		if (null != employeeDetails.getResignDate()) {
+			employeeDetailsResponseDto.setDateOfResign(String.valueOf(employeeDetails.getResignDate()));
+		}
+		employeeDetailsResponseDto.setActive(employeeDetails.getActive());
 		employeeDetailsResponseDto.setEmailId(employeeDetails.getEmailId());
 		employeeDetailsResponseDto.setFirstName(employeeDetails.getFirstName());
 		employeeDetailsResponseDto.setLastName(employeeDetails.getLastName());
