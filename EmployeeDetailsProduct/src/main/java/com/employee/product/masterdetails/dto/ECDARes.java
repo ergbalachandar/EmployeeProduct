@@ -15,4 +15,8 @@ import lombok.Setter;
 public class ECDARes {
 	
 	List<ECDA> ecda;
+    String mfirstName;
+    String mLastName;
+    String mRole;
+    
 }
