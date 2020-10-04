@@ -203,7 +203,7 @@ Create TABLE `master_users`(
   );
 
 -- Changes for getting view of companydetails to MAdmin -- Begins -- 
-CREATE OR REPLACE VIEW COMPANY_DETAILS_MADW AS
+CREATE OR REPLACE VIEW COMPANY_DETAILS_MADM AS
 select DISTINCT
 c.id,
 c.name,
@@ -218,7 +218,7 @@ c.vat_number,
 c.postal_code,
 c.contact_number, 
 c.company_type,
-c1.ct
+c1.ct total
 from company c,employee e,
 (select count(*) ct,c.id from employee e,company c where e.company_id= c.id group by e.company_id) c1 where c1.id = c.id;
 
