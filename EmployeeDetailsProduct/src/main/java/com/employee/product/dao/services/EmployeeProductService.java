@@ -1,5 +1,6 @@
 package com.employee.product.dao.services;
 
+import java.sql.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -18,7 +19,6 @@ import com.employee.product.entity.companydetails.CompanyDetails;
 import com.employee.product.entity.companydetails.Users;
 import com.employee.product.entity.employeedetails.EmployeeDetails;
 import com.employee.product.entity.employeedetails.EmployeePassportDetails;
-import com.employee.product.entity.employeedetails.EmployeePaySlipDetails;
 import com.employee.product.entity.employeedetails.EmployeeWorkPermitDetails;
 import com.employee.product.utils.AddEmployeeDetailsUtil;
 
@@ -83,6 +83,7 @@ public class EmployeeProductService {
 		Set<EmployeeDetails> employeeDetailsSet = users.getEmployeeDetails();
 		for (EmployeeDetails employeeDetails : employeeDetailsSet) {
 			employeeDetails.setActive(0);
+			employeeDetails.setResignDate(new Date(new java.util.Date().getTime()));
 		}
 		System.out.println(users.getEmployeeDetails());
 
@@ -188,17 +189,21 @@ public class EmployeeProductService {
 			}
 			//Commented as Payslip is not required in this module.
 
-			Set<EmployeePaySlipDetails> employeePaySlipDetailsList = employeeDetails.getEmployeePaySlipDetails();
-
-			for (EmployeePaySlipDetails employeePaySlipDetails : employeePaySlipDetailsList) {
-
-				Users userDetailsRetrieval = loginDetailsInterface
-						.findByEmployeeDetailsEmployeePaySlipDetails(employeePaySlipDetails);
-
-				DocumentManagementService.accessValidation(userRoleOfLoggedInEmployee, userDetailsRetrieval,
-						employeeDetails.getId(),employeeDetails);
-
-			} 
+			/*
+			 * Set<EmployeePaySlipDetails> employeePaySlipDetailsList =
+			 * employeeDetails.getEmployeePaySlipDetails();
+			 * 
+			 * for (EmployeePaySlipDetails employeePaySlipDetails :
+			 * employeePaySlipDetailsList) {
+			 * 
+			 * Users userDetailsRetrieval = loginDetailsInterface
+			 * .findByEmployeeDetailsEmployeePaySlipDetails(employeePaySlipDetails);
+			 * 
+			 * DocumentManagementService.accessValidation(userRoleOfLoggedInEmployee,
+			 * userDetailsRetrieval, employeeDetails.getId(),employeeDetails);
+			 * 
+			 * }
+			 */
 
 			Set<EmployeePassportDetails> employeePassportDetailsList = employeeDetails.getEmployeePassportDetails();
 
