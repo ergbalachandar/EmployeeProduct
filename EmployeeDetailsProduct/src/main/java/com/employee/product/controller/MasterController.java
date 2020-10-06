@@ -31,7 +31,7 @@ public class MasterController {
 	@Autowired
 	private EMasterService eMasterService;
 
-	@RequestMapping(method = RequestMethod.POST, value = "/elogin")
+	@RequestMapping(method = RequestMethod.POST, value = "/mlogin")
 	@ApiOperation(value = "Master Login")
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "Master Login"),
 			@ApiResponse(code = 401, message = "You are not authorized as Master login"),
@@ -50,7 +50,7 @@ public class MasterController {
 		return emaster;
 	}
 
-	@RequestMapping(method = RequestMethod.POST, value = "/comDetails")
+	@RequestMapping(method = RequestMethod.POST, value = "/comdetails")
     @ApiOperation(value = "Master Admin retrieves all company Info")
     @ApiResponses(value = {@ApiResponse(code = 200, message = "company information"),
             @ApiResponse(code = 401, message = "You are not authorized as Master Signup"),
@@ -68,7 +68,7 @@ public class MasterController {
         return eCDARes;
     }
 	
-	@RequestMapping(method = RequestMethod.POST, value = "/get")
+	@RequestMapping(method = RequestMethod.POST, value = "/msignup")
     @ApiOperation(value = "Master Admin ESignup")
     @ApiResponses(value = {@ApiResponse(code = 200, message = "Master Login"),
             @ApiResponse(code = 401, message = "You are not authorized as Master Signup"),

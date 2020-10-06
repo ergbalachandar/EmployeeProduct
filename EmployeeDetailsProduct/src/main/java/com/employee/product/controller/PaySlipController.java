@@ -13,11 +13,13 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.employee.product.dao.services.CommonService;
 import com.employee.product.dao.services.EmployeeProductService;
 import com.employee.product.dao.services.PaySlipService;
 import com.employee.product.dao.services.UserDetailsImpl;
 import com.employee.product.entity.employeedetails.EmployeeDetails;
 import com.employee.product.entity.employeedetails.EmployeePaySlipDetails;
+import com.employee.product.entity.ops.AuditTrailFE;
 import com.employee.product.payslipsdetails.request.dto.EPaySlipReqDto;
 import com.employee.product.payslipsdetails.response.dto.EPaySlipEmpRes;
 import com.employee.product.payslipsdetails.response.dto.EPaySlipResDto;
@@ -49,6 +51,9 @@ public class PaySlipController {
 	@Autowired
 	private EmployeeProductService employeeProductService;
 	
+	@Autowired
+	CommonService commonService;
+
 	
 	@RequestMapping(method = RequestMethod.POST, value = "/payAdmlist")
 	@ApiOperation(value = "View Payslips", authorizations = { @Authorization(value = "jwtToken") })
@@ -59,13 +64,19 @@ public class PaySlipController {
 	@ResponseBody
 	public EPaySlipResDto retrievePayslips(@RequestBody EPaySlipReqDto EPaySlipReqDto)
 			throws Exception {
-		UserDetailsImpl userDetailsImpl = generateUserDetailsFromJWT();
-		if(!"Admin".equals(userDetailsImpl.getUsers().getRole()) || userDetailsImpl.getUsers().getCompanyDetails().getActive() == 0) {
+		UserDetailsImpl userDetails = generateUserDetailsFromJWT("PAYADMLIST");
+		if(!"Admin".equals(userDetails.getUsers().getRole()) || userDetails.getUsers().getCompanyDetails().getActive() == 0) {
+			commonService.setAudit(new AuditTrailFE(userDetails.getUsers().getFirstName(),
+					userDetails.getUsers().getCompanyDetails().getId(), userDetails.getUsers().getRole(),
+					"You are not authorized to view", 0, "PAYADMLIST"));
 			throw new Exception("You are not authorized to view");
 		}
-		List<EmployeeDetails> paySlipDetails = paySlipService.retrievePayslipsByCompanyId(userDetailsImpl.getUsers().getCompanyDetails());
+		List<EmployeeDetails> paySlipDetails = paySlipService.retrievePayslipsByCompanyId(userDetails.getUsers().getCompanyDetails());
 		EPaySlipResDto ePaySlipRes = new EPaySlipResDto();
 		PaySlipsDetailsUtil.mapPaySlipDetails(ePaySlipRes, paySlipDetails);
+		commonService.setAudit(new AuditTrailFE(userDetails.getUsers().getFirstName(),
+				userDetails.getUsers().getCompanyDetails().getId(), userDetails.getUsers().getRole(),
+				"Admin view of Payslips retrieved Successfully", 1, "PAYADMLIST"));
 		return ePaySlipRes;
 	}
 	
@@ -78,33 +89,36 @@ public class PaySlipController {
 	@ResponseBody
 	public EPaySlipEmpRes retrievePayslipsForEmployee(@RequestBody EPaySlipReqDto EPaySlipReqDto)
 			throws Exception {
-		UserDetailsImpl userDetailsImpl = generateUserDetailsFromJWT();
+		UserDetailsImpl userDetails = this.generateUserDetailsFromJWT("PAYLIST");
 		Set<EmployeePaySlipDetails> paySlipDetails = null;
 
 		List<EmployeeDetails> employeeDetailsList = employeeProductService
-				.findbyCompanyDetails(userDetailsImpl.getUsers().getCompanyDetails().getId());
+				.findbyCompanyDetails(userDetails.getUsers().getCompanyDetails().getId());
 		for(EmployeeDetails empDet:employeeDetailsList) {
-			System.out.println("---empDet---"+empDet.getEmailId());
-			System.out.println("---UserName---"+userDetailsImpl.getUsers().getUserName());
-			
-			if(empDet.getEmailId().equals(userDetailsImpl.getUsers().getUserName())){
+			if(empDet.getEmailId().equals(userDetails.getUsers().getUserName())){
 				paySlipDetails = empDet.getEmployeePaySlipDetails();
 				}
 			}
 		EPaySlipEmpRes ePaySlipEmpRes = new EPaySlipEmpRes();
 		if(null != paySlipDetails && paySlipDetails.size() > 0) {
 			PaySlipsDetailsUtil.mapEmpPaySlipDetails(paySlipDetails, ePaySlipEmpRes);
+			commonService.setAudit(new AuditTrailFE(userDetails.getUsers().getFirstName(),
+					userDetails.getUsers().getCompanyDetails().getId(), userDetails.getUsers().getRole(),
+					"Employee view of Payslips retrieved Successfully", 1, "PAYLIST"));
 		}
 		return ePaySlipEmpRes;
 	}
 	
-	private static UserDetailsImpl generateUserDetailsFromJWT() throws Exception {
-		UserDetailsImpl userDetailsImpl = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication()
+	private UserDetailsImpl generateUserDetailsFromJWT(String module) throws Exception {
+		UserDetailsImpl userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication()
 				.getPrincipal();
-		if (userDetailsImpl.getUsers().getActive() == 0) {
+		if (userDetails.getUsers().getActive() == 0) {
+			commonService.setAudit(new AuditTrailFE(userDetails.getUsers().getFirstName(),
+					userDetails.getUsers().getCompanyDetails().getId(), userDetails.getUsers().getRole(),
+					"Your profile has been deleted", 0, module));
 			throw new Exception("Your profile has been deleted");
 		}
-		return userDetailsImpl;
+		return userDetails;
 	}
 
 }
