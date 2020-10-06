@@ -32,7 +32,7 @@ import io.swagger.annotations.ApiResponses;
 import io.swagger.annotations.Authorization;
 
 @RestController
-@RequestMapping("/payslips")
+@RequestMapping("/EProduct/payslips")
 public class PaySlipController {
 	
 	@Autowired
