@@ -55,14 +55,14 @@ public class PaySlipController {
 	CommonService commonService;
 
 	
-	@RequestMapping(method = RequestMethod.POST, value = "/payAdmlist")
+	@RequestMapping(method = RequestMethod.GET, value = "/payAdmlist")
 	@ApiOperation(value = "View Payslips", authorizations = { @Authorization(value = "jwtToken") })
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "Successfully retrieved Payslips"),
 			@ApiResponse(code = 401, message = "You are not authorized to Log In"),
 			@ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
 			@ApiResponse(code = 404, message = "The resource you were trying to reach is not found") })
 	@ResponseBody
-	public EPaySlipResDto retrievePayslips(@RequestBody EPaySlipReqDto EPaySlipReqDto)
+	public EPaySlipResDto retrievePayslips()
 			throws Exception {
 		UserDetailsImpl userDetails = generateUserDetailsFromJWT("PAYADMLIST");
 		if(!"Admin".equals(userDetails.getUsers().getRole()) || userDetails.getUsers().getCompanyDetails().getActive() == 0) {
@@ -80,14 +80,14 @@ public class PaySlipController {
 		return ePaySlipRes;
 	}
 	
-	@RequestMapping(method = RequestMethod.POST, value = "/paylist")
+	@RequestMapping(method = RequestMethod.GET, value = "/paylist")
 	@ApiOperation(value = "View Payslips", authorizations = { @Authorization(value = "jwtToken") })
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "Successfully retrieved Payslips"),
 			@ApiResponse(code = 401, message = "You are not authorized to Log In"),
 			@ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
 			@ApiResponse(code = 404, message = "The resource you were trying to reach is not found") })
 	@ResponseBody
-	public EPaySlipEmpRes retrievePayslipsForEmployee(@RequestBody EPaySlipReqDto EPaySlipReqDto)
+	public EPaySlipEmpRes retrievePayslipsForEmployee()
 			throws Exception {
 		UserDetailsImpl userDetails = this.generateUserDetailsFromJWT("PAYLIST");
 		Set<EmployeePaySlipDetails> paySlipDetails = null;
