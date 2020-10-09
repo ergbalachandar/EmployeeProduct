@@ -8,6 +8,7 @@ import com.employee.product.employeedetails.dto.EmployeeDetailsDto;
 import com.employee.product.employeedetails.dto.MaritalStat;
 import com.employee.product.entity.employeedetails.EmployeeDetails;
 import com.employee.product.entity.employeedetails.EmployeePaySlipDetails;
+import com.employee.product.payslipsdetails.response.dto.DocumentType;
 import com.employee.product.payslipsdetails.response.dto.EPaySlip;
 import com.employee.product.payslipsdetails.response.dto.EPaySlipEmpRes;
 import com.employee.product.payslipsdetails.response.dto.EPaySlipResDto;
@@ -36,7 +37,8 @@ public class PaySlipsDetailsUtil {
 							EPaySlip ePaySlip = new EPaySlip();
 							ePaySlip.setDocumentName(employeePaySlipDetails.getDocumentName());
 							ePaySlip.setDocumentNumber(employeePaySlipDetails.getPaySlipNumber());
-							ePaySlip.setDocumentType(employeePaySlipDetails.getDocumentType());
+							if(null != employeePaySlipDetails.getDocumentType())
+								ePaySlip.setDocumentType(DocumentType.valueOf(employeePaySlipDetails.getDocumentType()));
 							ePaySlip.setMonth(employeePaySlipDetails.getPaySlipMonth());
 							ePaySlip.setYear(employeePaySlipDetails.getPaySlipYear());
 							epaySlipList.add(ePaySlip);
@@ -67,8 +69,11 @@ public class PaySlipsDetailsUtil {
 		empDetails.setLastName(employeeDetails.getLastName());
 		empDetails.setSex(employeeDetails.getSex());
 		empDetails.setState(employeeDetails.getState());
-		empDetails.setMaritalStatus(MaritalStat.valueOf(employeeDetails.getMaritalStatus()));
+		if(null != employeeDetails.getMaritalStatus()) 
+			empDetails.setMaritalStatus(MaritalStat.valueOf(employeeDetails.getMaritalStatus()));
 		empDetails.setJobRole(employeeDetails.getJobRole());
+		empDetails.setEmpId(employeeDetails.getId());
+		empDetails.setDocumentType(DocumentType.values());
 		ePaySlips.setEmpDetails(empDetails);
 	}
 
@@ -83,7 +88,8 @@ public class PaySlipsDetailsUtil {
 			for(EmployeePaySlipDetails paySlip:paySlipDetails) {
 				EPaySlip paySlipEmp = new EPaySlip();
 				paySlipEmp.setDocumentName(paySlip.getDocumentName());
-				paySlipEmp.setDocumentType(paySlip.getDocumentType());
+				if(null != paySlip.getDocumentType())
+					paySlipEmp.setDocumentType(DocumentType.valueOf(paySlip.getDocumentType()));
 				paySlipEmp.setMonth(paySlip.getPaySlipMonth());
 				paySlipEmp.setDocumentNumber(paySlip.getPaySlipNumber());
 				paySlipEmp.setYear(paySlip.getPaySlipYear());
