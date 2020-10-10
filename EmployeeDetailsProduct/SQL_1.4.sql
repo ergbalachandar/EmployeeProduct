@@ -117,12 +117,15 @@ CREATE TABLE `company` (
   `vat_number` varchar(25)
 );
 
-CREATE TABLE `Audit_Trial` (
+CREATE TABLE `audit_trial` (
   `id` int PRIMARY KEY AUTO_INCREMENT,
   `updated_by` varchar(255),
   `updated_user` varchar(255),
   `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  `updated_company` varchar(255)
+  `updated_company` varchar(255),
+  `module` varchar(50),
+  `message` varchar(255),
+  `status` int
 );
 
 ALTER TABLE `users` ADD FOREIGN KEY (`company_id`) REFERENCES `company` (`id`);
@@ -226,13 +229,13 @@ from company c,employee e,
 -- Changes for getting view of companydetails to MAdmin -- Ends --
 
 
----Added new payslip_year ---------Begin-----
+-- Added new payslip_year ---------Begin-----
 alter table payslip_details add column payslip_year varchar(50);
 
----Added new payslip_year ---------End-----
+-- Added new payslip_year ---------End-----
 
----Added new resignation_date ---------Begin-----
+-- Added new resignation_date ---------Begin-----
 
 alter table employee add column resignation_date date;
 
----Added new resignation_date ---------End-----
+-- Added new resignation_date ---------End-----
