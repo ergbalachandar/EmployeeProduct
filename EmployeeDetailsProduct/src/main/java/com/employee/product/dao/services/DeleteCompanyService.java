@@ -23,4 +23,10 @@ public class DeleteCompanyService {
 		companyDetails.get().setActive(0);
 	}
 
+	
+	@Transactional
+	public CompanyDetails getCompany(String companyId) {
+		Optional<CompanyDetails> companyDetails = companyDeleteInterface.findById(companyId);
+		return companyDetails.get();
+	}
 }
