@@ -9,7 +9,9 @@ public class EPaySlip {
 
 	private String documentName;
 	private String documentNumber;
-	private DocumentType documentType;
+	private String documentType;
 	private String month;
 	private String year;
+	private PayslipType paySlipType;
+	
 }
