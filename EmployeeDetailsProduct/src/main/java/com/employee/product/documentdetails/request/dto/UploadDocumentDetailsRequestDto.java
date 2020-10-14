@@ -13,5 +13,11 @@ public class UploadDocumentDetailsRequestDto {
 	
 	private String employeeId; // EmployeeId for which document needs to be uploaded
 	
+	private String month;  // Payslip Module
+	
+	private String year;   //  Payslip Module 
+	
+	private String payslipType; // Payslip Module
+	
 	
 }

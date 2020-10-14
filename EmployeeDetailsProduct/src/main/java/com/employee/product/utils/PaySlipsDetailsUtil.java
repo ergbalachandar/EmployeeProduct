@@ -8,11 +8,11 @@ import com.employee.product.employeedetails.dto.EmployeeDetailsDto;
 import com.employee.product.employeedetails.dto.MaritalStat;
 import com.employee.product.entity.employeedetails.EmployeeDetails;
 import com.employee.product.entity.employeedetails.EmployeePaySlipDetails;
-import com.employee.product.payslipsdetails.response.dto.DocumentType;
 import com.employee.product.payslipsdetails.response.dto.EPaySlip;
 import com.employee.product.payslipsdetails.response.dto.EPaySlipEmpRes;
 import com.employee.product.payslipsdetails.response.dto.EPaySlipResDto;
 import com.employee.product.payslipsdetails.response.dto.EPaySlips;
+import com.employee.product.payslipsdetails.response.dto.PayslipType;
 /**
  * 
  * A class that helps to retrieve payslips and employee details
@@ -31,21 +31,24 @@ public class PaySlipsDetailsUtil {
 			List<EPaySlips> epayList = new ArrayList<EPaySlips>();
 			for (EmployeeDetails employeeDetails : paySlipDetails) {
 				EPaySlips ePaySlips = new EPaySlips();
+				if(employeeDetails.getActive() == 1) {
 				mappingEmployeeDetailsForPayslip(ePaySlips,employeeDetails);
 				List<EPaySlip> epaySlipList = new ArrayList<EPaySlip>();
 					for(EmployeePaySlipDetails employeePaySlipDetails:employeeDetails.getEmployeePaySlipDetails()) {
 							EPaySlip ePaySlip = new EPaySlip();
 							ePaySlip.setDocumentName(employeePaySlipDetails.getDocumentName());
 							ePaySlip.setDocumentNumber(employeePaySlipDetails.getPaySlipNumber());
-							if(null != employeePaySlipDetails.getDocumentType())
-								ePaySlip.setDocumentType(DocumentType.valueOf(employeePaySlipDetails.getDocumentType()));
+							if(null != employeePaySlipDetails.getPayslipType())
+								ePaySlip.setPaySlipType(PayslipType.valueOf(employeePaySlipDetails.getPayslipType()));
 							ePaySlip.setMonth(employeePaySlipDetails.getPaySlipMonth());
 							ePaySlip.setYear(employeePaySlipDetails.getPaySlipYear());
+							ePaySlip.setDocumentType(employeePaySlipDetails.getDocumentType());;
 							epaySlipList.add(ePaySlip);
 				}
 				ePaySlips.setEPaySlip(epaySlipList);
 				epayList.add(ePaySlips);
 		 }
+			}
 			ePaySlipResList.setEPaySlips(epayList);
 		}
 		
@@ -73,7 +76,6 @@ public class PaySlipsDetailsUtil {
 			empDetails.setMaritalStatus(MaritalStat.valueOf(employeeDetails.getMaritalStatus()));
 		empDetails.setJobRole(employeeDetails.getJobRole());
 		empDetails.setEmpId(employeeDetails.getId());
-		empDetails.setDocumentType(DocumentType.values());
 		ePaySlips.setEmpDetails(empDetails);
 	}
 
@@ -88,9 +90,10 @@ public class PaySlipsDetailsUtil {
 			for(EmployeePaySlipDetails paySlip:paySlipDetails) {
 				EPaySlip paySlipEmp = new EPaySlip();
 				paySlipEmp.setDocumentName(paySlip.getDocumentName());
-				if(null != paySlip.getDocumentType())
-					paySlipEmp.setDocumentType(DocumentType.valueOf(paySlip.getDocumentType()));
+				if(null != paySlip.getPayslipType())
+					paySlipEmp.setPaySlipType(PayslipType.valueOf(paySlip.getPayslipType()));
 				paySlipEmp.setMonth(paySlip.getPaySlipMonth());
+				paySlipEmp.setDocumentType(paySlip.getDocumentType());
 				paySlipEmp.setDocumentNumber(paySlip.getPaySlipNumber());
 				paySlipEmp.setYear(paySlip.getPaySlipYear());
 				ePaySlipList.add(paySlipEmp);

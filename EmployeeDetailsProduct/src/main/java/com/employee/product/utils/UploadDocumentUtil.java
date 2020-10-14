@@ -1,10 +1,12 @@
 package com.employee.product.utils;
 
+import java.util.Date;
+
 import com.employee.product.dao.services.DocumentManagementService;
 import com.employee.product.documentdetails.request.dto.UploadDocumentDetailsRequestDto;
 import com.employee.product.documentdetails.response.dto.UploadDocumentDetailsResponseDto;
 import com.employee.product.entity.employeedetails.EmployeePassportDocumentDetails;
-import com.employee.product.entity.employeedetails.EmployeePaySlipDocumentDetails;
+import com.employee.product.entity.employeedetails.EmployeePaySlipDetails;
 import com.employee.product.entity.employeedetails.EmployeeWorkPermitDocumentDetails;
 
 public class UploadDocumentUtil {
@@ -41,15 +43,19 @@ public class UploadDocumentUtil {
 				 loggedInUserName,uploadDocumentDetailsRequestDto.getEmployeeId());
 	}
 
-	private static void uploadPaySlipDocumentDetails(String loggedInUserName, UploadDocumentDetailsRequestDto uploadDocumentDetailsRequestDto,
+	private static void uploadPaySlipDocumentDetails(String loggedInUserName, UploadDocumentDetailsRequestDto uddReq,
 			byte[] bytes, DocumentManagementService documentManagementService, String fileName) throws Exception {
 
-		EmployeePaySlipDocumentDetails employeePaySlipDocumentDetails = new EmployeePaySlipDocumentDetails();
-		employeePaySlipDocumentDetails.setDocumentData(bytes);
-		employeePaySlipDocumentDetails.setPaySlipNumber(uploadDocumentDetailsRequestDto.getDocumentNumber());
-		employeePaySlipDocumentDetails.setDocumentName(fileName);
-		documentManagementService.addPaySlipDocument(employeePaySlipDocumentDetails,
-				 loggedInUserName,uploadDocumentDetailsRequestDto.getEmployeeId());
+		EmployeePaySlipDetails ePDD = new EmployeePaySlipDetails();
+		ePDD.setDocumentData(bytes);
+		ePDD.setPaySlipNumber(uddReq.getEmployeeId()+""+new Date().getTime());
+		ePDD.setDocumentName(fileName);
+		ePDD.setDocumentType(uddReq.getDocumentType());
+		ePDD.setPayslipType(uddReq.getPayslipType());
+		ePDD.setPaySlipMonth(uddReq.getMonth());
+		ePDD.setPaySlipYear(uddReq.getYear());
+		documentManagementService.addPaySlipDocument(ePDD,
+				 loggedInUserName,uddReq);
 
 	}
 

@@ -2,8 +2,6 @@ package com.employee.product.employeedetails.dto;
 
 import java.sql.Date;
 
-import com.employee.product.payslipsdetails.response.dto.DocumentType;
-
 import lombok.Data;
 
 @Data
@@ -24,7 +22,6 @@ public class EmployeeDetailsDto {
 	private String jobRole;
 	private MaritalStat maritalStatus;
 	private String empId;
-	private DocumentType[] documentType;
 	
 
 }

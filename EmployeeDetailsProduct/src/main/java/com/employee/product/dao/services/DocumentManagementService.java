@@ -1,6 +1,8 @@
 package com.employee.product.dao.services;
 
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
 
 import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
@@ -9,16 +11,17 @@ import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.employee.product.dao.interfaces.EmployeeDetailsInterface;
 import com.employee.product.dao.interfaces.EmployeePassportDocumentDetailsInterface;
-import com.employee.product.dao.interfaces.EmployeePaySlipDocumentDetailsInterface;
+import com.employee.product.dao.interfaces.EmployeePayslipDetailsInterface;
 import com.employee.product.dao.interfaces.EmployeeWorkPermitDocumentDetailsInterface;
 import com.employee.product.dao.interfaces.LoginDetailsInterface;
+import com.employee.product.documentdetails.request.dto.UploadDocumentDetailsRequestDto;
 import com.employee.product.entity.companydetails.Users;
 import com.employee.product.entity.employeedetails.EmployeeDetails;
 import com.employee.product.entity.employeedetails.EmployeePassportDetails;
 import com.employee.product.entity.employeedetails.EmployeePassportDocumentDetails;
 import com.employee.product.entity.employeedetails.EmployeePaySlipDetails;
-import com.employee.product.entity.employeedetails.EmployeePaySlipDocumentDetails;
 import com.employee.product.entity.employeedetails.EmployeeWorkPermitDetails;
 import com.employee.product.entity.employeedetails.EmployeeWorkPermitDocumentDetails;
 
@@ -32,13 +35,16 @@ public class DocumentManagementService {
 	private EmployeeWorkPermitDocumentDetailsInterface employeeWorkPermitDocumentDetailsInterface;
 
 	@Autowired
-	private EmployeePaySlipDocumentDetailsInterface employeePaySlipDocumentDetailsInterface;
-
+	private EmployeePayslipDetailsInterface employeePayslipDetailsInterface;
+	
 	@Autowired
 	private EmployeePassportDocumentDetailsInterface employeePassportDocumentDetailsInterface;
 
 	@Autowired
 	private LoginDetailsInterface loginDetailsInterface;
+	
+	@Autowired
+	private EmployeeDetailsInterface empDet;
 
 	@Transactional
 	public void addWorkPermitDocument(EmployeeWorkPermitDocumentDetails employeeWorkPermitDocumentDetails,
@@ -64,7 +70,7 @@ public class DocumentManagementService {
 					.setDocumentName(employeeWorkPermitDocumentDetails.getDocumentName());
 			employeeWorkPermitDocumentDetailsRetrieval.getWorkpermit_number()
 					.setDocumentType(FilenameUtils.getExtension(employeeWorkPermitDocumentDetails.getDocumentName()));
-
+			entity.merge(employeeWorkPermitDocumentDetailsRetrieval);
 		} else {
 			employeeWorkPermitDocumentDetails.setWorkpermit_number(users.getEmployeeDetails().stream().findFirst().get()
 					.getEmployeeWorkPermitDetails().stream().findFirst().get());
@@ -78,37 +84,13 @@ public class DocumentManagementService {
 	}
 
 	@Transactional
-	public void addPaySlipDocument(EmployeePaySlipDocumentDetails employeePaySlipDocumentDetails,
-			String loggedInUserName, String employeeId) throws Exception {
-
-		EmployeePaySlipDetails employeePaySlipDetails = new EmployeePaySlipDetails();
-
-		employeePaySlipDetails.setPaySlipNumber(employeePaySlipDocumentDetails.getPaySlipNumber());
-
-		Users users = loginDetailsInterface.findByEmployeeDetailsEmployeePaySlipDetails(employeePaySlipDetails);
-
-		Optional<Users> userRoleOfLoggedInEmployee = loginDetailsInterface.findById(loggedInUserName);
-		accessValidation(userRoleOfLoggedInEmployee, users, employeeId,null);
-
-		EmployeePaySlipDocumentDetails employeePaySlipDocumentDetailsRetrieval = entity
-				.find(EmployeePaySlipDocumentDetails.class, employeePaySlipDocumentDetails.getPaySlipNumber());
-		if (null != employeePaySlipDocumentDetailsRetrieval) {
-
-			employeePaySlipDocumentDetailsRetrieval.setDocumentData(employeePaySlipDocumentDetails.getDocumentData());
-			employeePaySlipDocumentDetailsRetrieval.setDocumentName(employeePaySlipDocumentDetails.getDocumentName());
-			employeePaySlipDocumentDetailsRetrieval.getPayslip_number()
-					.setDocumentName(employeePaySlipDocumentDetails.getDocumentName());
-			employeePaySlipDocumentDetailsRetrieval.getPayslip_number()
-					.setDocumentType(FilenameUtils.getExtension(employeePaySlipDocumentDetails.getDocumentName()));
-		} else {
-			employeePaySlipDocumentDetails.setPayslip_number(users.getEmployeeDetails().stream().findFirst().get()
-					.getEmployeePaySlipDetails().stream().findFirst().get());
-			entity.persist(employeePaySlipDocumentDetails);
-			users.getEmployeeDetails().stream().findFirst().get().getEmployeePaySlipDetails().stream().findFirst().get()
-					.setDocumentName(employeePaySlipDocumentDetails.getDocumentName());
-			users.getEmployeeDetails().stream().findFirst().get().getEmployeePaySlipDetails().stream().findFirst().get()
-					.setDocumentType(FilenameUtils.getExtension(employeePaySlipDocumentDetails.getDocumentName()));
-		}
+	public void addPaySlipDocument(EmployeePaySlipDetails epdd,
+			String loggedInUserName, UploadDocumentDetailsRequestDto updd) throws Exception {
+		Optional<EmployeeDetails> empDetails = empDet.findById(updd.getEmployeeId());
+		Set<EmployeePaySlipDetails> empDetailsSet = new HashSet<EmployeePaySlipDetails>();
+		empDetailsSet.add(epdd);
+		empDetails.get().setEmployeePaySlipDetails(empDetailsSet);
+		entity.merge(empDetails.get());
 	}
 
 	@Transactional
@@ -156,8 +138,8 @@ public class DocumentManagementService {
 					.find(EmployeeWorkPermitDocumentDetails.class, documentNumber);
 			return employeeWorkPermitDocumentDetails;
 		} else if (documentType.equals("2")) {
-			EmployeePaySlipDocumentDetails employeePaySlipDocumentDetails = entity
-					.find(EmployeePaySlipDocumentDetails.class, documentNumber);
+			EmployeePaySlipDetails employeePaySlipDocumentDetails = entity
+					.find(EmployeePaySlipDetails.class, documentNumber);
 			return employeePaySlipDocumentDetails;
 		} else if (documentType.equals("3")) {
 			EmployeePassportDocumentDetails employeePassportDocumentDetails = entity
@@ -173,7 +155,7 @@ public class DocumentManagementService {
 		if (documentType.equals("1")) {
 			employeeWorkPermitDocumentDetailsInterface.deleteById(documentNumber);
 		} else if (documentType.equals("2")) {
-			employeePaySlipDocumentDetailsInterface.deleteById(documentNumber);
+			employeePayslipDetailsInterface.deleteById(documentNumber);
 		} else if (documentType.equals("3")) {
 			employeePassportDocumentDetailsInterface.deleteById(documentNumber);
 		}
@@ -204,8 +186,8 @@ public class DocumentManagementService {
 
 		else {
 			if (userRoleOfLoggedInEmployee.get().getRole().equalsIgnoreCase("Admin")) {
-
-				if (!userRoleOfLoggedInEmployee.get().getCompanyDetails().getId()
+					
+				if (null != employeeDetails && !userRoleOfLoggedInEmployee.get().getCompanyDetails().getId()
 						.equalsIgnoreCase(employeeDetails.getCompanyDetails().getId())) {
 
 					throw new Exception("You are not authorised to manage the document of Other company employees");

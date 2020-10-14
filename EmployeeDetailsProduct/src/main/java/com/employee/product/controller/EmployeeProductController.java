@@ -56,7 +56,6 @@ import com.employee.product.entity.companydetails.CompanyDetails;
 import com.employee.product.entity.companydetails.Users;
 import com.employee.product.entity.employeedetails.EmployeeDetails;
 import com.employee.product.entity.employeedetails.EmployeePassportDocumentDetails;
-import com.employee.product.entity.employeedetails.EmployeePaySlipDocumentDetails;
 import com.employee.product.entity.employeedetails.EmployeeWorkPermitDocumentDetails;
 import com.employee.product.entity.ops.AuditTrailFE;
 import com.employee.product.security.jwt.JwtUtils;
@@ -471,12 +470,15 @@ public class EmployeeProductController {
 					.header(HttpHeaders.CONTENT_DISPOSITION,
 							"attachment; filename=" + ((EmployeePassportDocumentDetails) obj).getDocumentName())
 					.body(((EmployeePassportDocumentDetails) obj).getDocumentData());
-		} else if (obj instanceof EmployeePaySlipDocumentDetails) {
-			return ResponseEntity.ok().contentType(MediaType.parseMediaType("application/octet-stream"))
-					.header(HttpHeaders.CONTENT_DISPOSITION,
-							"attachment; filename=" + ((EmployeePaySlipDocumentDetails) obj).getDocumentName())
-					.body(((EmployeePaySlipDocumentDetails) obj).getDocumentData());
-		} else {
+		} /*
+			 * else if (obj instanceof EmployeePaySlipDocumentDetails) { return
+			 * ResponseEntity.ok().contentType(MediaType.parseMediaType(
+			 * "application/octet-stream")) .header(HttpHeaders.CONTENT_DISPOSITION,
+			 * "attachment; filename=" + ((EmployeePaySlipDocumentDetails)
+			 * obj).getDocumentName()) .body(((EmployeePaySlipDocumentDetails)
+			 * obj).getDocumentData());
+			 
+		}*/ else {
 			return ResponseEntity.noContent().build();
 		}
 
