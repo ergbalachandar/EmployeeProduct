@@ -58,19 +58,18 @@ CREATE TABLE `workpermit_document_details` (
   `document_data` longblob
 );
 
+
 CREATE TABLE `payslip_details` (
   `payslip_number` varchar(255)  PRIMARY KEY,
   `employee_id` varchar(255),
   `payslip_month` varchar(255),
   `document_name` varchar(255),
-  `document_type` varchar(255)
+  `document_type` varchar(255),
+  `document_data` longblob,
+  `payslip_type` varchar(50),
+  `payslip_year` varchar(20)
 );
 
-CREATE TABLE `payslip_document_details` (
-  `payslip_number` varchar(255) PRIMARY KEY,
-  `document_name` varchar(255),
-  `document_data` longblob
-);
 
 CREATE TABLE `passport_details` (
   `employee_id` varchar(255),
@@ -139,8 +138,6 @@ ALTER TABLE `workpermit_details` ADD FOREIGN KEY (`employee_id`) REFERENCES `emp
 ALTER TABLE `workpermit_document_details` ADD FOREIGN KEY (`workpermit_number`) REFERENCES `workpermit_details` (`workpermit_number`);
 
 ALTER TABLE `payslip_details` ADD FOREIGN KEY (`employee_id`) REFERENCES `employee` (`id`);
-
-ALTER TABLE `payslip_document_details` ADD FOREIGN KEY (`payslip_number`) REFERENCES `payslip_details` (`payslip_number`);
 
 ALTER TABLE `passport_details` ADD FOREIGN KEY (`employee_id`) REFERENCES `employee` (`id`);
 
@@ -229,13 +226,32 @@ from company c,employee e,
 -- Changes for getting view of companydetails to MAdmin -- Ends --
 
 
--- Added new payslip_year ---------Begin-----
-alter table payslip_details add column payslip_year varchar(50);
-
--- Added new payslip_year ---------End-----
-
 -- Added new resignation_date ---------Begin-----
 
 alter table employee add column resignation_date date;
 
 -- Added new resignation_date ---------End-----
+
+-- Added new expense_details ---------Begin-----
+
+Create TABLE `expense_details`(
+  `id` varchar(50) PRIMARY KEY,
+  `employee_id` varchar(50),
+  `type` varchar(25) not null,
+  `reason` varchar(255),
+  `upload` longblob,
+  `amount` int not null,
+  `status` varchar(50),
+  `approverName`  varchar(255),
+  `approvedId` varchar(50),
+  `proofDate` date not null,
+  `createdDate` date not null, 
+  `approvedDate` date
+  );
+
+
+ALTER TABLE `expense_details` DROP INDEX `employee_id`;
+
+ALTER TABLE `expense_details` ADD FOREIGN KEY (`employee_id`) REFERENCES `employee` (`id`);
+
+-- Added new expense_details ---------End-----
