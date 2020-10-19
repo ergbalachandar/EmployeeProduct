@@ -56,6 +56,7 @@ import com.employee.product.entity.companydetails.CompanyDetails;
 import com.employee.product.entity.companydetails.Users;
 import com.employee.product.entity.employeedetails.EmployeeDetails;
 import com.employee.product.entity.employeedetails.EmployeePassportDocumentDetails;
+import com.employee.product.entity.employeedetails.EmployeePaySlipDetails;
 import com.employee.product.entity.employeedetails.EmployeeWorkPermitDocumentDetails;
 import com.employee.product.entity.ops.AuditTrailFE;
 import com.employee.product.security.jwt.JwtUtils;
@@ -132,8 +133,8 @@ public class EmployeeProductController {
 		// CompanySignUpDetailsUtil.sendMessage(mailSender,companyDetailsDto.getEmailId(),
 		// companyDetailsDto.getCompanyName(), users);
 		CompanySignUpDetailsUtil.companyDetailsSignUpResponseMapping(companyDetailsResponseDto);
-		commonService.setAudit(new AuditTrailFE(companyDetailsDto.getEmployeeDetails().getFirstName(),companyDetailsDto.getCompanyName(),"Admin" ,
-				"SignUp Successfully", 1, "SIGNUP"));
+		commonService.setAudit(new AuditTrailFE(companyDetailsDto.getEmployeeDetails().getFirstName(),
+				companyDetailsDto.getCompanyName(), "Admin", "SignUp Successfully", 1, "SIGNUP"));
 		return companyDetailsResponseDto;
 	}
 
@@ -281,17 +282,20 @@ public class EmployeeProductController {
 		UserDetailsImpl userDetails = generateUserDetailsFromJWT("ADDMODIFYEMPLOYEE");
 		CompanyDetails companyDetails = employeeProductService.findCompanyDetails(addEmployeeRequestDto.getCompanyId());
 		newEmployee = AddEmployeeDetailsUtil.checkForNewOrUpdateEmployee(newEmployee, addEmployeeRequestDto);
+		EmployeeDetails empActual = null;
+		if (!newEmployee)
+			empActual = employeeProductService.findByEmployeeId(addEmployeeRequestDto.getEmployeeDetails().getId());
 		AddEmployeeDetailsUtil.mapAddEmployeeRequest(addEmployeeRequestDto, users, employeeDetails, companyDetails,
-				newEmployee, encoder);
+				newEmployee, encoder, empActual);
 		employeeDetails = employeeProductService.addOrUpdateEmployeeDetails(employeeDetails, users, companyDetails,
 				newEmployee, userDetails.getUsers().getUserName());
 		EmployeeDetailsResponseDto employeeDetailsResponseDto = new EmployeeDetailsResponseDto();
 		EmployeeDetailsUtil.mapEmployeeDetails(employeeDetailsResponseDto, employeeDetails, false);
-		if(newEmployee) {
-		commonService.setAudit(new AuditTrailFE(userDetails.getUsers().getFirstName(),
-				userDetails.getUsers().getCompanyDetails().getId(), userDetails.getUsers().getRole(),
-				"Successfully added an Employee", 1, "ADDMODIFYEMPLOYEE"));
-		}else {
+		if (newEmployee) {
+			commonService.setAudit(new AuditTrailFE(userDetails.getUsers().getFirstName(),
+					userDetails.getUsers().getCompanyDetails().getId(), userDetails.getUsers().getRole(),
+					"Successfully added an Employee", 1, "ADDMODIFYEMPLOYEE"));
+		} else {
 			commonService.setAudit(new AuditTrailFE(userDetails.getUsers().getFirstName(),
 					userDetails.getUsers().getCompanyDetails().getId(), userDetails.getUsers().getRole(),
 					"Successfully Modified an Employee", 1, "ADDMODIFYEMPLOYEE"));
@@ -438,7 +442,7 @@ public class EmployeeProductController {
 			e.printStackTrace();
 			commonService.setAudit(new AuditTrailFE(userDetails.getUsers().getFirstName(),
 					userDetails.getUsers().getCompanyDetails().getId(), userDetails.getUsers().getRole(),
-					"Failed to Upload"+e.getMessage(), 0, "UPLOADDOCUMENT"));
+					"Failed to Upload" + e.getMessage(), 0, "UPLOADDOCUMENT"));
 			throw new Exception("Could not upload Document");
 		}
 		UploadDocumentUtil.mapResponseUploadDocumentResponseDto(uploadDocumentDetailsResponseDto);
@@ -470,15 +474,13 @@ public class EmployeeProductController {
 					.header(HttpHeaders.CONTENT_DISPOSITION,
 							"attachment; filename=" + ((EmployeePassportDocumentDetails) obj).getDocumentName())
 					.body(((EmployeePassportDocumentDetails) obj).getDocumentData());
-		} /*
-			 * else if (obj instanceof EmployeePaySlipDocumentDetails) { return
-			 * ResponseEntity.ok().contentType(MediaType.parseMediaType(
-			 * "application/octet-stream")) .header(HttpHeaders.CONTENT_DISPOSITION,
-			 * "attachment; filename=" + ((EmployeePaySlipDocumentDetails)
-			 * obj).getDocumentName()) .body(((EmployeePaySlipDocumentDetails)
-			 * obj).getDocumentData());
-			 
-		}*/ else {
+		} else if (obj instanceof EmployeePaySlipDetails) {
+			return ResponseEntity.ok().contentType(MediaType.parseMediaType("application/octet-stream"))
+					.header(HttpHeaders.CONTENT_DISPOSITION,
+							"attachment; filename=" + ((EmployeePaySlipDetails) obj).getDocumentName())
+					.body(((EmployeePaySlipDetails) obj).getDocumentData());
+
+		} else {
 			return ResponseEntity.noContent().build();
 		}
 

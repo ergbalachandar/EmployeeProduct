@@ -13,20 +13,21 @@ import com.employee.product.employeedetails.request.dto.AddEmployeeRequestDto;
 import com.employee.product.employeedetails.request.dto.EmployeeDetailsRequestDto;
 import com.employee.product.employeedetails.request.dto.EmployeeFamilyDetailsRequestDto;
 import com.employee.product.employeedetails.request.dto.EmployeePassportDetailsRequestDto;
+import com.employee.product.employeedetails.request.dto.EmployeePaySlipDetailsRequestDto;
 import com.employee.product.employeedetails.request.dto.EmployeeWorkPermitDetailsRequestDto;
 import com.employee.product.entity.companydetails.CompanyDetails;
 import com.employee.product.entity.companydetails.Users;
 import com.employee.product.entity.employeedetails.EmployeeDetails;
 import com.employee.product.entity.employeedetails.EmployeeFamilyDetails;
 import com.employee.product.entity.employeedetails.EmployeePassportDetails;
+import com.employee.product.entity.employeedetails.EmployeePaySlipDetails;
 import com.employee.product.entity.employeedetails.EmployeeWorkPermitDetails;
 
 public class AddEmployeeDetailsUtil {
 
 	private static void mapEmployeeDetails(EmployeeDetailsRequestDto emloyeeDetailsRequestDto,
-			EmployeeDetails employeeDetails) {
+			EmployeeDetails employeeDetails, EmployeeDetails empActual) {
 
-		
 		employeeDetails.setAddressLine1(emloyeeDetailsRequestDto.getAddressLine1());
 		employeeDetails.setAddressLine2(emloyeeDetailsRequestDto.getAddressLine2());
 		employeeDetails.setCity(emloyeeDetailsRequestDto.getCity());
@@ -82,7 +83,6 @@ public class AddEmployeeDetailsUtil {
 		if (employeeFamilyDetailsRequestDtoList != null)
 			for (EmployeeFamilyDetailsRequestDto employeeFamilyDetailsRequestDto : employeeFamilyDetailsRequestDtoList) {
 				EmployeeFamilyDetails employeeFamilyDetails = new EmployeeFamilyDetails();
-
 				employeeFamilyDetails.setContactNumber(employeeFamilyDetailsRequestDto.getContactNumber());
 				employeeFamilyDetails.setFirstName(employeeFamilyDetailsRequestDto.getFirstName());
 				employeeFamilyDetails.setLastName(employeeFamilyDetailsRequestDto.getLastName());
@@ -121,35 +121,30 @@ public class AddEmployeeDetailsUtil {
 			}
 		}
 		employeeDetails.setEmployeePassportDetails(employeePassportDetailsSet);
-		
-		/*
-		 * Set<EmployeePaySlipDetails> employeePaySlipDetailsSet = new
-		 * HashSet<EmployeePaySlipDetails>();
-		 * 
-		 * 
-		 * List<EmployeePaySlipDetailsRequestDto> employeePaySlipDetailsRequestDtoList =
-		 * emloyeeDetailsRequestDto .getPaySlipDetails();
-		 * 
-		 * if (null != employeePaySlipDetailsRequestDtoList) { for
-		 * (EmployeePaySlipDetailsRequestDto employeePaySlipDetailsRequestDto :
-		 * employeePaySlipDetailsRequestDtoList) { EmployeePaySlipDetails
-		 * employeePaySlipDetails = new EmployeePaySlipDetails();
-		 * 
-		 * employeePaySlipDetails.setPaySlipMonth(employeePaySlipDetailsRequestDto.
-		 * getPaySlipMonth());
-		 * employeePaySlipDetails.setPaySlipNumber(employeePaySlipDetailsRequestDto.
-		 * getPaySlipNumber()); employeePaySlipDetailsSet.add(employeePaySlipDetails); }
-		 * 
-		 * employeeDetails.setEmployeePaySlipDetails(employeePaySlipDetailsSet); }
-		 */
-
+		//Not to modify Payslip Data when its not coming from FE
+		if(null != empActual) {
+		Set<EmployeePaySlipDetails> employeePaySlips = new HashSet<EmployeePaySlipDetails>();
+		for(EmployeePaySlipDetails empAct:empActual.getEmployeePaySlipDetails()) {
+			EmployeePaySlipDetails employeePaySlip = new EmployeePaySlipDetails();
+			employeePaySlip.setDocumentData(empAct.getDocumentData());
+			employeePaySlip.setDocumentName(empAct.getDocumentName());
+			employeePaySlip.setDocumentType(empAct.getDocumentType());
+			employeePaySlip.setPaySlipMonth(empAct.getPaySlipMonth());
+			employeePaySlip.setPaySlipNumber(empAct.getPaySlipNumber());
+			employeePaySlip.setPayslipType(empAct.getPayslipType());
+			employeePaySlip.setPaySlipYear(empAct.getPaySlipYear());
+			employeePaySlips.add(employeePaySlip);
+		}
+		employeeDetails.setEmployeePaySlipDetails(employeePaySlips);
+		}
 	}
 
 	public static void mapAddEmployeeRequest(AddEmployeeRequestDto addEmployeeRequestDto, Users users,
-			EmployeeDetails employeeDetails, CompanyDetails companyDetails,boolean newEmployee,PasswordEncoder encoder) {
+			EmployeeDetails employeeDetails, CompanyDetails companyDetails, boolean newEmployee,
+			PasswordEncoder encoder, EmployeeDetails empActual) {
 
 		EmployeeDetailsRequestDto emloyeeDetailsRequestDto = addEmployeeRequestDto.getEmployeeDetails();
-		
+
 		users.setActive(1);
 		users.setCountry(emloyeeDetailsRequestDto.getCountry());
 		users.setFirstName(emloyeeDetailsRequestDto.getFirstName());
@@ -162,59 +157,57 @@ public class AddEmployeeDetailsUtil {
 		Set<EmployeeDetails> employeeDetailsSet = new HashSet<EmployeeDetails>();
 		// EmployeeDetails employeeDetails = new EmployeeDetails();
 
-		mapEmployeeDetails(emloyeeDetailsRequestDto, employeeDetails);
+		mapEmployeeDetails(emloyeeDetailsRequestDto, employeeDetails, empActual);
 //		CompanyDetails companyDetails = new CompanyDetails();
 //		companyDetails.setId(Integer.valueOf(addEmployeeRequestDto.getCompanyId()));
 //		employeeDetails.setCompanyDetails(companyDetails);
-		
-        employeeDetails.setCompanyDetails(companyDetails);
+
+		employeeDetails.setCompanyDetails(companyDetails);
 		employeeDetailsSet.add(employeeDetails);
 
 		// users.setEmployeeDetails(employeeDetailsSet);
 
-		//users.setCompanyDetails(companyDetails);
+		// users.setCompanyDetails(companyDetails);
 	}
-	
-	
+
 	public static String generateEmployeeId(String companyName, String firstName, String lastName) {
 		String comp = null;
 		String fName = null;
 		String sName = null;
-			int num = generateRandomNumber();
-			if(companyName.length()>4) {
-			comp = removeSpaces(companyName).substring(0,4);
-			}
-			else
-			{
-				comp = companyName;
-			}
-			fName = firstName.toUpperCase().substring(0,1);
-			sName = lastName.toUpperCase().substring(0,1);
-			String employeeId = comp.toUpperCase() + fName + sName + String.valueOf(num);
-			
-			return employeeId;
-		
+		int num = generateRandomNumber();
+		if (companyName.length() > 4) {
+			comp = removeSpaces(companyName).substring(0, 4);
+		} else {
+			comp = companyName;
+		}
+		fName = firstName.toUpperCase().substring(0, 1);
+		sName = lastName.toUpperCase().substring(0, 1);
+		String employeeId = comp.toUpperCase() + fName + sName + String.valueOf(num);
+
+		return employeeId;
+
 	}
 
 	// Remove all space characters
 	private static String removeSpaces(String input) {
 		return input.replaceAll(" ", "");
 	}
+
 	public static int generateRandomNumber() {
 		Random generator = new Random();
 		generator.setSeed(System.currentTimeMillis());
 		int num = generator.nextInt(900000) + 100000;
 		return num;
-		
+
 	}
-	
-	
-	public static boolean checkForNewOrUpdateEmployee(boolean newEmployee,AddEmployeeRequestDto addEmployeeRequestDto) {
-		
-		if(StringUtils.isBlank(addEmployeeRequestDto.getEmployeeDetails().getId())) {
+
+	public static boolean checkForNewOrUpdateEmployee(boolean newEmployee,
+			AddEmployeeRequestDto addEmployeeRequestDto) {
+
+		if (StringUtils.isBlank(addEmployeeRequestDto.getEmployeeDetails().getId())) {
 			newEmployee = true;
 		}
-		
+
 		return newEmployee;
 	}
 }

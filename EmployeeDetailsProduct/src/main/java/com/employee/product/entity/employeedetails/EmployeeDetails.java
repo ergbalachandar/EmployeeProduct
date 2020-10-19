@@ -6,7 +6,6 @@ import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -102,26 +101,24 @@ public class EmployeeDetails {
 	@OneToMany(cascade = CascadeType.ALL)
 	@JoinColumn(name = "employee_id")
 	private Set<EmployeeWorkPermitDetails> employeeWorkPermitDetails;
-	
-	@OneToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
+
+	@OneToMany(cascade = CascadeType.ALL)
 	@JoinColumn(name = "employee_id")
-	private Set<EmployeePaySlipDetails> employeePaySlipDetails ;
+	private Set<EmployeePaySlipDetails> employeePaySlipDetails;
 
 	@OneToMany(cascade = CascadeType.ALL)
 	@JoinColumn(name = "employee_id")
 	private Set<EmployeePassportDetails> employeePassportDetails;
-
-//    @OneToOne(mappedBy = "employee", cascade = CascadeType.ALL)
-//	@JoinColumn(name = "employee_id")
-//	private EmployeeOfficeDetails employeeOfficeDetails; 
-//
-//	@OneToMany(cascade = CascadeType.ALL)
-//	@JoinColumn(name = "reporting_person_id")
-//	private Set<EmployeeOfficeDetails> employeeOfficeDetailsSet; 
 
 	@OneToMany(cascade = CascadeType.ALL)
 	@JoinColumn(name = "employee_id")
 	private Set<EmployeeFamilyDetails> employeeFamilyDetails;
 
 
+	/*
+	 * @OneToMany(cascade = CascadeType.ALL)
+	 * 
+	 * @JoinColumn(name = "employee_id") private Set<EmployeeExpenseDetails>
+	 * employeeExpenseDetails;
+	 */
 }

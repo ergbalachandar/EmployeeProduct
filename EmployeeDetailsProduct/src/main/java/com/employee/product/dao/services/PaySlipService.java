@@ -18,6 +18,6 @@ public class PaySlipService {
 	public List<EmployeeDetails> retrievePayslipsByCompanyId(CompanyDetails companyDetails) {
 		return empDetInt.findByCompanyDetails(companyDetails);
 	}
-	
+
 
 }

@@ -232,6 +232,12 @@ alter table employee add column resignation_date date;
 
 -- Added new resignation_date ---------End-----
 
+-- Added Uploaded_date ---------Begin-----
+
+alter table payslip_details add column uploaded_date date;
+
+-- Added new Uploaded_date ---------End-----
+
 -- Added new expense_details ---------Begin-----
 
 Create TABLE `expense_details`(
@@ -250,8 +256,11 @@ Create TABLE `expense_details`(
   );
 
 
-ALTER TABLE `expense_details` DROP INDEX `employee_id`;
-
 ALTER TABLE `expense_details` ADD FOREIGN KEY (`employee_id`) REFERENCES `employee` (`id`);
 
+ALTER TABLE `expense_details` DROP INDEX `employee_id`;
+
+ALTER TABLE `expense_details` DROP FOREIGN KEY `expense_details_ibfk_1`;
 -- Added new expense_details ---------End-----
+
+

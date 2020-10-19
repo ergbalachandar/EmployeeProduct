@@ -1,8 +1,11 @@
 package com.employee.product.entity.employeedetails;
 
+import java.sql.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 import javax.persistence.Table;
 
 import lombok.Data;
@@ -25,7 +28,18 @@ public class EmployeePaySlipDetails {
 	@Column(name = "document_name")
 	private String documentName;
 	
+	@Column(name = "uploaded_date")
+	private Date uploadedDate;
+	
 	@Column(name = "document_type")
 	private String documentType;
-
+	
+	@Column(name = "payslip_type")
+	private String payslipType;
+	
+	@Lob
+	@Column(name = "document_data")
+	private byte[] documentData;
+	
+	
 }

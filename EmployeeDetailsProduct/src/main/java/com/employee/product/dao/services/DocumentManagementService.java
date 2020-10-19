@@ -11,7 +11,6 @@ import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.employee.product.dao.interfaces.EmployeeDetailsInterface;
 import com.employee.product.dao.interfaces.EmployeePassportDocumentDetailsInterface;
 import com.employee.product.dao.interfaces.EmployeePayslipDetailsInterface;
 import com.employee.product.dao.interfaces.EmployeeWorkPermitDocumentDetailsInterface;
@@ -43,9 +42,6 @@ public class DocumentManagementService {
 	@Autowired
 	private LoginDetailsInterface loginDetailsInterface;
 	
-	@Autowired
-	private EmployeeDetailsInterface empDet;
-
 	@Transactional
 	public void addWorkPermitDocument(EmployeeWorkPermitDocumentDetails employeeWorkPermitDocumentDetails,
 			String loggedInUserName, String employeeId) throws Exception {
@@ -83,14 +79,26 @@ public class DocumentManagementService {
 		}
 	}
 
+
+	@Transactional
+	public EmployeeDetails findByEmployeeId(String id) {
+		return entity.find(EmployeeDetails.class, id);
+	}
+	
+	
 	@Transactional
 	public void addPaySlipDocument(EmployeePaySlipDetails epdd,
 			String loggedInUserName, UploadDocumentDetailsRequestDto updd) throws Exception {
-		Optional<EmployeeDetails> empDetails = empDet.findById(updd.getEmployeeId());
+		EmployeeDetails empDetails = findByEmployeeId(updd.getEmployeeId());
 		Set<EmployeePaySlipDetails> empDetailsSet = new HashSet<EmployeePaySlipDetails>();
+		if(null != empDetails.getEmployeePaySlipDetails()) {
+			for(EmployeePaySlipDetails empPaySlipExits:empDetails.getEmployeePaySlipDetails()) {
+				empDetailsSet.add(empPaySlipExits);
+			}
+		}
 		empDetailsSet.add(epdd);
-		empDetails.get().setEmployeePaySlipDetails(empDetailsSet);
-		entity.merge(empDetails.get());
+		empDetails.setEmployeePaySlipDetails(empDetailsSet);
+		entity.persist(empDetails);
 	}
 
 	@Transactional

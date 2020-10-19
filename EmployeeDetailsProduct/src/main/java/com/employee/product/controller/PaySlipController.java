@@ -9,6 +9,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -60,7 +61,7 @@ public class PaySlipController {
 			@ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
 			@ApiResponse(code = 404, message = "The resource you were trying to reach is not found") })
 	@ResponseBody
-	public EPaySlipResDto retrievePayslips()
+	public EPaySlipResDto retrievePayslips(@RequestParam String m,@RequestParam String y)
 			throws Exception {
 		UserDetailsImpl userDetails = generateUserDetailsFromJWT("PAYADMLIST");
 		if(!"Admin".equals(userDetails.getUsers().getRole()) || userDetails.getUsers().getCompanyDetails().getActive() == 0) {
@@ -71,7 +72,7 @@ public class PaySlipController {
 		}
 		List<EmployeeDetails> paySlipDetails = paySlipService.retrievePayslipsByCompanyId(userDetails.getUsers().getCompanyDetails());
 		EPaySlipResDto ePaySlipRes = new EPaySlipResDto();
-		PaySlipsDetailsUtil.mapPaySlipDetails(ePaySlipRes, paySlipDetails);
+		PaySlipsDetailsUtil.mapPaySlipDetails(ePaySlipRes, paySlipDetails, m, y);
 		commonService.setAudit(new AuditTrailFE(userDetails.getUsers().getFirstName(),
 				userDetails.getUsers().getCompanyDetails().getId(), userDetails.getUsers().getRole(),
 				"Admin view of Payslips retrieved Successfully", 1, "PAYADMLIST"));

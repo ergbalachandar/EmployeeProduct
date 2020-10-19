@@ -54,6 +54,7 @@ public class UploadDocumentUtil {
 		ePDD.setPayslipType(uddReq.getPayslipType());
 		ePDD.setPaySlipMonth(uddReq.getMonth());
 		ePDD.setPaySlipYear(uddReq.getYear());
+		ePDD.setUploadedDate(new java.sql.Date(new Date().getTime()));
 		documentManagementService.addPaySlipDocument(ePDD,
 				 loggedInUserName,uddReq);
 
