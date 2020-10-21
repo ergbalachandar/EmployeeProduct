@@ -21,7 +21,7 @@ public class EmployeeDetailsDto {
 	private Date dateOfJoin;
 	private String jobRole;
 	private MaritalStat maritalStatus;
-	private String empId;
+	private String id;
 	
 
 }

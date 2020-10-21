@@ -149,7 +149,7 @@ public class AddEmployeeDetailsUtil {
 		users.setCountry(emloyeeDetailsRequestDto.getCountry());
 		users.setFirstName(emloyeeDetailsRequestDto.getFirstName());
 		users.setLastName(emloyeeDetailsRequestDto.getLastName());
-		users.setPassword(encoder.encode(emloyeeDetailsRequestDto.getEmailId()));
+		users.setPassword(encoder.encode(emloyeeDetailsRequestDto.getEmailId().toLowerCase()));
 		users.setRole("Employee");
 		users.setUserName(emloyeeDetailsRequestDto.getEmailId());
 		users.setCreatedAt(new Date());

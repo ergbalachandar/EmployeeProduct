@@ -12,7 +12,7 @@ import com.employee.product.payslipsdetails.response.dto.EPaySlip;
 import com.employee.product.payslipsdetails.response.dto.EPaySlipEmpRes;
 import com.employee.product.payslipsdetails.response.dto.EPaySlipResDto;
 import com.employee.product.payslipsdetails.response.dto.EPaySlips;
-import com.employee.product.payslipsdetails.response.dto.PayslipType;
+import com.employee.product.payslipsdetails.response.dto.PaySlipType;
 
 /**
  * 
@@ -40,24 +40,22 @@ public class PaySlipsDetailsUtil {
 					List<EPaySlip> epaySlipList = new ArrayList<EPaySlip>();
 					for (EmployeePaySlipDetails employeePaySlipDetails : employeeDetails.getEmployeePaySlipDetails()) {
 						if (employeePaySlipDetails.getPaySlipMonth().equals(m)
-								&& employeePaySlipDetails.getPaySlipMonth().equals(y)) {
+								&& employeePaySlipDetails.getPaySlipYear().equals(y)) {
 							EPaySlip ePaySlip = new EPaySlip();
 							ePaySlip.setDocumentName(employeePaySlipDetails.getDocumentName());
 							ePaySlip.setDocumentNumber(employeePaySlipDetails.getPaySlipNumber());
 							if (null != employeePaySlipDetails.getPayslipType())
-								ePaySlip.setPaySlipType(PayslipType.valueOf(employeePaySlipDetails.getPayslipType()));
+								ePaySlip.setPaySlipType(PaySlipType.valueOf(employeePaySlipDetails.getPayslipType()));
 							ePaySlip.setMonth(employeePaySlipDetails.getPaySlipMonth());
 							ePaySlip.setYear(employeePaySlipDetails.getPaySlipYear());
 							ePaySlip.setDocumentType(employeePaySlipDetails.getDocumentType());
-							;
 							ePaySlip.setUploadedDate(String.valueOf(employeePaySlipDetails.getUploadedDate()));
 							epaySlipList.add(ePaySlip);
 						}
 					}
-					if (epaySlipList.size() > 0) {
 						ePaySlips.setEPaySlip(epaySlipList);
 						epayList.add(ePaySlips);
-					}
+					
 				}
 			}
 			ePaySlipResList.setEPaySlips(epayList);
@@ -89,7 +87,7 @@ public class PaySlipsDetailsUtil {
 		if (null != employeeDetails.getMaritalStatus())
 			empDetails.setMaritalStatus(MaritalStat.valueOf(employeeDetails.getMaritalStatus()));
 		empDetails.setJobRole(employeeDetails.getJobRole());
-		empDetails.setEmpId(employeeDetails.getId());
+		empDetails.setId(employeeDetails.getId());
 		ePaySlips.setEmpDetails(empDetails);
 	}
 
@@ -104,7 +102,7 @@ public class PaySlipsDetailsUtil {
 				EPaySlip paySlipEmp = new EPaySlip();
 				paySlipEmp.setDocumentName(paySlip.getDocumentName());
 				if (null != paySlip.getPayslipType())
-					paySlipEmp.setPaySlipType(PayslipType.valueOf(paySlip.getPayslipType()));
+					paySlipEmp.setPaySlipType(PaySlipType.valueOf(paySlip.getPayslipType()));
 				paySlipEmp.setMonth(paySlip.getPaySlipMonth());
 				paySlipEmp.setDocumentType(paySlip.getDocumentType());
 				paySlipEmp.setDocumentNumber(paySlip.getPaySlipNumber());

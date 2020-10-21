@@ -13,6 +13,6 @@ public class EPaySlip {
 	private String month;
 	private String year;
 	private String uploadedDate;
-	private PayslipType paySlipType;
+	private PaySlipType paySlipType;
 	
 }

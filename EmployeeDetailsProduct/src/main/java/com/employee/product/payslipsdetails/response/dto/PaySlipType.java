@@ -1,6 +1,6 @@
 package com.employee.product.payslipsdetails.response.dto;
 
-public enum PayslipType {
+public enum PaySlipType {
 
 	BON, // Bonus
 	SAL, // Salary
