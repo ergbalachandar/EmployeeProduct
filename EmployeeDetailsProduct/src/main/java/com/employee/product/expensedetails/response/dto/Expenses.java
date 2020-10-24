@@ -1,6 +1,6 @@
 package com.employee.product.expensedetails.response.dto;
 
-import java.util.Set;
+import java.util.List;
 
 import com.employee.product.employeedetails.dto.EmployeeDetailsDto;
 
@@ -13,7 +13,7 @@ import lombok.Setter;
 public class Expenses {
 	
 	EmployeeDetailsDto empDetails;
-	Set<Expense> expense;
+	List<Expense> expense;
 
 
 }

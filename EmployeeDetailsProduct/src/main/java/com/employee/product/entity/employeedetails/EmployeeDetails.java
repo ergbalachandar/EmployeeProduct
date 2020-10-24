@@ -114,6 +114,9 @@ public class EmployeeDetails {
 	@JoinColumn(name = "employee_id")
 	private Set<EmployeeFamilyDetails> employeeFamilyDetails;
 
+	@OneToMany(cascade = CascadeType.ALL)
+	@JoinColumn(name = "employee_id")
+	private Set<EmployeeExpenseDetails> employeeExpenseDetails;
 
 	/*
 	 * @OneToMany(cascade = CascadeType.ALL)

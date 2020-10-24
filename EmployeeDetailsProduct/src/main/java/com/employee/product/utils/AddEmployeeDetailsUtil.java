@@ -18,10 +18,14 @@ import com.employee.product.employeedetails.request.dto.EmployeeWorkPermitDetail
 import com.employee.product.entity.companydetails.CompanyDetails;
 import com.employee.product.entity.companydetails.Users;
 import com.employee.product.entity.employeedetails.EmployeeDetails;
+import com.employee.product.entity.employeedetails.EmployeeExpenseDetails;
 import com.employee.product.entity.employeedetails.EmployeeFamilyDetails;
 import com.employee.product.entity.employeedetails.EmployeePassportDetails;
 import com.employee.product.entity.employeedetails.EmployeePaySlipDetails;
 import com.employee.product.entity.employeedetails.EmployeeWorkPermitDetails;
+import com.employee.product.expensedetails.response.dto.TypeCurrency;
+import com.employee.product.expensedetails.response.dto.TypeExpense;
+import com.employee.product.expensedetails.response.dto.TypeStatus;
 
 public class AddEmployeeDetailsUtil {
 
@@ -137,6 +141,28 @@ public class AddEmployeeDetailsUtil {
 		}
 		employeeDetails.setEmployeePaySlipDetails(employeePaySlips);
 		}
+		//Not to modify expense Data when its  not coming from FE
+		if(null != empActual) {
+			Set<EmployeeExpenseDetails> employeeExpenses = new HashSet<EmployeeExpenseDetails>();
+			for(EmployeeExpenseDetails empActExp:empActual.getEmployeeExpenseDetails()) {
+				EmployeeExpenseDetails employeeExpense = new EmployeeExpenseDetails();
+				employeeExpense.setAmount(empActExp.getAmount());
+				employeeExpense.setApprovedDate(empActExp.getApprovedDate());
+				employeeExpense.setApprovedId(empActExp.getApprovedId());
+				employeeExpense.setApproverName(empActExp.getApproverName());
+				employeeExpense.setCreatedDate(empActExp.getCreatedDate());
+				employeeExpense.setCurrencyType(empActExp.getCurrencyType());
+				employeeExpense.setDocumentName(empActExp.getDocumentName());
+				employeeExpense.setDocumentType(empActExp.getDocumentType());
+				employeeExpense.setId(empActExp.getId());
+				employeeExpense.setReason(empActExp.getReason());
+				employeeExpense.setProofDate(empActExp.getProofDate());
+				employeeExpense.setStatus(empActExp.getStatus());
+				employeeExpense.setTypeExpense(empActExp.getTypeExpense());
+				employeeExpenses.add(employeeExpense);
+			}
+			employeeDetails.setEmployeeExpenseDetails(employeeExpenses);
+			}
 	}
 
 	public static void mapAddEmployeeRequest(AddEmployeeRequestDto addEmployeeRequestDto, Users users,

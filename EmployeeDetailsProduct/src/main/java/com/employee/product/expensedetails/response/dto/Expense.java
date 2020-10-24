@@ -1,7 +1,5 @@
 package com.employee.product.expensedetails.response.dto;
 
-import java.sql.Date;
-
 import lombok.Getter;
 import lombok.Setter;
 
@@ -10,17 +8,17 @@ import lombok.Setter;
 public class Expense {
 	
 	private String expenseNumber;
-	private String issuePlace;
 	private String reason;
-	private String typeExpense;
+	private TypeExpense typeExpense;
 	private String documentName;
 	private String documentType;
 	private long amount;
 	private String approverName;
 	private String approvedId;
-	private String status;
-	private Date startDate;
-	private Date createdDate;
-	private Date approvedDate;
+	private TypeStatus typeStatus;
+	private TypeCurrency typeCurrency;
+	private String proofDate;
+	private String createdDate;
+	private String approvedDate;
 
 }

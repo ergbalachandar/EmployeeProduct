@@ -4,9 +4,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -22,7 +20,6 @@ import com.employee.product.entity.employeedetails.EmployeePaySlipDetails;
 import com.employee.product.entity.ops.AuditTrailFE;
 import com.employee.product.payslipsdetails.response.dto.EPaySlipEmpRes;
 import com.employee.product.payslipsdetails.response.dto.EPaySlipResDto;
-import com.employee.product.security.jwt.JwtUtils;
 import com.employee.product.utils.PaySlipsDetailsUtil;
 
 import io.swagger.annotations.ApiOperation;
@@ -35,18 +32,8 @@ import io.swagger.annotations.Authorization;
 public class PaySlipController {
 	
 	@Autowired
-	AuthenticationManager authenticationManager;
-
-	@Autowired
-	PasswordEncoder encoder;
-
-	@Autowired
-	JwtUtils jwtUtils;
-	
-	@Autowired
 	private PaySlipService paySlipService;
 	
-
 	@Autowired
 	private EmployeeProductService employeeProductService;
 	

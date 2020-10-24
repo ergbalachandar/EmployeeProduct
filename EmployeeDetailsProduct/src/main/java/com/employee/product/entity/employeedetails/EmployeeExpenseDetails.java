@@ -21,9 +21,6 @@ public class EmployeeExpenseDetails {
 	@Column(name = "id")
 	private String id;
 
-	@Column(name = "issue_place")
-	private String issuePlace;
-
 	@Column(name = "reason")
 	private String reason;
 
@@ -35,6 +32,9 @@ public class EmployeeExpenseDetails {
 
 	@Column(name = "document_type")
 	private String documentType;
+	
+	@Column(name = "currency_type")
+	private String currencyType;
 
 	@Column(name = "amount")
 	private long amount;
@@ -49,7 +49,7 @@ public class EmployeeExpenseDetails {
 	private String status;
 
 	@Column(name = "proof_date")
-	private Date startDate;
+	private Date proofDate;
 
 	@Column(name = "created_date")
 	private Date createdDate;

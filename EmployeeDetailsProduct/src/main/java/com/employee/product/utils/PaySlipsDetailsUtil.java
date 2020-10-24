@@ -34,8 +34,8 @@ public class PaySlipsDetailsUtil {
 		if (null != paySlipDetails) {
 			List<EPaySlips> epayList = new ArrayList<EPaySlips>();
 			for (EmployeeDetails employeeDetails : paySlipDetails) {
-				EPaySlips ePaySlips = new EPaySlips();
-				if (employeeDetails.getActive() == 1) {
+				EPaySlips ePaySlips = new EPaySlips();	
+				if (null != employeeDetails && employeeDetails.getActive() == 1 && null != employeeDetails.getEmployeePaySlipDetails()) {
 					mappingEmployeeDetailsForPayslip(ePaySlips, employeeDetails);
 					List<EPaySlip> epaySlipList = new ArrayList<EPaySlip>();
 					for (EmployeePaySlipDetails employeePaySlipDetails : employeeDetails.getEmployeePaySlipDetails()) {
