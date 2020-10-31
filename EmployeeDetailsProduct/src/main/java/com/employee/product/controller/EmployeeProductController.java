@@ -40,6 +40,7 @@ import com.employee.product.dao.services.DeleteCompanyService;
 import com.employee.product.dao.services.DocumentManagementService;
 import com.employee.product.dao.services.EmployeeProductService;
 import com.employee.product.dao.services.LoginDetailsService;
+import com.employee.product.dao.services.NotificationService;
 import com.employee.product.dao.services.UserDetailsImpl;
 import com.employee.product.documentdetails.request.dto.DeleteDocumentRequestDto;
 import com.employee.product.documentdetails.request.dto.UploadDocumentDetailsRequestDto;
@@ -58,6 +59,7 @@ import com.employee.product.entity.employeedetails.EmployeeDetails;
 import com.employee.product.entity.employeedetails.EmployeePassportDocumentDetails;
 import com.employee.product.entity.employeedetails.EmployeePaySlipDetails;
 import com.employee.product.entity.employeedetails.EmployeeWorkPermitDocumentDetails;
+import com.employee.product.entity.notification.NotificationDetailsEntity;
 import com.employee.product.entity.ops.AuditTrailFE;
 import com.employee.product.security.jwt.JwtUtils;
 import com.employee.product.utils.AddEmployeeDetailsUtil;
@@ -71,6 +73,7 @@ import com.employee.product.utils.GenerateCsvReportUtil;
 import com.employee.product.utils.GenerateExcelReportUtil;
 import com.employee.product.utils.GeneratePdfReportUtil;
 import com.employee.product.utils.LoginUserUtil;
+import com.employee.product.utils.NotificationUtil;
 import com.employee.product.utils.UploadDocumentUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -101,12 +104,16 @@ public class EmployeeProductController {
 
 	@Autowired
 	PasswordEncoder encoder;
+	
+	@Autowired
+	NotificationService notifyService;
 
 	@Autowired
 	JwtUtils jwtUtils;
 	/*
 	 * @Autowired private MailSender mailSender;
 	 */
+	 
 
 	@Autowired
 	private DeleteCompanyService deleteCompanyService;
@@ -130,9 +137,13 @@ public class EmployeeProductController {
 		CompanySignUpDetailsUtil.companySignUpDetailsMapping(companyDetailsDto, users);
 		users.setPassword(encoder.encode(companyDetailsDto.getPassword()));
 		users = employeeProductService.signUpCompanyDetails(users);
-		// CompanySignUpDetailsUtil.sendMessage(mailSender,companyDetailsDto.getEmailId(),
-		// companyDetailsDto.getCompanyName(), users);
+		/*
+		 * CompanySignUpDetailsUtil.sendMessage(mailSender,companyDetailsDto.getEmailId(
+		 * ), companyDetailsDto.getCompanyName(),
+		 * users,companyDetailsDto.getPassword());
+		 */
 		CompanySignUpDetailsUtil.companyDetailsSignUpResponseMapping(companyDetailsResponseDto);
+		users.getEmployeeDetails().forEach(n ->  Notify("Welcome "+companyDetailsDto.getCompanyName(),n.getId()));
 		commonService.setAudit(new AuditTrailFE(companyDetailsDto.getEmployeeDetails().getFirstName(),
 				companyDetailsDto.getCompanyName(), "Admin", "SignUp Successfully", 1, "SIGNUP"));
 		return companyDetailsResponseDto;
@@ -173,6 +184,13 @@ public class EmployeeProductController {
 		if (loginDetailsRequestDto.getReset() == 0) {
 			LoginUserUtil.mapLoginDetailsResponseDto(userDetails.getUsers(), loginDetailsResponseDto);
 			loginDetailsResponseDto.setJwt(jwt);
+			/*
+			 * CompanySignUpDetailsUtil.sendMessageAfterLogin(mailSender,
+			 * loginDetailsRequestDto.getUserName());
+			 * 
+			 */
+
+			userDetails.getUsers().getEmployeeDetails().forEach(n ->  Notify("Logged in Portal Successfully",n.getId()));
 			commonService.setAudit(new AuditTrailFE(userDetails.getUsers().getFirstName(),
 					userDetails.getUsers().getCompanyDetails().getId(), userDetails.getUsers().getRole(),
 					"User Login Successful", 1, "LOGIN"));
@@ -181,6 +199,7 @@ public class EmployeeProductController {
 					encoder.encode(loginDetailsRequestDto.getNewPassword()), loginDetailsRequestDto.getUserName());
 			LoginUserUtil.mapLoginDetailsResponseDto(usersWithNewPassword, loginDetailsResponseDto);
 			loginDetailsResponseDto.setJwt(null);
+			userDetails.getUsers().getEmployeeDetails().forEach(n ->  Notify("Password changed in Portal Successfully",n.getId()));
 			commonService.setAudit(new AuditTrailFE(userDetails.getUsers().getFirstName(),
 					userDetails.getUsers().getCompanyDetails().getId(), userDetails.getUsers().getRole(),
 					"Password changed Successfully", 1, "LOGIN"));
@@ -614,14 +633,20 @@ public class EmployeeProductController {
 
 		UserDetailsImpl userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication()
 				.getPrincipal();
-
 		if (userDetails.getUsers().getActive() == 0) {
 			commonService.setAudit(new AuditTrailFE(userDetails.getUsers().getFirstName(),
 					userDetails.getUsers().getCompanyDetails().getId(), userDetails.getUsers().getRole(),
 					"Your profile has been deleted", 0, module));
 			throw new Exception("Your profile has been deleted");
 		}
-
 		return userDetails;
 	}
+	
+
+	private void Notify(String message, String id) {
+		NotificationDetailsEntity nde = new NotificationDetailsEntity();
+		NotificationUtil.push(message,id,nde);
+		notifyService.pushNotifaction(nde);
+	}
+
 }

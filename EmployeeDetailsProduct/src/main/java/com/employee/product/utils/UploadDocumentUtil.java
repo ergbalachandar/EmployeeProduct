@@ -5,12 +5,22 @@ import java.util.Date;
 import com.employee.product.dao.services.DocumentManagementService;
 import com.employee.product.documentdetails.request.dto.UploadDocumentDetailsRequestDto;
 import com.employee.product.documentdetails.response.dto.UploadDocumentDetailsResponseDto;
+import com.employee.product.entity.employeedetails.EmployeeExpenseDetails;
 import com.employee.product.entity.employeedetails.EmployeePassportDocumentDetails;
 import com.employee.product.entity.employeedetails.EmployeePaySlipDetails;
 import com.employee.product.entity.employeedetails.EmployeeWorkPermitDocumentDetails;
 
 public class UploadDocumentUtil {
 
+	/**
+	 * A method for Upload document for several modules
+	 * @param loggedInUserName
+	 * @param uploadDocumentDetailsRequestDto
+	 * @param bytes
+	 * @param documentManagementService
+	 * @param fileName
+	 * @throws Exception
+	 */
 	public static void uploadDocument(String loggedInUserName,UploadDocumentDetailsRequestDto uploadDocumentDetailsRequestDto, byte[] bytes,
 			DocumentManagementService documentManagementService, String fileName) throws Exception {
 
@@ -25,11 +35,41 @@ public class UploadDocumentUtil {
 		case "3":
 			uploadPassportDocumentDetails(loggedInUserName,uploadDocumentDetailsRequestDto, bytes, documentManagementService, fileName);
 			break;
+		case "4":
+			uploadExpenseDocumentDetails(loggedInUserName,uploadDocumentDetailsRequestDto, bytes, documentManagementService, fileName);
+			break;
 		default:
 			throw new Exception("Document type doesnt valid");
 
 		}
 
+	}
+	
+
+	/**
+	 * Upload Expense details
+	 * @param loggedInUserName
+	 * @param uploadDocumentDetailsRequestDto
+	 * @param bytes
+	 * @param documentManagementService
+	 * @param fileName
+	 */
+	private static void uploadExpenseDocumentDetails(String loggedInUserName,
+			UploadDocumentDetailsRequestDto uddReq, byte[] bytes,
+			DocumentManagementService documentManagementService, String fileName) {
+		EmployeeExpenseDetails expDet = new EmployeeExpenseDetails();
+		expDet.setAmount(uddReq.getAmount());
+		expDet.setCreatedDate(new java.sql.Date(new Date().getTime()));
+		expDet.setDocumentData(bytes);
+		expDet.setCurrencyType(uddReq.getCurrency().name());
+		expDet.setId(uddReq.getEmployeeId()+""+new Date().getTime());
+		expDet.setDocumentName(fileName);
+		expDet.setDocumentType(uddReq.getDocumentType());
+		expDet.setReason(uddReq.getReason());
+		expDet.setProofDate(uddReq.getProofDate());
+		expDet.setTypeExpense(uddReq.getExpense().name());
+		documentManagementService.addExpenseDocument(expDet,
+				 loggedInUserName,uddReq);
 	}
 
 	private static void uploadWorkPermitDocumentDetails(String loggedInUserName, UploadDocumentDetailsRequestDto uploadDocumentDetailsRequestDto,

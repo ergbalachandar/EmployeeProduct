@@ -99,19 +99,22 @@ public class PaySlipsDetailsUtil {
 	public static void mapEmpPaySlipDetails(Set<EmployeePaySlipDetails> paySlipDetails, EPaySlipEmpRes ePaySlipEmpRes) {
 		List<EPaySlip> ePaySlipList = new ArrayList<EPaySlip>();
 		for (EmployeePaySlipDetails paySlip : paySlipDetails) {
-				EPaySlip paySlipEmp = new EPaySlip();
-				paySlipEmp.setDocumentName(paySlip.getDocumentName());
-				if (null != paySlip.getPayslipType())
-					paySlipEmp.setPaySlipType(PaySlipType.valueOf(paySlip.getPayslipType()));
-				paySlipEmp.setMonth(paySlip.getPaySlipMonth());
-				paySlipEmp.setDocumentType(paySlip.getDocumentType());
-				paySlipEmp.setDocumentNumber(paySlip.getPaySlipNumber());
-				paySlipEmp.setYear(paySlip.getPaySlipYear());
-				paySlipEmp.setUploadedDate(String.valueOf(paySlip.getUploadedDate()));
-				ePaySlipList.add(paySlipEmp);
+				ePaySlipList.add(mapPaySlip(paySlip));
 		}
-
 		ePaySlipEmpRes.setEPaySlip(ePaySlipList);
+	}
+	
+	private static EPaySlip mapPaySlip(EmployeePaySlipDetails paySlip) {
+		EPaySlip paySlipEmp = new EPaySlip();
+		paySlipEmp.setDocumentName(paySlip.getDocumentName());
+		if (null != paySlip.getPayslipType())
+			paySlipEmp.setPaySlipType(PaySlipType.valueOf(paySlip.getPayslipType()));
+		paySlipEmp.setMonth(paySlip.getPaySlipMonth());
+		paySlipEmp.setDocumentType(paySlip.getDocumentType());
+		paySlipEmp.setDocumentNumber(paySlip.getPaySlipNumber());
+		paySlipEmp.setYear(paySlip.getPaySlipYear());
+		paySlipEmp.setUploadedDate(String.valueOf(paySlip.getUploadedDate()));
+		return paySlipEmp;	
 	}
 
 }

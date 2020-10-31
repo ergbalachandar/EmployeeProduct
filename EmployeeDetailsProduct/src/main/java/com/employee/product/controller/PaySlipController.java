@@ -4,23 +4,31 @@ import java.util.List;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.employee.product.dao.services.CommonService;
+import com.employee.product.dao.services.DocumentManagementService;
 import com.employee.product.dao.services.EmployeeProductService;
 import com.employee.product.dao.services.PaySlipService;
 import com.employee.product.dao.services.UserDetailsImpl;
+import com.employee.product.documentdetails.request.dto.UploadDocumentDetailsRequestDto;
+import com.employee.product.documentdetails.response.dto.UploadDocumentDetailsResponseDto;
 import com.employee.product.entity.employeedetails.EmployeeDetails;
 import com.employee.product.entity.employeedetails.EmployeePaySlipDetails;
 import com.employee.product.entity.ops.AuditTrailFE;
 import com.employee.product.payslipsdetails.response.dto.EPaySlipEmpRes;
 import com.employee.product.payslipsdetails.response.dto.EPaySlipResDto;
 import com.employee.product.utils.PaySlipsDetailsUtil;
+import com.employee.product.utils.UploadDocumentUtil;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -39,6 +47,9 @@ public class PaySlipController {
 	
 	@Autowired
 	CommonService commonService;
+	
+	@Autowired
+	private DocumentManagementService documentManagementService;
 
 	
 	@RequestMapping(method = RequestMethod.GET, value = "/payAdmlist")
@@ -93,6 +104,39 @@ public class PaySlipController {
 					"Employee view of Payslips retrieved Successfully", 1, "PAYLIST"));
 		}
 		return ePaySlipEmpRes;
+	}
+	
+	@RequestMapping(method = RequestMethod.POST, value = "/payslipDocument", consumes = { "multipart/form-data",
+			MediaType.APPLICATION_JSON_VALUE })
+	@ApiOperation(value = "Payslip Document", authorizations = { @Authorization(value = "jwtToken") })
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "Successfully Uploaded"),
+			@ApiResponse(code = 401, message = "You are not authorized to Log In"),
+			@ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
+			@ApiResponse(code = 404, message = "The resource you were trying to reach is not found") })
+	public UploadDocumentDetailsResponseDto payslipWithFile(@RequestPart("value") String value,
+			@RequestParam("file") MultipartFile uploadFile) throws Exception {
+		UploadDocumentDetailsResponseDto uploadDocumentDetailsResponseDto = new UploadDocumentDetailsResponseDto();
+		byte[] bytes = uploadFile.getBytes();
+		ObjectMapper mapper = new ObjectMapper();
+		UserDetailsImpl userDetails = generateUserDetailsFromJWT("EXPENSEDOCUMENT");
+		UploadDocumentDetailsRequestDto uploadDocumentDetailsRequestDto = mapper.readValue(value,
+				UploadDocumentDetailsRequestDto.class);
+		try {
+			UploadDocumentUtil.uploadDocument(userDetails.getUsers().getUserName(), uploadDocumentDetailsRequestDto,
+					bytes, documentManagementService, uploadFile.getOriginalFilename());
+		} catch (Exception e) {
+			e.printStackTrace();
+			commonService.setAudit(new AuditTrailFE(userDetails.getUsers().getFirstName(),
+					userDetails.getUsers().getCompanyDetails().getId(), userDetails.getUsers().getRole(),
+					"Failed to Upload" + e.getMessage(), 0, "EXPENSEDOCUMENT"));
+			throw new Exception("Could not add Expense");
+		}
+		UploadDocumentUtil.mapResponseUploadDocumentResponseDto(uploadDocumentDetailsResponseDto);
+		commonService.setAudit(new AuditTrailFE(userDetails.getUsers().getFirstName(),
+				userDetails.getUsers().getCompanyDetails().getId(), userDetails.getUsers().getRole(),
+				"Successfully Expense added", 1, "EXPENSEDOCUMENT"));
+		return uploadDocumentDetailsResponseDto;
+
 	}
 	
 	private UserDetailsImpl generateUserDetailsFromJWT(String module) throws Exception {

@@ -12,14 +12,12 @@
  * com.amazonaws.services.simpleemail.AmazonSimpleEmailService; import
  * com.amazonaws.services.simpleemail.AmazonSimpleEmailServiceClientBuilder;
  * 
- * 
  * @Configuration public class SesConfig {
  * 
  * @Bean public AmazonSimpleEmailService
  * amazonSimpleEmailService(AWSCredentialsProvider credentialsProvider) { return
- * AmazonSimpleEmailServiceClientBuilder.standard()
- * .withCredentials(credentialsProvider)
- * .withRegion(Regions.AP_SOUTH_1).build(); }
+ * AmazonSimpleEmailServiceClientBuilder.standard().withCredentials(
+ * credentialsProvider) .withRegion(Regions.AP_SOUTH_1).build(); }
  * 
  * @Bean public MailSender mailSender(AmazonSimpleEmailService ses) { return new
  * SimpleEmailServiceMailSender(ses); } }

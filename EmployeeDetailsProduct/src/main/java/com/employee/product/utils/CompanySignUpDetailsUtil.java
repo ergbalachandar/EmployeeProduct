@@ -154,33 +154,52 @@ public class CompanySignUpDetailsUtil {
 	 * 
 	 * }
 	 */
-
-	public static void sendMessage(MailSender mailSender, String emailId, String companyName, Users users) {
-		SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
-
-		StringBuilder result = new StringBuilder();
-
-		result.append("Dear " + users.getFirstName() + " " + users.getLastName());
-		result.append(System.lineSeparator());
-		result.append("UserName : " + users.getUserName());
-		result.append(System.lineSeparator());
-		result.append("Password : " + users.getPassword());
-		result.append(System.lineSeparator());
-
-		result.append("Company Name : " + companyName);
-		result.append(System.lineSeparator());
-		result.append("Company Mail Id : " + emailId);
-		simpleMailMessage.setText(result.toString());
-		simpleMailMessage.setFrom("mproduct113@gmail.com");
-		simpleMailMessage.setTo(emailId);
-		simpleMailMessage.setSubject("SignUp Is Successfull");
-
-		mailSender.send(simpleMailMessage);
-	} 
-
+	/*
+	 * public static void sendMessageAfterLogin(MailSender mailSender, String
+	 * emailId) { SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
+	 * StringBuilder result = new StringBuilder(); result.
+	 * append("Welcome to MProduct !! One stop services for all your HR needs");
+	 * result.append(System.lineSeparator()); result.append(System.lineSeparator());
+	 * result.append(System.lineSeparator()); result.append(System.lineSeparator());
+	 * result.append(System.lineSeparator()); result.append(System.lineSeparator());
+	 * result.append(System.lineSeparator()); result.append("Logged In Time : " +
+	 * new Date()); result.append(System.lineSeparator());
+	 * result.append(System.lineSeparator()); result.append(System.lineSeparator());
+	 * result.append(System.lineSeparator()); result.append(System.lineSeparator());
+	 * result.
+	 * append("Welcome to MProduct !! One stop services for all your HR needs");
+	 * simpleMailMessage.setText(result.toString());
+	 * simpleMailMessage.setFrom("mproduct113@gmail.com");
+	 * simpleMailMessage.setTo(emailId);
+	 * simpleMailMessage.setSubject("Login Is Successfull");
+	 * mailSender.send(simpleMailMessage); }
+	 */
+	
+	/*
+	 * public static void sendMessage(MailSender mailSender, String emailId, String
+	 * companyName, Users users, String pwd) { SimpleMailMessage simpleMailMessage =
+	 * new SimpleMailMessage(); StringBuilder result = new StringBuilder(); result.
+	 * append("Welcome to MProduct !! One stop services for all your HR needs");
+	 * result.append(System.lineSeparator()); result.append("Dear " +
+	 * users.getFirstName() + " " + users.getLastName());
+	 * result.append(System.lineSeparator()); result.append("UserName : " +
+	 * users.getUserName()); result.append(System.lineSeparator());
+	 * result.append("Password : " + pwd); result.append(System.lineSeparator());
+	 * result.append("Company Name : " + companyName);
+	 * result.append(System.lineSeparator()); result.append("Company Mail Id : " +
+	 * emailId); result.append(System.lineSeparator());
+	 * result.append(System.lineSeparator()); result.append(System.lineSeparator());
+	 * result.append(System.lineSeparator()); result.append(System.lineSeparator());
+	 * result.
+	 * append("Welcome to MProduct !! One stop services for all your HR needs");
+	 * simpleMailMessage.setText(result.toString());
+	 * simpleMailMessage.setFrom("mproduct113@gmail.com");
+	 * simpleMailMessage.setTo(emailId);
+	 * simpleMailMessage.setSubject("SignUp Is Successfull");
+	 * mailSender.send(simpleMailMessage); }
+	 */
 	public static CompanyDetailsResponseDto companyDetailsSignUpResponseMapping(
 			CompanyDetailsResponseDto companyDetailsResponseDto) {
-
 		companyDetailsResponseDto.setMessage("SignUp Successfull");
 		return companyDetailsResponseDto;
 	}

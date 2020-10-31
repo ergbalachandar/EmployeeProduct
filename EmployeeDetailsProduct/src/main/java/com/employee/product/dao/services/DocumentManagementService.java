@@ -11,6 +11,7 @@ import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.employee.product.dao.interfaces.EmployeeExpenseDetailsInterface;
 import com.employee.product.dao.interfaces.EmployeePassportDocumentDetailsInterface;
 import com.employee.product.dao.interfaces.EmployeePayslipDetailsInterface;
 import com.employee.product.dao.interfaces.EmployeeWorkPermitDocumentDetailsInterface;
@@ -18,6 +19,7 @@ import com.employee.product.dao.interfaces.LoginDetailsInterface;
 import com.employee.product.documentdetails.request.dto.UploadDocumentDetailsRequestDto;
 import com.employee.product.entity.companydetails.Users;
 import com.employee.product.entity.employeedetails.EmployeeDetails;
+import com.employee.product.entity.employeedetails.EmployeeExpenseDetails;
 import com.employee.product.entity.employeedetails.EmployeePassportDetails;
 import com.employee.product.entity.employeedetails.EmployeePassportDocumentDetails;
 import com.employee.product.entity.employeedetails.EmployeePaySlipDetails;
@@ -41,23 +43,21 @@ public class DocumentManagementService {
 
 	@Autowired
 	private LoginDetailsInterface loginDetailsInterface;
+
+	@Autowired
+	private EmployeeExpenseDetailsInterface empExpenseDetailsInterface;
 	
 	@Transactional
 	public void addWorkPermitDocument(EmployeeWorkPermitDocumentDetails employeeWorkPermitDocumentDetails,
 			String loggedInUserName, String employeeId) throws Exception {
 		EmployeeWorkPermitDetails employeeWorkPermitDetails = new EmployeeWorkPermitDetails();
-
 		employeeWorkPermitDetails.setWorkPermitNumber(employeeWorkPermitDocumentDetails.getWorkPermitNumber());
-
 		Users users = loginDetailsInterface.findByEmployeeDetailsEmployeeWorkPermitDetails(employeeWorkPermitDetails);
-
 		Optional<Users> userRoleOfLoggedInEmployee = loginDetailsInterface.findById(loggedInUserName);
 		accessValidation(userRoleOfLoggedInEmployee, users, employeeId,null);
-
 		EmployeeWorkPermitDocumentDetails employeeWorkPermitDocumentDetailsRetrieval = entity
 				.find(EmployeeWorkPermitDocumentDetails.class, employeeWorkPermitDocumentDetails.getWorkPermitNumber());
 		if (null != employeeWorkPermitDocumentDetailsRetrieval) {
-
 			employeeWorkPermitDocumentDetailsRetrieval
 					.setDocumentData(employeeWorkPermitDocumentDetails.getDocumentData());
 			employeeWorkPermitDocumentDetailsRetrieval
@@ -106,18 +106,13 @@ public class DocumentManagementService {
 			String loggedInUserName, String employeeId) throws Exception {
 
 		EmployeePassportDetails employeePassportDetails = new EmployeePassportDetails();
-
 		employeePassportDetails.setPassportNumber(employeePassportDocumentDetails.getPassportNumber());
-
 		Users users = loginDetailsInterface.findByEmployeeDetailsEmployeePassportDetails(employeePassportDetails);
-
 		Optional<Users> userRoleOfLoggedInEmployee = loginDetailsInterface.findById(loggedInUserName);
 		accessValidation(userRoleOfLoggedInEmployee, users, employeeId,null);
-
 		EmployeePassportDocumentDetails employeePassportDocumentDetailsRetrieval = entity
 				.find(EmployeePassportDocumentDetails.class, employeePassportDocumentDetails.getPassportNumber());
 		if (null != employeePassportDocumentDetailsRetrieval) {
-
 			employeePassportDocumentDetailsRetrieval.setDocumentData(employeePassportDocumentDetails.getDocumentData());
 			employeePassportDocumentDetailsRetrieval.setDocumentName(employeePassportDocumentDetails.getDocumentName());
 			employeePassportDocumentDetailsRetrieval.getPassport_number()
@@ -133,39 +128,40 @@ public class DocumentManagementService {
 			users.getEmployeeDetails().stream().findFirst().get().getEmployeePassportDetails().stream().findFirst()
 					.get()
 					.setDocumentType(FilenameUtils.getExtension(employeePassportDocumentDetails.getDocumentName()));
-
 		}
-
 	}
 
 	@Transactional
 	public <T> Object downloadDocument(String documentNumber, String documentType) {
-
-		if (documentType.equals("1")) {
+		if ("1".equals(documentType)) {
 			EmployeeWorkPermitDocumentDetails employeeWorkPermitDocumentDetails = entity
 					.find(EmployeeWorkPermitDocumentDetails.class, documentNumber);
 			return employeeWorkPermitDocumentDetails;
-		} else if (documentType.equals("2")) {
+		} else if ("2".equals(documentType)) {
 			EmployeePaySlipDetails employeePaySlipDocumentDetails = entity
 					.find(EmployeePaySlipDetails.class, documentNumber);
 			return employeePaySlipDocumentDetails;
-		} else if (documentType.equals("3")) {
+		} else if ("3".equals(documentType)) {
 			EmployeePassportDocumentDetails employeePassportDocumentDetails = entity
 					.find(EmployeePassportDocumentDetails.class, documentNumber);
 			return employeePassportDocumentDetails;
+		}  else if ("4".equals(documentType)) {
+			EmployeeExpenseDetails employeeExpenseDetails = entity
+					.find(EmployeeExpenseDetails.class, documentNumber);
+			return employeeExpenseDetails;
 		}
-
 		return null;
 	}
 
 	public void deleteDocument(String documentNumber, String documentType) {
-
-		if (documentType.equals("1")) {
+		if ("1".equals(documentType)) {
 			employeeWorkPermitDocumentDetailsInterface.deleteById(documentNumber);
-		} else if (documentType.equals("2")) {
+		} else if ("2".equals(documentType)) {
 			employeePayslipDetailsInterface.deleteById(documentNumber);
-		} else if (documentType.equals("3")) {
+		} else if ("3".equals(documentType)) {
 			employeePassportDocumentDetailsInterface.deleteById(documentNumber);
+		} else if ("4".equals(documentType)) {
+			empExpenseDetailsInterface.deleteById(documentNumber);
 		}
 
 	}
@@ -174,43 +170,54 @@ public class DocumentManagementService {
 			EmployeeDetails employeeDetails) throws Exception {
 
 		if (users != null) {
-
 			if (userRoleOfLoggedInEmployee.get().getEmployeeDetails().stream().findFirst().get().getId() != users
 					.getEmployeeDetails().stream().findFirst().get().getId()
 					&& !userRoleOfLoggedInEmployee.get().getRole().equalsIgnoreCase("Admin")) {
 				throw new Exception("You are not authorised to Manage the document");
 			}
-
 			if (userRoleOfLoggedInEmployee.get().getRole().equalsIgnoreCase("Admin") && !userRoleOfLoggedInEmployee
 					.get().getCompanyDetails().getId().equalsIgnoreCase(users.getCompanyDetails().getId())) {
 				throw new Exception("You are not authorised to manage the document of other company employee");
 			}
-
 			if (userRoleOfLoggedInEmployee.get().getRole().equalsIgnoreCase("Admin")
 					&& !users.getEmployeeDetails().stream().findFirst().get().getId().equalsIgnoreCase(employeeId)) {
 				throw new Exception("Document you are trying to update is already associated with other employee");
 			}
 		}
-
 		else {
-			if (userRoleOfLoggedInEmployee.get().getRole().equalsIgnoreCase("Admin")) {
-					
+			if (userRoleOfLoggedInEmployee.get().getRole().equalsIgnoreCase("Admin")) {			
 				if (null != employeeDetails && !userRoleOfLoggedInEmployee.get().getCompanyDetails().getId()
 						.equalsIgnoreCase(employeeDetails.getCompanyDetails().getId())) {
-
 					throw new Exception("You are not authorised to manage the document of Other company employees");
 				}
-
 			} else if (userRoleOfLoggedInEmployee.get().getRole().equalsIgnoreCase("Employee")) {
-
 				if (!userRoleOfLoggedInEmployee.get().getEmployeeDetails().stream().findFirst().get().getId()
 						.equalsIgnoreCase(employeeDetails.getId())) {
-
 					throw new Exception("You are not authorised to manage document of other users");
 				}
 			}
 		}
+	}
 
+	/**
+	 * Adding documents to expense upload
+	 * @param expDet
+	 * @param loggedInUserName
+	 * @param uddReq
+	 */
+	public void addExpenseDocument(EmployeeExpenseDetails expDet, String loggedInUserName,
+			UploadDocumentDetailsRequestDto uddReq) {
+		EmployeeDetails empDetails = findByEmployeeId(uddReq.getEmployeeId());
+		Set<EmployeeExpenseDetails> empDetailsSet = new HashSet<EmployeeExpenseDetails>();
+		if(null != empDetails.getEmployeePaySlipDetails()) {
+			for(EmployeeExpenseDetails empPaySlipExits:empDetails.getEmployeeExpenseDetails()) {
+				empDetailsSet.add(empPaySlipExits);
+			}
+		}
+		empDetailsSet.add(expDet);
+		empDetails.setEmployeeExpenseDetails(empDetailsSet);
+		entity.persist(empDetails);
+		
 	}
 
 }
