@@ -1,5 +1,7 @@
 package com.employee.product.notification.dto;
 
+import java.util.Date;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -9,8 +11,8 @@ public class NotificationDetail {
 	
 	private String id;
 	private String message;
-	private String employeeId;
+	private String username;
 	private boolean status;
-	private String createdDate;
+	private Date createdDate;
 
 }

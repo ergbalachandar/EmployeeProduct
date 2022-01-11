@@ -1,16 +1,18 @@
 package com.employee.product.entity.notification;
 
-import java.sql.Date;
+import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
-@Data
+@Setter
+@Getter
 @Table(name = "notifications_details")
 public class NotificationDetailsEntity {
 
@@ -18,11 +20,11 @@ public class NotificationDetailsEntity {
 	private String id;
 	@Column(name = "message")
 	private String message;
-	@Column(name = "employee_id")
-	private String employeeId;
+	@Column(name = "username")
+	private String userName;
 	@Column(name = "status	")
 	private boolean status;
-	@Column(name = "created_date")
+	@Column(name = "created_date", nullable = false, insertable = false, columnDefinition = "DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")
 	private Date createdDate;
 
 }

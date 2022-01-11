@@ -1,8 +1,9 @@
 package com.employee.product.controller;
 
+import java.time.Month;
 import java.util.List;
-import java.util.Set;
 
+import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -17,15 +18,17 @@ import org.springframework.web.multipart.MultipartFile;
 import com.employee.product.dao.services.CommonService;
 import com.employee.product.dao.services.DocumentManagementService;
 import com.employee.product.dao.services.EmployeeProductService;
+import com.employee.product.dao.services.NotificationService;
 import com.employee.product.dao.services.PaySlipService;
 import com.employee.product.dao.services.UserDetailsImpl;
 import com.employee.product.documentdetails.request.dto.UploadDocumentDetailsRequestDto;
 import com.employee.product.documentdetails.response.dto.UploadDocumentDetailsResponseDto;
 import com.employee.product.entity.employeedetails.EmployeeDetails;
-import com.employee.product.entity.employeedetails.EmployeePaySlipDetails;
+import com.employee.product.entity.notification.NotificationDetailsEntity;
 import com.employee.product.entity.ops.AuditTrailFE;
 import com.employee.product.payslipsdetails.response.dto.EPaySlipEmpRes;
 import com.employee.product.payslipsdetails.response.dto.EPaySlipResDto;
+import com.employee.product.utils.NotificationUtil;
 import com.employee.product.utils.PaySlipsDetailsUtil;
 import com.employee.product.utils.UploadDocumentUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -47,6 +50,9 @@ public class PaySlipController {
 	
 	@Autowired
 	CommonService commonService;
+	
+	@Autowired
+	private NotificationService notifyService;
 	
 	@Autowired
 	private DocumentManagementService documentManagementService;
@@ -87,22 +93,20 @@ public class PaySlipController {
 	public EPaySlipEmpRes retrievePayslipsForEmployee()
 			throws Exception {
 		UserDetailsImpl userDetails = this.generateUserDetailsFromJWT("PAYLIST");
-		Set<EmployeePaySlipDetails> paySlipDetails = null;
-
+		EPaySlipEmpRes ePaySlipEmpRes = new EPaySlipEmpRes();
 		List<EmployeeDetails> employeeDetailsList = employeeProductService
 				.findbyCompanyDetails(userDetails.getUsers().getCompanyDetails().getId());
 		for(EmployeeDetails empDet:employeeDetailsList) {
 			if(empDet.getEmailId().equals(userDetails.getUsers().getUserName())){
-				paySlipDetails = empDet.getEmployeePaySlipDetails();
+				if(null != empDet.getEmployeePaySlipDetails() && empDet.getEmployeePaySlipDetails().size() > 0) {
+				PaySlipsDetailsUtil.mapEmpPaySlipDetails(empDet.getEmployeePaySlipDetails(), ePaySlipEmpRes, empDet.getId());
+				commonService.setAudit(new AuditTrailFE(userDetails.getUsers().getFirstName(),
+						userDetails.getUsers().getCompanyDetails().getId(), userDetails.getUsers().getRole(),
+						"Employee view of Payslips retrieved Successfully", 1, "PAYLIST"));
 				}
 			}
-		EPaySlipEmpRes ePaySlipEmpRes = new EPaySlipEmpRes();
-		if(null != paySlipDetails && paySlipDetails.size() > 0) {
-			PaySlipsDetailsUtil.mapEmpPaySlipDetails(paySlipDetails, ePaySlipEmpRes);
-			commonService.setAudit(new AuditTrailFE(userDetails.getUsers().getFirstName(),
-					userDetails.getUsers().getCompanyDetails().getId(), userDetails.getUsers().getRole(),
-					"Employee view of Payslips retrieved Successfully", 1, "PAYLIST"));
-		}
+			}
+		
 		return ePaySlipEmpRes;
 	}
 	
@@ -118,23 +122,25 @@ public class PaySlipController {
 		UploadDocumentDetailsResponseDto uploadDocumentDetailsResponseDto = new UploadDocumentDetailsResponseDto();
 		byte[] bytes = uploadFile.getBytes();
 		ObjectMapper mapper = new ObjectMapper();
-		UserDetailsImpl userDetails = generateUserDetailsFromJWT("EXPENSEDOCUMENT");
-		UploadDocumentDetailsRequestDto uploadDocumentDetailsRequestDto = mapper.readValue(value,
+		UserDetailsImpl userDetails = generateUserDetailsFromJWT("PAYSLIPDOCUMENT");
+		UploadDocumentDetailsRequestDto uplReq = mapper.readValue(value,
 				UploadDocumentDetailsRequestDto.class);
 		try {
-			UploadDocumentUtil.uploadDocument(userDetails.getUsers().getUserName(), uploadDocumentDetailsRequestDto,
-					bytes, documentManagementService, uploadFile.getOriginalFilename());
+			String extension = FilenameUtils.getExtension(uploadFile.getOriginalFilename());
+			UploadDocumentUtil.uploadDocument(userDetails.getUsers().getUserName(), uplReq,
+					bytes, documentManagementService, uploadFile.getOriginalFilename(),extension);
+			EmployeeDetails emp = employeeProductService.findByEmployeeId(uplReq.getEmployeeId());
+			notifyDet("Your monthly of "+Month.of(Integer.valueOf(uplReq.getMonth()))+" Payslip was generated",emp.getEmailId());
 		} catch (Exception e) {
-			e.printStackTrace();
 			commonService.setAudit(new AuditTrailFE(userDetails.getUsers().getFirstName(),
 					userDetails.getUsers().getCompanyDetails().getId(), userDetails.getUsers().getRole(),
-					"Failed to Upload" + e.getMessage(), 0, "EXPENSEDOCUMENT"));
-			throw new Exception("Could not add Expense");
+					"Failed to Upload" + e.getMessage(), 0, "PAYSLIPDOCUMENT"));
+			throw new Exception("Could not add payslip");
 		}
 		UploadDocumentUtil.mapResponseUploadDocumentResponseDto(uploadDocumentDetailsResponseDto);
 		commonService.setAudit(new AuditTrailFE(userDetails.getUsers().getFirstName(),
 				userDetails.getUsers().getCompanyDetails().getId(), userDetails.getUsers().getRole(),
-				"Successfully Expense added", 1, "EXPENSEDOCUMENT"));
+				"Successfully Payslip added", 1, "PAYSLIPDOCUMENT"));
 		return uploadDocumentDetailsResponseDto;
 
 	}
@@ -149,6 +155,12 @@ public class PaySlipController {
 			throw new Exception("Your profile has been deleted");
 		}
 		return userDetails;
+	}
+	
+	private void notifyDet(String message, String userName) {
+		NotificationDetailsEntity nde = new NotificationDetailsEntity();
+		NotificationUtil.push(message,userName,nde);
+		notifyService.pushNotifaction(nde);
 	}
 
 }

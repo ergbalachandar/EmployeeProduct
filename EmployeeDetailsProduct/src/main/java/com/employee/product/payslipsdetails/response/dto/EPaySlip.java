@@ -6,13 +6,15 @@ import lombok.Setter;
 @Setter
 @Getter
 public class EPaySlip {
-
-	private String documentName;
+	
+	private String fileName;
+	private String fileType;
 	private String documentNumber;
-	private String documentType;
 	private String month;
 	private String year;
 	private String uploadedDate;
 	private PaySlipType paySlipType;
+	private String id;
+	private String documentType;
 	
 }

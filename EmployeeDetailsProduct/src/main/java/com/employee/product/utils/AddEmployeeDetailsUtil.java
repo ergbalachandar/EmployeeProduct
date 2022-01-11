@@ -13,7 +13,6 @@ import com.employee.product.employeedetails.request.dto.AddEmployeeRequestDto;
 import com.employee.product.employeedetails.request.dto.EmployeeDetailsRequestDto;
 import com.employee.product.employeedetails.request.dto.EmployeeFamilyDetailsRequestDto;
 import com.employee.product.employeedetails.request.dto.EmployeePassportDetailsRequestDto;
-import com.employee.product.employeedetails.request.dto.EmployeePaySlipDetailsRequestDto;
 import com.employee.product.employeedetails.request.dto.EmployeeWorkPermitDetailsRequestDto;
 import com.employee.product.entity.companydetails.CompanyDetails;
 import com.employee.product.entity.companydetails.Users;
@@ -23,9 +22,6 @@ import com.employee.product.entity.employeedetails.EmployeeFamilyDetails;
 import com.employee.product.entity.employeedetails.EmployeePassportDetails;
 import com.employee.product.entity.employeedetails.EmployeePaySlipDetails;
 import com.employee.product.entity.employeedetails.EmployeeWorkPermitDetails;
-import com.employee.product.expensedetails.response.dto.TypeCurrency;
-import com.employee.product.expensedetails.response.dto.TypeExpense;
-import com.employee.product.expensedetails.response.dto.TypeStatus;
 
 public class AddEmployeeDetailsUtil {
 
@@ -147,13 +143,14 @@ public class AddEmployeeDetailsUtil {
 			for(EmployeeExpenseDetails empActExp:empActual.getEmployeeExpenseDetails()) {
 				EmployeeExpenseDetails employeeExpense = new EmployeeExpenseDetails();
 				employeeExpense.setAmount(empActExp.getAmount());
-				employeeExpense.setApprovedDate(empActExp.getApprovedDate());
+				employeeExpense.setUpdatedDate(empActExp.getUpdatedDate());
 				employeeExpense.setApprovedId(empActExp.getApprovedId());
 				employeeExpense.setApproverName(empActExp.getApproverName());
 				employeeExpense.setCreatedDate(empActExp.getCreatedDate());
 				employeeExpense.setCurrencyType(empActExp.getCurrencyType());
 				employeeExpense.setDocumentName(empActExp.getDocumentName());
 				employeeExpense.setDocumentType(empActExp.getDocumentType());
+				employeeExpense.setDocumentData(empActExp.getDocumentData());
 				employeeExpense.setId(empActExp.getId());
 				employeeExpense.setReason(empActExp.getReason());
 				employeeExpense.setProofDate(empActExp.getProofDate());
@@ -175,26 +172,16 @@ public class AddEmployeeDetailsUtil {
 		users.setCountry(emloyeeDetailsRequestDto.getCountry());
 		users.setFirstName(emloyeeDetailsRequestDto.getFirstName());
 		users.setLastName(emloyeeDetailsRequestDto.getLastName());
-		users.setPassword(encoder.encode(emloyeeDetailsRequestDto.getEmailId().toLowerCase()));
+		if(null == empActual)
+			users.setPassword(encoder.encode(emloyeeDetailsRequestDto.getEmailId().toLowerCase()));
 		users.setRole("Employee");
 		users.setUserName(emloyeeDetailsRequestDto.getEmailId());
 		users.setCreatedAt(new Date());
-
 		Set<EmployeeDetails> employeeDetailsSet = new HashSet<EmployeeDetails>();
-		// EmployeeDetails employeeDetails = new EmployeeDetails();
-
 		mapEmployeeDetails(emloyeeDetailsRequestDto, employeeDetails, empActual);
-//		CompanyDetails companyDetails = new CompanyDetails();
-//		companyDetails.setId(Integer.valueOf(addEmployeeRequestDto.getCompanyId()));
-//		employeeDetails.setCompanyDetails(companyDetails);
-
 		employeeDetails.setCompanyDetails(companyDetails);
 		employeeDetailsSet.add(employeeDetails);
-
-		// users.setEmployeeDetails(employeeDetailsSet);
-
-		// users.setCompanyDetails(companyDetails);
-	}
+		}
 
 	public static String generateEmployeeId(String companyName, String firstName, String lastName) {
 		String comp = null;

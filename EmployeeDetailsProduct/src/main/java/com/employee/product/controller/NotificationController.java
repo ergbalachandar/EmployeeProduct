@@ -1,18 +1,19 @@
 package com.employee.product.controller;
 
+import java.util.Optional;
+
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.employee.product.dao.services.NotificationService;
 import com.employee.product.dao.services.UserDetailsImpl;
-import com.employee.product.entity.employeedetails.EmployeeDetails;
 import com.employee.product.entity.notification.NotificationDetailsEntity;
 import com.employee.product.notification.dto.NotificationDetails;
 import com.employee.product.notification.dto.NotificationReq;
@@ -46,14 +47,7 @@ public class NotificationController {
 	public NotificationDetails getNotifications(HttpSession httpSession) throws Exception {
 		UserDetailsImpl userDetails = generateUserDetailsFromJWT();
 		NotificationDetails notifyDetails = new NotificationDetails();
-		String empId = null;
-		for (EmployeeDetails em : userDetails.getUsers().getEmployeeDetails()) {
-			empId = em.getId();
-		}
-		if (null == empId) {
-			throw new Exception("Error in retrieve notifications");
-		}
-		NotificationUtil.mapNotifications(notifyDetails, notifyService.pullNotification(empId));
+		NotificationUtil.mapNotifications(notifyDetails, notifyService.pullNotification(userDetails.getUsername()));
 		return notifyDetails;
 	}
 
@@ -63,24 +57,11 @@ public class NotificationController {
 			@ApiResponse(code = 401, message = "You are not authorized to recieve Notifications"),
 			@ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
 			@ApiResponse(code = 404, message = "The resource you were trying to reach is not found") })
-	@ResponseBody
-	public boolean updateNotifications(@RequestParam NotificationReq notifReq,HttpSession httpSession) throws Exception {
-		UserDetailsImpl userDetails = generateUserDetailsFromJWT();
-		String empId = null;
-		for (EmployeeDetails em : userDetails.getUsers().getEmployeeDetails()) {
-			empId = em.getId();
-		}
-		if (null == empId) {
-			throw new Exception("Error in retrieve notifications");
-		}
-		if(null == notifReq || null ==  notifReq.getId()) {
-			throw new Exception("Error in updating notifications");
-		}
-		NotificationDetailsEntity ent = new NotificationDetailsEntity();
-		NotificationUtil.updateNotify(ent,notifReq);
-		notifyService.updateNotification(ent);
-		return true;
-		
+	public void updateNotifications(@RequestBody NotificationReq notifReq,HttpSession httpSession) throws Exception {
+		Optional<NotificationDetailsEntity> notifyEnt = notifyService.getById(notifReq.getId());
+		NotificationDetailsEntity notifyModified = notifyEnt.get();
+		notifyModified.setStatus(notifReq.isStatus());
+		notifyService.updateNotification(notifyModified);
 	}
 
 	private UserDetailsImpl generateUserDetailsFromJWT() throws Exception {

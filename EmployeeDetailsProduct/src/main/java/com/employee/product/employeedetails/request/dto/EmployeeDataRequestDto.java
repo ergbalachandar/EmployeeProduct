@@ -7,6 +7,6 @@ public class EmployeeDataRequestDto {
 	
 //	private String userName;
 //	private String password;
-	private int documentType;  // 1- PDF, 2 - XLSX, 3 - CSV
+	private FILETYPE fileType;  // 1- PDF, 2 - XLSX, 3 - CSV
 
 }

@@ -5,7 +5,7 @@ public enum TypeStatus {
 	REJ, // REJECTED
     APP, // APPROVED
     CAN, // CANCELLED
-    PEN, // PENDING
+    PEN, // PENDING or INITIATED
     INP; // InProgress
 	
 }

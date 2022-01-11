@@ -1,6 +1,6 @@
 package com.employee.product.entity.employeedetails;
 
-import java.sql.Date;
+import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -20,6 +20,9 @@ public class EmployeeExpenseDetails {
 	@Id
 	@Column(name = "id")
 	private String id;
+
+	@Column(name = "ar_message")
+	private String arMessage;
 
 	@Column(name = "reason")
 	private String reason;
@@ -50,13 +53,16 @@ public class EmployeeExpenseDetails {
 
 	@Column(name = "proof_date")
 	private Date proofDate;
+	
+	@Column(name = "proof_number")
+	private String proofNumber;
 
-	@Column(name = "created_date")
+	@Column(name = "created_date", nullable = false, insertable = false, columnDefinition = "DEFAULT CURRENT_TIMESTAMP")
 	private Date createdDate;
 
-	@Column(name = "approved_date")
-	private Date approvedDate;
-
+	@Column(name = "approved_date", nullable = false, insertable = false, columnDefinition = "DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")
+	private Date updatedDate;
+	
 	@Lob
 	@Column(name = "document_data")
 	private byte[] documentData;

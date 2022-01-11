@@ -10,6 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import com.employee.product.entity.companydetails.CompanyDetails;
@@ -117,6 +118,14 @@ public class EmployeeDetails {
 	@OneToMany(cascade = CascadeType.ALL)
 	@JoinColumn(name = "employee_id")
 	private Set<EmployeeExpenseDetails> employeeExpenseDetails;
+	
+	@OneToMany(cascade = CascadeType.ALL)
+	@JoinColumn(name = "employee_id")
+	private Set<EmployeeTimeSheetDetails> employeeTimeSheetDetails;
+	
+	@OneToMany(cascade = CascadeType.ALL)
+	@JoinColumn(name = "employee_id")
+	private Set<EmployeeLeaveDetails> employeeLeaveDetails;
 
 	/*
 	 * @OneToMany(cascade = CascadeType.ALL)

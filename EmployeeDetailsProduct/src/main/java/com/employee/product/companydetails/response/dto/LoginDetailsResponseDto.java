@@ -19,6 +19,8 @@ public class LoginDetailsResponseDto {
 
 	private int companyFlag;
 	
+	private String notifCount;
+	
 	private EmployeeDetailsResponseDto employeeDetails;
 	
 

@@ -8,6 +8,7 @@ import com.employee.product.entity.notification.NotificationDetailsEntity;
 
 public interface INotificationService extends JpaRepository <NotificationDetailsEntity, String> {
 	
-	public List<NotificationDetailsEntity> getByEmployeeId(String employeeId);
+	public List<NotificationDetailsEntity> getByUserName(String userName);
+	public void deleteByUserName(String userName);
 
 }

@@ -10,6 +10,7 @@ import lombok.Setter;
 public class NotificationDetails {
 	
 	int count;
+	int unRead;
 	List<NotificationDetail> notificationDetail;
 
 }

@@ -73,8 +73,7 @@ public class EmployeeProductService {
 	}
 
 	@Transactional
-	public void deleteEmployee(String userName, String companyId) throws Exception {
-
+	public String deleteEmployee(String userName, String companyId) throws Exception {
 		Users users = entity.find(Users.class, userName);
 		if(!users.getCompanyDetails().getId().equalsIgnoreCase(companyId)) {
 			throw new Exception("You dont have authorise to delete employee of other company");
@@ -86,6 +85,7 @@ public class EmployeeProductService {
 			employeeDetails.setResignDate(new Date(new java.util.Date().getTime()));
 		}
 		System.out.println(users.getEmployeeDetails());
+		return users.getFirstName()+" "+ users.getLastName();
 
 	}
 

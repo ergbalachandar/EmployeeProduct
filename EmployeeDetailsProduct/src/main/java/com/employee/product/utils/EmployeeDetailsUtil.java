@@ -117,8 +117,8 @@ public class EmployeeDetailsUtil {
 			}
 			employeePassportDetailsResponseDto.setValidity(employeePassportDetails.getValidity());
 			employeePassportDetailsResponseDto.setBirthPlace(employeePassportDetails.getBirthPlace());
-			employeePassportDetailsResponseDto.setDocumentName(employeePassportDetails.getDocumentName());
-			employeePassportDetailsResponseDto.setDocumentType(employeePassportDetails.getDocumentType());
+			employeePassportDetailsResponseDto.setFileName(employeePassportDetails.getDocumentName());
+			employeePassportDetailsResponseDto.setFileType(employeePassportDetails.getDocumentType());
 			employeePassportDetailsResponseDtoList.add(employeePassportDetailsResponseDto);
 		}
 
@@ -146,8 +146,8 @@ public class EmployeeDetailsUtil {
 			employeeWorkPermitDetailsResponseDto.setStartDate(String.valueOf(employeeWorkPermitDetails.getStartDate()));
 			}
 			employeeWorkPermitDetailsResponseDto.setValidity(employeeWorkPermitDetails.getValidity());
-			employeeWorkPermitDetailsResponseDto.setDocumentName(employeeWorkPermitDetails.getDocumentName());
-			employeeWorkPermitDetailsResponseDto.setDocumentType(employeeWorkPermitDetails.getDocumentType());
+			employeeWorkPermitDetailsResponseDto.setFileName(employeeWorkPermitDetails.getDocumentName());
+			employeeWorkPermitDetailsResponseDto.setFileType(employeeWorkPermitDetails.getDocumentType());
 
 			employeeWorkPermitDetailsResponseDtoList.add(employeeWorkPermitDetailsResponseDto);
 		}

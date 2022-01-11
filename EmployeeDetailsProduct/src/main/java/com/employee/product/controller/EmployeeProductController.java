@@ -6,6 +6,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
@@ -56,6 +57,7 @@ import com.employee.product.employeedetails.response.dto.EmployeeDetailsResponse
 import com.employee.product.entity.companydetails.CompanyDetails;
 import com.employee.product.entity.companydetails.Users;
 import com.employee.product.entity.employeedetails.EmployeeDetails;
+import com.employee.product.entity.employeedetails.EmployeeExpenseDetails;
 import com.employee.product.entity.employeedetails.EmployeePassportDocumentDetails;
 import com.employee.product.entity.employeedetails.EmployeePaySlipDetails;
 import com.employee.product.entity.employeedetails.EmployeeWorkPermitDocumentDetails;
@@ -143,7 +145,7 @@ public class EmployeeProductController {
 		 * users,companyDetailsDto.getPassword());
 		 */
 		CompanySignUpDetailsUtil.companyDetailsSignUpResponseMapping(companyDetailsResponseDto);
-		users.getEmployeeDetails().forEach(n ->  Notify("Welcome "+companyDetailsDto.getCompanyName(),n.getId()));
+		notifyDet("Welcome to "+companyDetailsDto.getCompanyName(),users.getUserName());
 		commonService.setAudit(new AuditTrailFE(companyDetailsDto.getEmployeeDetails().getFirstName(),
 				companyDetailsDto.getCompanyName(), "Admin", "SignUp Successfully", 1, "SIGNUP"));
 		return companyDetailsResponseDto;
@@ -182,24 +184,17 @@ public class EmployeeProductController {
 			throw new Exception("You are not authorized to Log In Please contact Us");
 		}
 		if (loginDetailsRequestDto.getReset() == 0) {
-			LoginUserUtil.mapLoginDetailsResponseDto(userDetails.getUsers(), loginDetailsResponseDto);
+			LoginUserUtil.mapLoginDetailsResponseDto(userDetails.getUsers(), loginDetailsResponseDto,notifyService.notifCount(loginDetailsRequestDto.getUserName()));
 			loginDetailsResponseDto.setJwt(jwt);
-			/*
-			 * CompanySignUpDetailsUtil.sendMessageAfterLogin(mailSender,
-			 * loginDetailsRequestDto.getUserName());
-			 * 
-			 */
-
-			userDetails.getUsers().getEmployeeDetails().forEach(n ->  Notify("Logged in Portal Successfully",n.getId()));
 			commonService.setAudit(new AuditTrailFE(userDetails.getUsers().getFirstName(),
 					userDetails.getUsers().getCompanyDetails().getId(), userDetails.getUsers().getRole(),
 					"User Login Successful", 1, "LOGIN"));
 		} else {
 			Users usersWithNewPassword = loginDetailsService.updatePassword(
 					encoder.encode(loginDetailsRequestDto.getNewPassword()), loginDetailsRequestDto.getUserName());
-			LoginUserUtil.mapLoginDetailsResponseDto(usersWithNewPassword, loginDetailsResponseDto);
+			LoginUserUtil.mapLoginDetailsResponseDto(usersWithNewPassword, loginDetailsResponseDto,notifyService.notifCount(loginDetailsRequestDto.getUserName()));
 			loginDetailsResponseDto.setJwt(null);
-			userDetails.getUsers().getEmployeeDetails().forEach(n ->  Notify("Password changed in Portal Successfully",n.getId()));
+			notifyDet("Password changed in Portal Successfully",userDetails.getUsername());
 			commonService.setAudit(new AuditTrailFE(userDetails.getUsers().getFirstName(),
 					userDetails.getUsers().getCompanyDetails().getId(), userDetails.getUsers().getRole(),
 					"Password changed Successfully", 1, "LOGIN"));
@@ -291,7 +286,6 @@ public class EmployeeProductController {
 			@ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
 			@ApiResponse(code = 404, message = "The resource you were trying to reach is not found") })
 	@ResponseBody
-
 	public EmployeeDetailsResponseDto addOrUpdateEmployeeList(@RequestBody AddEmployeeRequestDto addEmployeeRequestDto)
 			throws Exception {
 
@@ -311,10 +305,15 @@ public class EmployeeProductController {
 		EmployeeDetailsResponseDto employeeDetailsResponseDto = new EmployeeDetailsResponseDto();
 		EmployeeDetailsUtil.mapEmployeeDetails(employeeDetailsResponseDto, employeeDetails, false);
 		if (newEmployee) {
+			notifyDet("New Employee Added Successfully",userDetails.getUsername());
+			notifyDet("Welcome "+addEmployeeRequestDto.getEmployeeDetails().getFirstName().toUpperCase()+" "+addEmployeeRequestDto.getEmployeeDetails().getLastName().toUpperCase(),addEmployeeRequestDto.getEmployeeDetails().getEmailId());
 			commonService.setAudit(new AuditTrailFE(userDetails.getUsers().getFirstName(),
 					userDetails.getUsers().getCompanyDetails().getId(), userDetails.getUsers().getRole(),
 					"Successfully added an Employee", 1, "ADDMODIFYEMPLOYEE"));
 		} else {
+			if(!userDetails.getUsername().equals(addEmployeeRequestDto.getEmployeeDetails().getEmailId()))
+				notifyDet("An Employee Modified Successfully",userDetails.getUsername());
+			notifyDet("Profile has been updated successfully",addEmployeeRequestDto.getEmployeeDetails().getEmailId());
 			commonService.setAudit(new AuditTrailFE(userDetails.getUsers().getFirstName(),
 					userDetails.getUsers().getCompanyDetails().getId(), userDetails.getUsers().getRole(),
 					"Successfully Modified an Employee", 1, "ADDMODIFYEMPLOYEE"));
@@ -337,7 +336,7 @@ public class EmployeeProductController {
 			@ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
 			@ApiResponse(code = 404, message = "The resource you were trying to reach is not found") })
 	public ResponseEntity<InputStreamResource> employeePdfReport(
-			@RequestBody EmployeeDataRequestDto employeeDataRequestDto, HttpServletResponse response) throws Exception {
+			@RequestBody EmployeeDataRequestDto eDR, HttpServletResponse response) throws Exception {
 
 		UserDetailsImpl userDetails = generateUserDetailsFromJWT("EMPLOYEELISTREPORT");
 
@@ -350,11 +349,9 @@ public class EmployeeProductController {
 		ByteArrayInputStream bis = null;
 		HttpHeaders headers = new HttpHeaders();
 
-		if (employeeDataRequestDto.getDocumentType() == 1) {
-
+		if ("PDF".equals(eDR.getFileType().name())) {
 			bis = GeneratePdfReportUtil.employeeReport(employeeDetailsList,
 					userDetails.getUsers().getCompanyDetails().getCompanyName());
-
 			headers.add("Content-Disposition", "inline; filename=EmployeeReport.pdf");
 			commonService.setAudit(new AuditTrailFE(userDetails.getUsers().getFirstName(),
 					userDetails.getUsers().getCompanyDetails().getId(), userDetails.getUsers().getRole(),
@@ -363,7 +360,7 @@ public class EmployeeProductController {
 					.body(new InputStreamResource(bis));
 		}
 
-		else if (employeeDataRequestDto.getDocumentType() == 2) {
+		else if ("XLS".equals(eDR.getFileType().name())) {
 			bis = GenerateExcelReportUtil.employeeReport(employeeDetailsList,
 					userDetails.getUsers().getCompanyDetails().getCompanyName());
 			headers.add("Content-Disposition", "inline; filename=EmployeeReport.xlsx");
@@ -383,18 +380,15 @@ public class EmployeeProductController {
 			@ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
 			@ApiResponse(code = 404, message = "The resource you were trying to reach is not found") })
 	@RequestMapping(value = "/employeeListCsvReport", method = RequestMethod.POST)
-	public void generateCsvEmployeeReport(@RequestBody EmployeeDataRequestDto employeeDataRequestDto,
+	public void generateCsvEmployeeReport(@RequestBody EmployeeDataRequestDto eDR,
 			HttpServletResponse response) throws Exception {
 		UserDetailsImpl userDetails = generateUserDetailsFromJWT("EMPLOYEELISTREPORT");
-		if (employeeDataRequestDto.getDocumentType() == 3) {
-
+		if ("CSV".equals(eDR.getFileType().name())) {
 			if (!userDetails.getUsers().getRole().equalsIgnoreCase("Admin")) {
 				throw new Exception("You are not authorised to retrieve the list of Employees");
 			}
-
 			List<EmployeeDetails> employeeDetailsList = employeeProductService
 					.findbyCompanyDetails(userDetails.getUsers().getCompanyDetails().getId());
-
 			GenerateCsvReportUtil.generateEmployeeDetails(response.getWriter(), employeeDetailsList,
 					userDetails.getUsers().getCompanyDetails().getCompanyName());
 			commonService.setAudit(new AuditTrailFE(userDetails.getUsers().getFirstName(),
@@ -424,14 +418,14 @@ public class EmployeeProductController {
 			throws Exception {
 		UserDetailsImpl userDetails = generateUserDetailsFromJWT("DELETEEMPLOYEE");
 		DeleteEmployeeResponseDto deleteEmployeeResponseDto = new DeleteEmployeeResponseDto();
-
 		if (!userDetails.getUsers().getRole().equalsIgnoreCase("Admin")) {
 			throw new Exception("You are not authorised to Delete the employee");
 		}
-
-		employeeProductService.deleteEmployee(deleteEmployeeRequestDto.getUserName(),
+		String empName = employeeProductService.deleteEmployee(deleteEmployeeRequestDto.getUserName(),
 				userDetails.getUsers().getCompanyDetails().getId());
+		notifyService.removeAllByUserName(deleteEmployeeRequestDto.getUserName());
 		DeleteEmployeeResponseUtil.mapResponseDeleteEmployeeResponse(deleteEmployeeResponseDto);
+		notifyDet(empName+" got Successfully off-Boarded",userDetails.getUsername());
 		commonService.setAudit(new AuditTrailFE(userDetails.getUsers().getFirstName(),
 				userDetails.getUsers().getCompanyDetails().getId(), userDetails.getUsers().getRole(),
 				"Successfully Deleted Employee", 1, "DELETEEMPLOYEE"));
@@ -454,9 +448,10 @@ public class EmployeeProductController {
 		UserDetailsImpl userDetails = generateUserDetailsFromJWT("UPLOADDOCUMENT");
 		UploadDocumentDetailsRequestDto uploadDocumentDetailsRequestDto = mapper.readValue(value,
 				UploadDocumentDetailsRequestDto.class);
+		String extension = FilenameUtils.getExtension(uploadFile.getOriginalFilename());
 		try {
 			UploadDocumentUtil.uploadDocument(userDetails.getUsers().getUserName(), uploadDocumentDetailsRequestDto,
-					bytes, documentManagementService, uploadFile.getOriginalFilename());
+					bytes, documentManagementService, uploadFile.getOriginalFilename(),extension);
 		} catch (Exception e) {
 			e.printStackTrace();
 			commonService.setAudit(new AuditTrailFE(userDetails.getUsers().getFirstName(),
@@ -499,7 +494,13 @@ public class EmployeeProductController {
 							"attachment; filename=" + ((EmployeePaySlipDetails) obj).getDocumentName())
 					.body(((EmployeePaySlipDetails) obj).getDocumentData());
 
-		} else {
+		}  else if (obj instanceof EmployeeExpenseDetails) {
+			return ResponseEntity.ok().contentType(MediaType.parseMediaType("application/octet-stream"))
+					.header(HttpHeaders.CONTENT_DISPOSITION,
+							"attachment; filename=" + ((EmployeeExpenseDetails) obj).getDocumentName())
+					.body(((EmployeeExpenseDetails) obj).getDocumentData());
+
+		}else {
 			return ResponseEntity.noContent().build();
 		}
 
@@ -544,20 +545,18 @@ public class EmployeeProductController {
 	public DeleteCompanyResponseDto deleteCompany() throws Exception {
 		DeleteCompanyResponseDto deleteCompanyResponseDto = new DeleteCompanyResponseDto();
 		UserDetailsImpl userDetails = generateUserDetailsFromJWT("DELETECOMPANY");
-
 		if (userDetails.getUsers().getRole().equalsIgnoreCase("Admin")) {
-
 			deleteCompanyService.deleteCompany(userDetails.getUsers().getCompanyDetails().getId());
 			List<EmployeeDetails> employeeDetailsList = employeeProductService
 					.findbyCompanyDetails(userDetails.getUsers().getCompanyDetails().getId());
 			for (EmployeeDetails employeeDetails : employeeDetailsList) {
 				employeeProductService.deleteEmployee(employeeDetails.getEmailId(),
 						employeeDetails.getCompanyDetails().getId());
+				notifyService.removeAllByUserName(employeeDetails.getEmailId());
 			}
 			commonService.setAudit(new AuditTrailFE(userDetails.getUsers().getFirstName(),
 					userDetails.getUsers().getCompanyDetails().getId(), userDetails.getUsers().getRole(),
 					"Successfully Deleted Company", 1, "DELETECOMPANY"));
-
 		} else {
 			commonService.setAudit(new AuditTrailFE(userDetails.getUsers().getFirstName(),
 					userDetails.getUsers().getCompanyDetails().getId(), userDetails.getUsers().getRole(),
@@ -611,6 +610,7 @@ public class EmployeeProductController {
 		CompanySignUpDetailsUtil.modifyCompanyDetailsMapping(companyDetails, companyDetailsDto);
 		employeeProductService.updateCompany(companyDetails);
 		compRes = companyDetailsDto;
+		notifyDet("Company Details are Updated",userDetails.getUsername());
 		commonService.setAudit(new AuditTrailFE(userDetails.getUsers().getFirstName(),
 				userDetails.getUsers().getCompanyDetails().getId(), userDetails.getUsers().getRole(),
 				"Successfully Updated company information", 1, "UPDATECOMPANY"));
@@ -643,9 +643,9 @@ public class EmployeeProductController {
 	}
 	
 
-	private void Notify(String message, String id) {
+	private void notifyDet(String message, String userName) {
 		NotificationDetailsEntity nde = new NotificationDetailsEntity();
-		NotificationUtil.push(message,id,nde);
+		NotificationUtil.push(message,userName,nde);
 		notifyService.pushNotifaction(nde);
 	}
 

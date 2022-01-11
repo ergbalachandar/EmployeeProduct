@@ -1,6 +1,8 @@
 package com.employee.product.dao.services;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Stream;
 
 import javax.persistence.EntityManager;
 
@@ -26,8 +28,25 @@ public class NotificationService  {
     }
     
     @Transactional
-    public List<NotificationDetailsEntity> pullNotification(String employeeId) {
-		return notificationService.getByEmployeeId(employeeId);
+    public List<NotificationDetailsEntity> pullNotification(String userName) {
+		return notificationService.getByUserName(userName);
+    }
+    
+
+    @Transactional
+    public void removeAllByUserName(String userName) {
+    	notificationService.deleteByUserName(userName);
+    }
+    
+    @Transactional
+    public long notifCount(String userName) {
+    	return notificationService.getByUserName(userName).stream().filter(a -> !a.isStatus()).count();
+    }
+    
+    
+    @Transactional
+    public Optional<NotificationDetailsEntity> getById(String id) {
+    	return notificationService.findById(id);
     }
     
     @Transactional

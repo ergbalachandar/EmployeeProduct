@@ -1,6 +1,7 @@
 package com.employee.product.utils;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 
@@ -41,6 +42,15 @@ public class ExpenseDetailsUtil {
 					for (EmployeeExpenseDetails employeeExpenseDetails : employeeDetails.getEmployeeExpenseDetails()) {
 							expenseList.add(mapExpense(employeeExpenseDetails));
 						}
+					if(null != expenseList) {
+						Comparator<Expense> comp = new Comparator<Expense>() {
+							@Override
+							public int compare(Expense o1, Expense o2) {
+								return o2.getCreatedDate().compareTo(o1.getCreatedDate());
+							}
+						};
+						expenseList.sort(comp);
+					}
 						expenses.setExpense(expenseList);
 						expensesList.add(expenses);
 				}
@@ -81,36 +91,73 @@ public class ExpenseDetailsUtil {
 	/**
 	 * 
 	 * @param paySlipDetails
-	 * @param expenseRes
+	 * @param expenseEmp
 	 */
-	public static void mapEmpExpenseDetails(Set<EmployeeExpenseDetails> empExpDetails, Expenses expenseRes) {
-		Expenses exp = new Expenses();
-		List<Expense> expenseList = new ArrayList<Expense>();
+	public static void mapEmpExpenseDetails(Set<EmployeeExpenseDetails> empExpDetails, List<Expense> expenseEmp, String id) {
 		for(EmployeeExpenseDetails employeeExpenseDetails:empExpDetails) {
-			expenseList.add(mapExpense(employeeExpenseDetails));
+			expenseEmp.add(mapExpense(employeeExpenseDetails,id));
+		}		
+		if(null != expenseEmp) {
+			Comparator<Expense> comp = new Comparator<Expense>() {
+				@Override
+				public int compare(Expense o1, Expense o2) {
+					return o2.getCreatedDate().compareTo(o1.getCreatedDate());
+				}
+			};
+			expenseEmp.sort(comp);
 		}
-		exp.setExpense(expenseList);
+	
+	}
+	
+	private static Expense mapExpense(EmployeeExpenseDetails employeeExpenseDetails, String id){
+		Expense expense = new Expense();
+		expense.setAmount(employeeExpenseDetails.getAmount());
+		if(null != employeeExpenseDetails.getUpdatedDate())
+			expense.setUpdatedDate(employeeExpenseDetails.getUpdatedDate());
+		expense.setApprovedId(employeeExpenseDetails.getApprovedId());
+		expense.setApproverName(employeeExpenseDetails.getApproverName());
+		expense.setCreatedDate(employeeExpenseDetails.getCreatedDate());
+		if(null != employeeExpenseDetails.getCurrencyType())
+			expense.setTypeCurrency(TypeCurrency.valueOf(employeeExpenseDetails.getCurrencyType()));
+		expense.setFileName(employeeExpenseDetails.getDocumentName());
+		expense.setFileType(employeeExpenseDetails.getDocumentType());
+		expense.setExpenseNumber(employeeExpenseDetails.getId());
+		expense.setReason(employeeExpenseDetails.getReason());
+		expense.setProofNumber(employeeExpenseDetails.getProofNumber());
+		expense.setProofDate(String.valueOf(employeeExpenseDetails.getProofDate()));
+		if(null != employeeExpenseDetails.getStatus())
+			expense.setTypeStatus(TypeStatus.valueOf(employeeExpenseDetails.getStatus()));
+		if(null != employeeExpenseDetails.getTypeExpense())
+			expense.setTypeExpense(TypeExpense.valueOf(employeeExpenseDetails.getTypeExpense()));
+		expense.setArMessage(employeeExpenseDetails.getArMessage());
+		expense.setDocumentType("4");
+		expense.setId(id);
+		return expense;
 		
 	}
 	
 	private static Expense mapExpense(EmployeeExpenseDetails employeeExpenseDetails){
 		Expense expense = new Expense();
 		expense.setAmount(employeeExpenseDetails.getAmount());
-		expense.setApprovedDate(String.valueOf(employeeExpenseDetails.getApprovedDate()));
+		expense.setDocumentType("4");
+		if(null != employeeExpenseDetails.getUpdatedDate())
+			expense.setUpdatedDate(employeeExpenseDetails.getUpdatedDate());
 		expense.setApprovedId(employeeExpenseDetails.getApprovedId());
 		expense.setApproverName(employeeExpenseDetails.getApproverName());
-		expense.setCreatedDate(String.valueOf(employeeExpenseDetails.getCreatedDate()));
+		expense.setCreatedDate(employeeExpenseDetails.getCreatedDate());
 		if(null != employeeExpenseDetails.getCurrencyType())
 			expense.setTypeCurrency(TypeCurrency.valueOf(employeeExpenseDetails.getCurrencyType()));
-		expense.setDocumentName(employeeExpenseDetails.getDocumentName());
-		expense.setDocumentType(employeeExpenseDetails.getDocumentType());
+		expense.setFileName(employeeExpenseDetails.getDocumentName());
+		expense.setFileType(employeeExpenseDetails.getDocumentType());
 		expense.setExpenseNumber(employeeExpenseDetails.getId());
 		expense.setReason(employeeExpenseDetails.getReason());
+		expense.setProofNumber(employeeExpenseDetails.getProofNumber());
 		expense.setProofDate(String.valueOf(employeeExpenseDetails.getProofDate()));
 		if(null != employeeExpenseDetails.getStatus())
 			expense.setTypeStatus(TypeStatus.valueOf(employeeExpenseDetails.getStatus()));
 		if(null != employeeExpenseDetails.getTypeExpense())
 			expense.setTypeExpense(TypeExpense.valueOf(employeeExpenseDetails.getTypeExpense()));
+		expense.setArMessage(employeeExpenseDetails.getArMessage());
 		return expense;
 		
 	}

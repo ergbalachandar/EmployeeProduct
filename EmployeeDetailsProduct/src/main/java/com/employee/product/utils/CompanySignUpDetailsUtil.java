@@ -3,9 +3,9 @@ package com.employee.product.utils;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
-
+/*
 import org.springframework.mail.MailSender;
-import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.SimpleMailMessage;*/
 
 import com.employee.product.companydetails.dto.CompanyDetailsDto;
 import com.employee.product.companydetails.request.dto.CompanyDetailsRequestDto;

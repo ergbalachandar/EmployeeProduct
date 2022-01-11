@@ -19,15 +19,17 @@ public class LoginUserUtil {
 		}
 	}
 
-	public static void mapLoginDetailsResponseDto(Users users, LoginDetailsResponseDto loginDetailsResponseDto) {
+	public static void mapLoginDetailsResponseDto(Users users, LoginDetailsResponseDto loginDetailsResponseDto, long count) {
 
 		loginDetailsResponseDto.setRole(users.getRole());
 		loginDetailsResponseDto.setUserName(users.getUserName());
 		loginDetailsResponseDto.setCompanyId(users.getCompanyDetails().getId());
 		loginDetailsResponseDto.setCompanyName(users.getCompanyDetails().getCompanyName());
 		loginDetailsResponseDto.setCompanyFlag(users.getCompanyDetails().getCompanyFlag());
+		loginDetailsResponseDto.setNotifCount(String.valueOf(count));
 		Set<EmployeeDetails> employeeDetailsSet = users.getEmployeeDetails();
 		EmployeeDetailsResponseDto employeeDetailsResponseDto = new EmployeeDetailsResponseDto();
+		//employeeDetailsResponseDto.setNotifCount();
 		for (EmployeeDetails employeeDetails : employeeDetailsSet) {
 
 			EmployeeDetailsUtil.mapEmployeeDetails(employeeDetailsResponseDto, employeeDetails,false);

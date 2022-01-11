@@ -5,17 +5,22 @@ import java.sql.Date;
 import com.employee.product.expensedetails.response.dto.TypeCurrency;
 import com.employee.product.expensedetails.response.dto.TypeExpense;
 
-import lombok.Data;
+import io.swagger.annotations.ApiParam;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
+@Setter
+@Getter
 public class UploadDocumentDetailsRequestDto {
 
-	private String documentType; // 1 - WP, 2- PaySlip, 3 - Passport
+	@ApiParam(required = true,value="1 - WP, 2- PaySlip, 3 - Passport, 4 - Expense")
+	private String documentType; // 1 - WP, 2- PaySlip, 3 - Passport, 4 - Expense
 	
 	private String documentNumber;
 	
 	//private String loggedInUserName;
 	
+	@ApiParam(required=true,value="Employee Id")
 	private String employeeId; // EmployeeId for which document needs to be uploaded
 	
 	private String month;  // Payslip Module
@@ -28,11 +33,13 @@ public class UploadDocumentDetailsRequestDto {
 	
 	private long amount;  // Expense Module
 	
-	private TypeCurrency currency; // Expense Module
+	private TypeCurrency typeCurrency; // Expense Module
 	 
 	private Date proofDate; // Expense Module
 	
-	private TypeExpense expense; // Expense Module
+	private TypeExpense typeExpense; // Expense Module
+	
+	private String proofNumber; // Expense Module
 	
 	
 }

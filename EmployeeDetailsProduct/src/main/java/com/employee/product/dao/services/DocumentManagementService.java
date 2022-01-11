@@ -205,18 +205,20 @@ public class DocumentManagementService {
 	 * @param loggedInUserName
 	 * @param uddReq
 	 */
+	@Transactional
 	public void addExpenseDocument(EmployeeExpenseDetails expDet, String loggedInUserName,
 			UploadDocumentDetailsRequestDto uddReq) {
 		EmployeeDetails empDetails = findByEmployeeId(uddReq.getEmployeeId());
 		Set<EmployeeExpenseDetails> empDetailsSet = new HashSet<EmployeeExpenseDetails>();
-		if(null != empDetails.getEmployeePaySlipDetails()) {
-			for(EmployeeExpenseDetails empPaySlipExits:empDetails.getEmployeeExpenseDetails()) {
-				empDetailsSet.add(empPaySlipExits);
+		if(null != empDetails.getEmployeeExpenseDetails()) {
+			for(EmployeeExpenseDetails empExpenseExits:empDetails.getEmployeeExpenseDetails()) {
+				empDetailsSet.add(empExpenseExits);
 			}
+			
 		}
 		empDetailsSet.add(expDet);
 		empDetails.setEmployeeExpenseDetails(empDetailsSet);
-		entity.persist(empDetails);
+		entity.merge(empDetails);
 		
 	}
 

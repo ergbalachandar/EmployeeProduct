@@ -1,14 +1,12 @@
 package com.employee.product.employeedetails.request.dto;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
+@Setter
+@Getter
 public class DeleteEmployeeRequestDto {
 	
 	private String userName;
-	
-//	private String adminUserName;
-//	
-//	private String adminPassword;
 
 }

@@ -242,25 +242,82 @@ alter table payslip_details add column uploaded_date date;
 
 Create TABLE `expense_details`(
   `id` varchar(50) PRIMARY KEY,
-  `employee_id` varchar(50),
-  `type` varchar(25) not null,
   `reason` varchar(255),
-  `upload` longblob,
+  `type_expense` varchar(25) not null,
+  `documentName` varchar(255),
+  `documentType` varchar(255),
+  `document_data` longblob,
   `amount` int not null,
   `status` varchar(50),
-  `approverName`  varchar(255),
-  `approvedId` varchar(50),
-  `proofDate` date not null,
-  `createdDate` date not null, 
-  `approvedDate` date
+  `approver_name`  varchar(255),
+  `approved_id` varchar(50),
+  `proof_date` date not null,
+  `created_date` date not null,
+  `approved_date` date,
+  `currency_type` varchar(10),
+  `ar_message` varchar(255),
+  `employee_id` varchar(255)
   );
-
 
 ALTER TABLE `expense_details` ADD FOREIGN KEY (`employee_id`) REFERENCES `employee` (`id`);
 
-ALTER TABLE `expense_details` DROP INDEX `employee_id`;
-
 ALTER TABLE `expense_details` DROP FOREIGN KEY `expense_details_ibfk_1`;
+
+
 -- Added new expense_details ---------End-----
 
+
+
+-- Added notification table ---------Begin-----
+
+Create TABLE `notifications_details`(
+  `id` varchar(100) PRIMARY KEY,
+  `message` varchar(255),
+  `created_date` date,
+  `status` boolean,
+  `username` varchar(255) not null
+  );
+
+-- Added notification table ---------Begin-----
+
+
+ALTER TABLE `expense_details` ADD COLUMN proof_number VARCHAR(255);
+
+ALTER TABLE `expense_details` ADD COLUMN updated_date VARCHAR(255);
+
+ALTER TABLE `notifications_details` MODIFY COLUMN created_date timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP;
+
+ALTER TABLE `expense_details` MODIFY COLUMN created_date timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP;
+
+ALTER TABLE `expense_details` MODIFY COLUMN updated_date timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP;
+
+
+Create TABLE `leave_details`(
+  `id` varchar(50) PRIMARY KEY,
+  `leave_type` varchar(255),
+  `no_of_days` int,
+  `created_date` date not null,
+  `employee_id` varchar(255)
+  );
+
+ALTER TABLE `leave_details` ADD FOREIGN KEY (`employee_id`) REFERENCES `employee` (`id`);
+
+Create TABLE `timesheet_details`(
+  `id` varchar(50) PRIMARY KEY not null,
+  `type_timesheet` varchar(255) not null,
+  `documentName` varchar(255),
+  `documentType` varchar(255),
+  `document_data` longblob,
+  `status` varchar(50),
+  `timesheet_date` date,
+  `approver_name`  varchar(255),
+  `approved_id` varchar(50),
+  `clientName` varchar(255),
+  `approved_date` date,
+  `timePeriod` int,
+  `task` varchar(255),
+  `employee_id` varchar(255)
+  );
+
+ALTER TABLE `timesheet_details` ADD FOREIGN KEY (`employee_id`) REFERENCES `employee` (`id`);
 
