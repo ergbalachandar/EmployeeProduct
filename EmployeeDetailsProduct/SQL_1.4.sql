@@ -249,6 +249,7 @@ Create TABLE `expense_details`(
   `document_data` longblob,
   `amount` int not null,
   `status` varchar(50),
+  `approver_id`  varchar(255),
   `approver_name`  varchar(255),
   `approved_id` varchar(50),
   `proof_date` date not null,
@@ -305,8 +306,8 @@ ALTER TABLE `leave_details` ADD FOREIGN KEY (`employee_id`) REFERENCES `employee
 Create TABLE `timesheet_details`(
   `id` varchar(50) PRIMARY KEY not null,
   `type_timesheet` varchar(255) not null,
-  `documentName` varchar(255),
-  `documentType` varchar(255),
+  `document_name` varchar(255),
+  `document_type` varchar(255),
   `document_data` longblob,
   `status` varchar(50),
   `timesheet_date` date,
