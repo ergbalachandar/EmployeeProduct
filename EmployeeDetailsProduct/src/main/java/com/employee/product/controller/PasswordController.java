@@ -7,6 +7,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -16,6 +17,8 @@ import com.employee.product.dao.services.NotificationService;
 import com.employee.product.dao.services.UserDetailsImpl;
 import com.employee.product.entity.companydetails.Users;
 import com.employee.product.entity.notification.NotificationDetailsEntity;
+import com.employee.product.employeedetails.request.dto.ResetPwdEmployeeRequestDto;
+import com.employee.product.employeedetails.response.dto.ResetPwdEmployeeResponseDto;
 import com.employee.product.entity.ops.AuditTrailFE;
 import com.employee.product.security.jwt.JwtUtils;
 import com.employee.product.utils.NotificationUtil;
@@ -47,8 +50,8 @@ public class PasswordController {
 		
 	/**
 	 * 
-	 * @param userName
-	 * @return
+	 * @param ResetPwdEmployeeRequestDto
+	 * @return ResetPwdEmployeeResponseDto
 	 * @throws Exception
 	 */
 	@RequestMapping(method = RequestMethod.POST, value = "/reset")
@@ -58,7 +61,7 @@ public class PasswordController {
 			@ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
 			@ApiResponse(code = 404, message = "The resource you were trying to reach is not found") })
 	@ResponseBody
-	public String changePwdForUser(String userName) throws Exception {
+	public ResetPwdEmployeeResponseDto changePwdForUser(@RequestBody ResetPwdEmployeeRequestDto req) throws Exception {
 		UserDetailsImpl userDetails = generateUserDetailsFromJWT("CHANGEPWD");
 		if(!"Admin".equals(userDetails.getUsers().getRole()) || userDetails.getUsers().getCompanyDetails().getActive() == 0) {
 			commonService.setAudit(new AuditTrailFE(userDetails.getUsers().getFirstName(),
@@ -66,14 +69,16 @@ public class PasswordController {
 					"You are not authorized to view", 0, "CHANGEPWD"));
 			throw new Exception("You are not authorized to Change PWD");
 		}
-		Users user = loginDet.getUser(userName);
+		Users user = loginDet.getUser(req.getUserName());
 		if(null == user || userDetails.getEmail().equals(user.getUserName())) {
 			throw new Exception("Invalid UserName !! Please check");
 		}
-		loginDet.updatePassword(encoder.encode(userName), userName);
-		notifyDet("Your password reset is completed",userName);
+		loginDet.updatePassword(encoder.encode(req.getUserName()), req.getUserName());
+		notifyDet("Your password reset is completed",req.getUserName());
 		notifyDet("Requested Password is changed for "+user.getFirstName(),userDetails.getEmail());
-		return "Password Reset done";
+        ResetPwdEmployeeResponseDto res = new ResetPwdEmployeeResponseDto();
+		res.setMessage("Password Reset done");
+		return res;
 	}
 	
 	private UserDetailsImpl generateUserDetailsFromJWT(String module) throws Exception {
